@@ -1,0 +1,5 @@
+.replit
+.bundle/
+replit.nix
+Gemfile
+Gemfile.lock
