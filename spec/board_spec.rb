@@ -53,4 +53,12 @@ RSpec.describe Board do
       end
     end
   end
+
+  describe '#set_piece' do
+    it 'changes the corresponding element within @grid to the given piece' do
+      position = 'b2'
+      piece = 'R'
+      expect { board.set_piece(position, piece) }.to change { board.grid[-2][1]}.to('R')
+    end
+  end
 end

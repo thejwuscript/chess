@@ -2,17 +2,26 @@
 
 class Board
   attr_accessor :grid
-  
   LETTERS = %w(a b c d e f g h)
   
   def initialize
     @grid = Array.new(8) { Array.new(8) }
   end
 
-  def piece_at(input) # ex. 'c4, downcase'
-    column = LETTERS.index(input[0])
-    row = -input[1].to_i
+  def piece_at(position) # ex. 'c4, downcase'
+    row, column = get_indexes(position)
     grid[row][column]
+  end
+
+  def set_piece(position, piece)
+    row, column = get_indexes(position)
+    grid[row][column] = piece
+  end
+
+  def show_board
+    grid_with_spaces.each_with_index do |row, row_index|
+      row_index.even? ? white_black_row(row) : black_white_row(row)
+    end
   end
 
   def grid_with_spaces
@@ -22,11 +31,13 @@ class Board
       end
     end
   end
+  
+  private
 
-  def show_board
-    grid_with_spaces.each_with_index do |row, row_index|
-      row_index.even? ? white_black_row(row) : black_white_row(row)
-    end
+  def get_indexes(position)
+    column = LETTERS.index(position[0])
+    row = -position[1].to_i
+    [row, column]
   end
 
   def white_black_row(row)
@@ -53,6 +64,7 @@ class Board
 
 end
 
+# 
 # PROMOTED_BLACK_PIECES = %w[♜ ♞ ♝ ♛ ♚ ♝ ♞ ♜]
 # BLACK_PAWN = '♟︎'
 # PROMOTED_WHITE_PIECES = %w[♖ ♘ ♗ ♕ ♔ ♗ ♘ ♖]
