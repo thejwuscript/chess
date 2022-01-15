@@ -14,9 +14,9 @@ RSpec.describe Board do
     end
   end
 
-  describe '#insert_spaces' do # to prepare for show_board
+  describe '#grid_with_spaces' do
     context 'if all elements within @grid are nil' do
-      it 'replaces all elements with a space' do
+      it 'outputs a nested array that has spaces in all elements ' do
         nested_array = [
           [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
           [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
@@ -27,8 +27,7 @@ RSpec.describe Board do
           [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
           [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ']
         ]
-        board.insert_spaces
-        grid = board.grid
+        grid = board.grid_with_spaces
         expect(grid).to eql(nested_array)
       end
     end
@@ -36,7 +35,7 @@ RSpec.describe Board do
     context 'if there are some elements not nil' do
       subject(:not_empty_board) { described_class.new }
       
-      it 'replaces only nil elements with a space' do
+      it 'outputs a nested array replacing only nil elements with a space' do
         not_empty_board.grid[-3][3] = 'P'
         not_empty_board.grid[-2][3] = 'K'
         nested_array = [
@@ -49,11 +48,9 @@ RSpec.describe Board do
           [' ', ' ', ' ', 'K', ' ', ' ', ' ', ' '],
           [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ']
         ] 
-        not_empty_board.insert_spaces
-        grid = not_empty_board.grid
+        grid = not_empty_board.grid_with_spaces
         expect(grid).to eql(nested_array)
       end
     end
   end
-      
 end
