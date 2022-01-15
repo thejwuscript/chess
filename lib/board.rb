@@ -14,6 +14,15 @@ class Board
     row = -input[1].to_i
     grid[row][column]
   end
+
+  def insert_spaces
+    grid.map! do |row|
+      row.map! do |element|
+        element.nil? ? ' ' : element
+      end
+    end
+  end
+
 end
 
 
