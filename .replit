@@ -1,4 +1,4 @@
-run = ["rspec", "spec/board_spec.rb"]
+run = ["rspec", "spec/pawn_spec.rb"]
 
 [packager]
 language = "ruby"

@@ -32,7 +32,7 @@ RSpec.describe Board do
       end
     end
 
-    context 'if there are some elements not nil' do
+    context 'if there are some elements in @grid not nil' do
       subject(:not_empty_board) { described_class.new }
       
       it 'outputs a nested array replacing only nil elements with a space' do
@@ -54,11 +54,11 @@ RSpec.describe Board do
     end
   end
 
-  describe '#set_piece' do
+  describe '#set_piece_at' do
     it 'changes the corresponding element within @grid to the given piece' do
       position = 'b2'
       piece = 'R'
-      expect { board.set_piece(position, piece) }.to change { board.grid[-2][1]}.to('R')
+      expect { board.set_piece_at(position, piece) }.to change { board.grid[-2][1]}.to('R')
     end
   end
 end

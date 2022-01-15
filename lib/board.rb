@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Board
-  attr_accessor :grid
+  attr_reader :grid
   LETTERS = %w(a b c d e f g h)
   
   def initialize
@@ -13,7 +13,7 @@ class Board
     grid[row][column]
   end
 
-  def set_piece(position, piece)
+  def set_piece_at(position, piece)
     row, column = get_indexes(position)
     grid[row][column] = piece
   end
@@ -64,7 +64,6 @@ class Board
 
 end
 
-# 
 # PROMOTED_BLACK_PIECES = %w[♜ ♞ ♝ ♛ ♚ ♝ ♞ ♜]
 # BLACK_PAWN = '♟︎'
 # PROMOTED_WHITE_PIECES = %w[♖ ♘ ♗ ♕ ♔ ♗ ♘ ♖]
