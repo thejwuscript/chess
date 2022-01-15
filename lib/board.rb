@@ -2,41 +2,22 @@
 
 class Board
   attr_accessor :grid
-
-  PROMOTED_BLACK_PIECES = %w[♜ ♞ ♝ ♛ ♚ ♝ ♞ ♜]
-  BLACK_PAWN = '♟︎'
-  PROMOTED_WHITE_PIECES = %w[♖ ♘ ♗ ♕ ♔ ♗ ♘ ♖]
-  WHITE_PAWN = '♙'
+  
+  LETTERS = %w(a b c d e f g h)
   
   def initialize
-    @grid = Array.new(8) {Array.new(8, ' ')}
-    initial_pieces_order
+    @grid = Array.new(8) { Array.new(8) }
   end
 
-  def initial_pieces_order
-    grid[0] = PROMOTED_BLACK_PIECES
-    grid[1].map! { |item| BLACK_PAWN }
-    grid[6].map! { |item| WHITE_PAWN }
-    grid[7] = PROMOTED_WHITE_PIECES
-  end
-
-  def show_board
-    grid.each_with_index do |row, row_index|
-      row_index.even? ? white_black_row(row) : black_white_row(row)
-    end
-  end
-
-  def white_black_row(row)
-    row.each_with_index do |item, ind|
-      print ind.even? ? "\e[48;5;251m #{item} \e[0m" : "\e[48;5;240m #{item} \e[0m"
-    end
-    print "\n"
-  end
-  
-  def black_white_row(row)
-    row.each_with_index do |item, ind|
-      print ind.even? ? "\e[48;5;240m #{item} \e[0m" : "\e[48;5;251m #{item} \e[0m"
-    end
-    print "\n"
+  def piece_at(input) # ex. 'c4, downcase'
+    column = LETTERS.index(input[0])
+    row = -input[1].to_i
+    grid[row][column]
   end
 end
+
+
+PROMOTED_BLACK_PIECES = %w[♜ ♞ ♝ ♛ ♚ ♝ ♞ ♜]
+BLACK_PAWN = '♟︎'
+PROMOTED_WHITE_PIECES = %w[♖ ♘ ♗ ♕ ♔ ♗ ♘ ♖]
+WHITE_PAWN = '♙'
