@@ -18,11 +18,9 @@ RSpec.describe Game do
       end
     end
   end
-end
 
-#subject(:place_pawn) { described_class.new('W', 'E2') }
-#    let(:pawn_board) { instance_double(Board) }
-#    
-#    it 'sends a message to board to include self in grid #array' do
-#      expect(pawn_board).to #receive(set_piece_at).with('E2', place_pawn)
-#    end
+  describe '#create_white_pieces' do
+    it 'stores pieces as an instance variables' do
+    end
+  end
+end

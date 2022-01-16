@@ -53,12 +53,20 @@ class Board
     print "\n"
   end
 
-  def white_square(obj)
-    "\e[48;5;251m #{obj} \e[0m"
+  def white_square(piece)
+    if piece == ' '
+      "\e[48;5;251m #{piece} \e[0m"
+    else
+      "\e[48;5;251m #{piece.symbol} \e[0m"
+    end
   end
 
-  def black_square(obj)
-    "\e[48;5;240m #{obj} \e[0m"
+  def black_square(piece)
+    if piece == ' '
+      "\e[48;5;240m #{piece} \e[0m"
+    else
+      "\e[48;5;240m #{piece.symbol} \e[0m"
+    end
   end
 
 end
