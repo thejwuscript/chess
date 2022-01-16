@@ -13,6 +13,12 @@ class Pawn
     @position = position
   end
 
+  def position_to_array
+    column = ('A'..'Z').to_a.index(position[0])
+    row = (1..8).to_a.reverse.index(position[1].to_i)
+    [row, column]
+  end
+
   private
 
   def assign_symbol
