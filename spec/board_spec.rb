@@ -7,8 +7,8 @@ RSpec.describe Board do
 
   describe '#piece_at' do
     it 'returns the object at the coordinate given as an argument' do
-      input = 'C4'
-      board.grid[-4][2] = 'O'
+      input = 'C5'
+      board.grid[3][2] = 'O'
       value = board.piece_at(input)
       expect(value).to eql('O')
     end
@@ -36,8 +36,8 @@ RSpec.describe Board do
       subject(:not_empty_board) { described_class.new }
       
       it 'outputs a nested array replacing only nil elements with a space' do
-        not_empty_board.grid[-3][3] = 'P'
-        not_empty_board.grid[-2][3] = 'K'
+        not_empty_board.grid[5][3] = 'P'
+        not_empty_board.grid[6][3] = 'K'
         nested_array = [
           [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
           [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
@@ -58,7 +58,7 @@ RSpec.describe Board do
     it 'changes the corresponding element within @grid to the given piece' do
       position = 'B2'
       piece = 'R'
-      expect { board.set_piece_at(position, piece) }.to change { board.grid[-2][1]}.to('R')
+      expect { board.set_piece_at(position, piece) }.to change { board.grid[6][1]}.to('R')
     end
   end
 end

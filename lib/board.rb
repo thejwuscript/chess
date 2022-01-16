@@ -2,19 +2,18 @@
 
 class Board
   attr_reader :grid
-  LETTERS = %w(A B C D E F G H)
   
   def initialize
     @grid = Array.new(8) { Array.new(8) }
   end
 
   def piece_at(position) # UPPERCASE
-    row, column = get_indexes(position)
+    row, column = position_to_array(position)
     grid[row][column]
   end
 
   def set_piece_at(position, piece)
-    row, column = get_indexes(position)
+    row, column = position_to_array(position)
     grid[row][column] = piece
   end
 
@@ -34,9 +33,9 @@ class Board
   
   private
 
-  def get_indexes(position)
-    column = LETTERS.index(position[0])
-    row = -position[1].to_i
+  def position_to_array(position)
+    row = (1..8).to_a.reverse.index(position[1].to_i)
+    column = ('A'..'Z').to_a.index(position[0])
     [row, column]
   end
 
