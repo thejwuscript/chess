@@ -2,13 +2,13 @@
 
 class Board
   attr_reader :grid
-  LETTERS = %w(a b c d e f g h)
+  LETTERS = %w(A B C D E F G H)
   
   def initialize
     @grid = Array.new(8) { Array.new(8) }
   end
 
-  def piece_at(position) # ex. 'c4, downcase'
+  def piece_at(position) # UPPERCASE
     row, column = get_indexes(position)
     grid[row][column]
   end

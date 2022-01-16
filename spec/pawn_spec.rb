@@ -15,7 +15,18 @@ RSpec.describe Pawn do
 
   describe '#initialize' do
     context 'when color of the piece is white' do
+      subject(:white_pawn) { described_class.new('W', 'D1') }
+      
       it 'assigns ♙ to @symbol' do
+        expect(white_pawn.symbol).to eql('♙')
+      end
+    end
+
+    context 'when color of the piece is black' do
+      subject(:black_pawn) { described_class.new('B', 'F2') }
+
+      it 'assigns ♟︎ to @symbol' do
+        expect(black_pawn.symbol).to eql('♟︎')
       end
     end
   end
