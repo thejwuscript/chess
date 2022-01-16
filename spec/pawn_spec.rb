@@ -29,6 +29,7 @@ RSpec.describe Pawn do
         expect(black_pawn.symbol).to eql('♟︎')
       end
     end
+  
   end
 
   describe '#position_to_array' do
