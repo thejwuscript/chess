@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require_relative '../lib/pawn'
+require_relative '../spec/shared_example_spec'
 
 RSpec.describe Pawn do
   describe '#update_position_to' do
@@ -29,16 +30,19 @@ RSpec.describe Pawn do
         expect(black_pawn.symbol).to eql('♟︎')
       end
     end
-  
   end
 
   describe '#position_to_array' do
-    subject(:pawn_array) { described_class.new('B', 'G7') }
-    
-    it "converts the piece's position to a two-element array" do
-      result = pawn_array.position_to_array
-      expect(result).to eql([1, 6])
-    end
+    include_examples '#position_to_array'
   end
     
 end
+
+#describe '#position_to_array' do
+#    subject(:pawn_array) { described_class.new('B', 'G7') }
+#    
+#    it "converts the piece's position to a two-element array" do
+#      result = pawn_array.position_to_array
+#      expect(result).to eql([1, 6])
+#    end
+#  end
