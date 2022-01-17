@@ -7,7 +7,7 @@ class Pawn < Piece
   
   def initialize(color, position)
     super # no need to take arguments for now
-    @symbol = assign_symbol
+    @type = 'pawn'
   end
 
   def update_position_to(position)
@@ -20,5 +20,4 @@ class Pawn < Piece
     return '♙' if @color == 'W'
     return '♟︎' if @color == 'B'
   end
-
 end

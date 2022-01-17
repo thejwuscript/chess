@@ -18,19 +18,11 @@ class Board
   end
 
   def show_board
-    grid_with_spaces.each_with_index do |row, row_index|
+    grid.each_with_index do |row, row_index|
       row_index.even? ? white_black_row(row) : black_white_row(row)
     end
   end
 
-  def grid_with_spaces
-    grid.map do |row|
-      row.map do |element|
-        element.nil? ? ' ' : element
-      end
-    end
-  end
-  
   private
 
   def position_to_array(position)
@@ -54,19 +46,11 @@ class Board
   end
 
   def white_square(piece)
-    if piece == ' '
-      "\e[48;5;251m #{piece} \e[0m"
-    else
-      "\e[48;5;251m #{piece.symbol} \e[0m"
-    end
+    piece.nil? ? "\e[48;5;251m   \e[0m" : "\e[48;5;251m #{piece.symbol} \e[0m"
   end
 
   def black_square(piece)
-    if piece == ' '
-      "\e[48;5;240m #{piece} \e[0m"
-    else
-      "\e[48;5;240m #{piece.symbol} \e[0m"
-    end
+    piece.nil? ? "\e[48;5;240m   \e[0m" : "\e[48;5;240m #{piece.symbol} \e[0m"
   end
 
 end

@@ -4,6 +4,8 @@ require_relative '../lib/pawn'
 require_relative '../spec/shared_example_spec'
 
 RSpec.describe Pawn do
+  include_examples 'parent class Piece methods'
+  
   describe '#update_position_to' do
     subject(:moved_pawn) { described_class.new('B', 'D1') }
     
@@ -31,11 +33,6 @@ RSpec.describe Pawn do
       end
     end
   end
-
-  describe '#position_to_array' do
-    include_examples '#position_to_array'
-  end
-    
 end
 
 #describe '#position_to_array' do

@@ -5,6 +5,4 @@ require_relative 'board'
 require_relative 'piece'
 require_relative 'pawn'
 
-
-game = Game.new
-game.pregame
+Game.new.pregame

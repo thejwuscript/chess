@@ -6,6 +6,7 @@ class Piece
   def initialize(color, position)
     @color = color
     @position = position
+    @symbol = assign_symbol
   end
 
   def position_to_array
