@@ -2,6 +2,12 @@
 
 require_relative '../lib/game'
 require_relative '../lib/board'
+require_relative '../lib/rook'
+require_relative '../lib/knight'
+require_relative '../lib/bishop'
+require_relative '../lib/queen'
+require_relative '../lib/king'
+require_relative '../lib/pawn'
 
 RSpec.describe Game do
   subject(:game) { described_class.new }
@@ -19,8 +25,12 @@ RSpec.describe Game do
     end
   end
 
-  describe '#create_white_pieces' do
-    it 'stores pieces as an instance variables' do
+  describe '#create_promoted_pieces' do
+    it 'returns 8 pieces of promoted objects' do
+      array = [Rook, Rook, Knight, Knight, Bishop, Bishop, Queen, King]
+      result = game.create_promoted_pieces.map { |obj| obj.class }
+      expect(result).to eql(array)
     end
   end
+
 end

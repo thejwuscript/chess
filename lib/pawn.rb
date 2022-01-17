@@ -3,10 +3,10 @@
 require_relative '../lib/piece'
 
 class Pawn < Piece
-  attr_reader :symbol
+  attr_reader :type
   
-  def initialize(color, position)
-    super # no need to take arguments for now
+  def initialize
+    super
     @type = 'pawn'
   end
 

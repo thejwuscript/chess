@@ -1,11 +1,11 @@
 #frozen_string_literal: true
 
 class Piece
-  attr_reader :position
+  attr_accessor :position, :color, :symbol
   
-  def initialize(color, position)
-    @color = color
-    @position = position
+  def initialize
+    @color = nil
+    @position = nil
     @symbol = assign_symbol
   end
 
