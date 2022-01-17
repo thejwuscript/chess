@@ -19,6 +19,16 @@ class Game
     array
   end
       
+  def assign_color(array, color)
+    array.map! do |piece|
+      piece.color = color
+      piece
+    end
+  end
+
+  def create_pawns
+    Array.new(8) { Pawn.new }
+  end
 
 end
 

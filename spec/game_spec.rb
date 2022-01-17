@@ -33,4 +33,26 @@ RSpec.describe Game do
     end
   end
 
+  describe '#assign_color' do
+    it 'returns an array of pieces with assigned colors' do
+      pieces_array = Array.new(8, Piece.new)
+      new_array = game.assign_color(pieces_array, 'W')
+      result = new_array.none? { |piece| piece.color.nil? }
+      expect(result).to eql(true)
+    end
+  end
+
+  describe '#create_pawns' do
+    it 'returns an array of eight objects' do
+      result = game.create_pawns.size
+      expect(result).to eql(8)
+    end
+
+    it 'all objects in the array are Pawns' do
+      array = game.create_pawns
+      result = array.all? { |piece| piece.is_a? Pawn }
+      expect(result).to eql(true)
+    end
+  end
+
 end

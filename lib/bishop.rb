@@ -1,4 +1,6 @@
 # frozen_string_literal: true
 
-class Bishop
+require_relative '../lib/piece'
+
+class Bishop < Piece
 end

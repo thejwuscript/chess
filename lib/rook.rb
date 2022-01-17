@@ -1,4 +1,6 @@
 # frozen_string_literal: true
 
-class Rook
+require_relative '../lib/piece'
+
+class Rook < Piece
 end

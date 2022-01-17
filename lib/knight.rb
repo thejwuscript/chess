@@ -1,4 +1,6 @@
 # frozen_string_literal: true
 
-class Knight
+require_relative '../lib/piece'
+
+class Knight < Piece
 end
