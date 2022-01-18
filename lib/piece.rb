@@ -1,11 +1,12 @@
 #frozen_string_literal: true
 
 class Piece
-  attr_accessor :position, :color, :symbol
-  
-  def initialize
-    @color = nil
-    @position = nil
+  attr_accessor :position, :color, :symbol, :type
+
+  def initialize(color, position)
+    @color = color || (self.class.initialize_count.even? ? 'B' : 'W')
+    @position = position || assign_initial_position
+    self.class.initialize_count += 1
     # @symbol = assign_symbol
   end
 

@@ -18,16 +18,21 @@ class Game
     [Queen, King].each { |klass| array.push(klass.new) }
     array
   end
-      
-  def assign_color(array, color)
-    array.map! do |piece|
-      piece.color = color
-      piece
-    end
-  end
 
   def create_pawns
-    Array.new(8) { Pawn.new }
+    array = Array.new(16) { Pawn.new }
+  end
+
+  def join_all_pieces(array = [])
+    2.times do
+      array << create_promoted_pieces
+      array << create_pawns
+    end
+    array.flatten
+  end
+
+  def assign_position(piece, position)
+    piece.position = position
   end
 
 end
