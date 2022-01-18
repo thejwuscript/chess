@@ -25,5 +25,18 @@ RSpec.describe Game do
     end
   end
 
+  describe '#create_all_pieces' do
+    it 'returns an array of all board pieces' do
+      array = game.create_all_pieces
+      expect(array).to include(a_kind_of(Pawn)).exactly(16).times
+                   .and include(a_kind_of(Rook)).exactly(4).times
+                   .and include(a_kind_of(Knight)).exactly(4).times
+                   .and include(a_kind_of(Bishop)).exactly(4).times
+                   .and include(a_kind_of(Queen)).twice
+                   .and include(a_kind_of(King)).twice
+      
+    end
+  end
+
 end
 
