@@ -4,9 +4,8 @@ class Piece
   attr_accessor :position, :color, :symbol, :type
 
   def initialize(color, position)
-    @color = color || (self.class.initialize_count.even? ? 'W' : 'B')
-    @position = position || assign_initial_position
-    self.class.initialize_count += 1
+    @color = color
+    @position = position
     @symbol = assign_symbol
   end
 

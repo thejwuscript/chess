@@ -15,15 +15,13 @@ class King < Piece
   end
 
   def assign_initial_position
-    ['E1', 'E8'][self.class.initialize_count]
+    self.position = ['E1', 'E8'][self.class.initialize_count]
+    self.class.initialize_count += 1
   end
-  
-  
-  private
-  
+
   def assign_symbol
-    return '♔' if @color == 'W'
-    return '♚' if @color == 'B'
+    self.symbol = '♔' if @color == 'W'
+    self.symbol = '♚' if @color == 'B'
   end
 
 end

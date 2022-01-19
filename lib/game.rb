@@ -5,29 +5,43 @@ class Game
 
   def initialize
     @board = Board.new
-    @all_pieces = arrange_all_pieces
-    set_initial_positions
+    @all_pieces = []
   end
 
-  def set_initial_positions
-    all_pieces.each do |key, value|
-      value.each { |piece| board.set_piece_at(piece.position, piece) }
+  def create_all_pieces
+    16.times { all_pieces.push(Pawn.new) }
+    [Rook, Bishop, Knight].each { |klass| 4.times { all_pieces << klass.new }}
+    [Queen, King].each { |klass| 2.times { all_pieces << klass.new }}
+  end
+    
+  def assign_all_colors
+    all_pieces.each_with_index do |piece, index|
+      index.even? ? piece.color = 'W' : piece.color = 'B'
     end
   end
 
-  def create_all_pieces(array = [])
-    16.times { array.push(Pawn.new) }
-    4.times { array.push(Rook.new, Bishop.new, Knight.new) }
-    2.times { array.push(Queen.new, King.new) }
-    array
+  def assign_all_symbols
+    all_pieces.each { |piece| piece.assign_symbol }
   end
 
-  def arrange_all_pieces
+  def assign_all_positions
+    all_pieces.each { |piece| piece.assign_initial_position }
+  end
+
+  def set_initial_positions
+    all_pieces.each do |piece|
+      board.set_piece_at(piece.position, piece)
+    end
+  end
+
+end
+
+=begin
+def arrange_all_pieces
     create_all_pieces.reduce(Hash.new) do |result, piece|
       result.key?(piece.type) ? 
         result[piece.type].push(piece) : result[piece.type] = [piece]
       result
     end
   end
-
-end
+=end

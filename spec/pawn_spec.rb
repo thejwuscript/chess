@@ -9,17 +9,17 @@ RSpec.describe Pawn do
     subject(:second_pawn) { described_class.new }
     subject(:third_pawn) { described_class.new('Q') }
     
-    it 'assigns black and position A2 to the first pawn' do
+    it 'assigns white and position A2 to the first pawn' do
       color = first_pawn.color
       position = first_pawn.position
-      expect(color).to eql('B')
+      expect(color).to eql('W')
       expect(position).to eql('A2')
     end
 
-    it 'assigns white and position A7 to the second pawn' do
+    it 'assigns black and position A7 to the second pawn' do
       color = second_pawn.color
       position = second_pawn.position
-      expect(color).to eql('W')
+      expect(color).to eql('B')
       expect(position).to eql('A7')
     end
 

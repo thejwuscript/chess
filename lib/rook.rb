@@ -15,13 +15,12 @@ class Rook < Piece
   end
 
   def assign_initial_position
-    ['A1', 'A8', 'H1', 'H8'][self.class.initialize_count]
+    self.position = ['A1', 'A8', 'H1', 'H8'][self.class.initialize_count]
+    self.class.initialize_count += 1
   end
   
-  private
-  
   def assign_symbol
-    return '♖' if @color == 'W'
-    return '♜' if @color == 'B'
+    self.symbol = '♖' if @color == 'W'
+    self.symbol = '♜' if @color == 'B'
   end
 end

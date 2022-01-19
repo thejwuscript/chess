@@ -15,15 +15,13 @@ class Bishop < Piece
   end
 
   def assign_initial_position
-    ['C1', 'C8', 'F1', 'F8'][self.class.initialize_count]
+    self.position = ['C1', 'C8', 'F1', 'F8'][self.class.initialize_count]
+    self.class.initialize_count += 1
   end
   
-  
-  private
-  
   def assign_symbol
-    return '♗' if @color == 'W'
-    return '♝' if @color == 'B'
+    self.symbol = '♗' if @color == 'W'
+    self.symbol = '♝' if @color == 'B'
   end
 
 end

@@ -12,29 +12,29 @@ require_relative '../lib/pawn'
 RSpec.describe Game do
   subject(:game) { described_class.new }
   
-  describe '#place_on_board' do
-    context 'when a piece is initialized' do
-      let(:piece) { double('piece', position: 'E2') }
-      
-      it 'sends a message to board to include the piece in @grid' do
-        board = game.board
-        position = piece.position
-        expect(board).to receive(:set_piece_at).with(position, piece)
-        game.place_on_board(piece)
-      end
-    end
-  end
-
   describe '#create_all_pieces' do
+    before do
+      game.create_all_pieces
+    end
+  
     it 'returns an array of all board pieces' do
-      array = game.create_all_pieces
-      expect(array).to include(a_kind_of(Pawn)).exactly(16).times
-                   .and include(a_kind_of(Rook)).exactly(4).times
-                   .and include(a_kind_of(Knight)).exactly(4).times
-                   .and include(a_kind_of(Bishop)).exactly(4).times
-                   .and include(a_kind_of(Queen)).twice
-                   .and include(a_kind_of(King)).twice
-      
+      expect(game.all_pieces).to include(a_kind_of(Pawn)).exactly(16).times
+       .and include(a_kind_of(Rook)).exactly(4).times
+       .and include(a_kind_of(Knight)).exactly(4).times
+       .and include(a_kind_of(Bishop)).exactly(4).times
+       .and include(a_kind_of(Queen)).twice
+       .and include(a_kind_of(King)).twice
+    end
+
+    it 'has pairs of the same class from the beginning' do
+      result = true
+      i = 0
+      until game.all_pieces[i].nil? do
+        break result = false if game.all_pieces[i].class != game.all_pieces[i+1].class
+        
+        i += 2
+      end
+      expect(result).to be true
     end
   end
 
