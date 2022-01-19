@@ -10,5 +10,4 @@ RSpec.shared_examples 'parent class Piece methods' do
       expect(result).to eql([1, 6])
     end
   end
-    
 end
