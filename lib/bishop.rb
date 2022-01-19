@@ -3,10 +3,10 @@
 require_relative '../lib/piece'
 
 class Bishop < Piece
-  @initialize_count = 0
+  @assignment_count = 0
 
   class << self
-    attr_accessor :initialize_count
+    attr_accessor :assignment_count
   end
   
   def initialize(color = nil, position = nil)
@@ -15,8 +15,8 @@ class Bishop < Piece
   end
 
   def assign_initial_position
-    self.position = ['C1', 'C8', 'F1', 'F8'][self.class.initialize_count]
-    self.class.initialize_count += 1
+    self.position = ['C1', 'C8', 'F1', 'F8'][self.class.assignment_count]
+    self.class.assignment_count += 1
   end
   
   def assign_symbol

@@ -12,9 +12,7 @@ require_relative 'king'
 
 game = Game.new
 game.create_all_pieces
-game.assign_all_positions
-game.assign_all_colors
-game.assign_all_symbols
+game.assign_all_attributes
 game.set_initial_positions
 game.all_pieces.each {|piece| p piece}
 game.board.show_board

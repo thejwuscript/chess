@@ -3,10 +3,10 @@
 require_relative '../lib/piece'
 
 class Pawn < Piece
-  @initialize_count = 0
+  @assignment_count = 0
 
   class << self
-    attr_accessor :initialize_count
+    attr_accessor :assignment_count
   end
   
   def initialize(color = nil, position = nil)
@@ -16,8 +16,8 @@ class Pawn < Piece
 
   def assign_initial_position
     ary = ('A'..'H').flat_map { |letter| ["#{letter}2", "#{letter}7"] }
-    self.position = ary[self.class.initialize_count]
-    self.class.initialize_count += 1
+    self.position = ary[self.class.assignment_count]
+    self.class.assignment_count += 1
   end
 
   def assign_symbol

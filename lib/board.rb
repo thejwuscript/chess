@@ -52,10 +52,4 @@ class Board
   def black_square(piece)
     piece.nil? ? "\e[48;5;240m   \e[0m" : "\e[48;5;240m #{piece.symbol} \e[0m"
   end
-
 end
-
-# PROMOTED_BLACK_PIECES = %w[♜ ♞ ♝ ♛ ♚ ♝ ♞ ♜]
-# BLACK_PAWN = '♟︎'
-# PROMOTED_WHITE_PIECES = %w[♖ ♘ ♗ ♕ ♔ ♗ ♘ ♖]
-# WHITE_PAWN = '♙'

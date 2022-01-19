@@ -13,11 +13,12 @@ RSpec.describe Game do
   subject(:game) { described_class.new }
   
   describe '#create_all_pieces' do
+    
     before do
       game.create_all_pieces
     end
   
-    it 'returns an array of all board pieces' do
+    it 'stores an array of all board pieces in @all_pieces' do
       expect(game.all_pieces).to include(a_kind_of(Pawn)).exactly(16).times
        .and include(a_kind_of(Rook)).exactly(4).times
        .and include(a_kind_of(Knight)).exactly(4).times
@@ -26,7 +27,7 @@ RSpec.describe Game do
        .and include(a_kind_of(King)).twice
     end
 
-    it 'has pairs of the same class from the beginning' do
+    it 'creates pairs of the same class from the beginning' do
       result = true
       i = 0
       until game.all_pieces[i].nil? do
@@ -35,6 +36,13 @@ RSpec.describe Game do
         i += 2
       end
       expect(result).to be true
+    end
+
+    it 'initializes pieces that have no color, position and symbol attributes' do
+      result = game.all_pieces.all? do |piece|
+        piece.color.nil? && piece.position.nil? && piece.symbol.nil?
+      end
+    expect(result).to be true
     end
   end
 

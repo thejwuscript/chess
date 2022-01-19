@@ -13,19 +13,13 @@ class Game
     [Rook, Bishop, Knight].each { |klass| 4.times { all_pieces << klass.new }}
     [Queen, King].each { |klass| 2.times { all_pieces << klass.new }}
   end
-    
-  def assign_all_colors
+
+  def assign_all_attributes
     all_pieces.each_with_index do |piece, index|
       index.even? ? piece.color = 'W' : piece.color = 'B'
+      piece.assign_symbol
+      piece.assign_initial_position
     end
-  end
-
-  def assign_all_symbols
-    all_pieces.each { |piece| piece.assign_symbol }
-  end
-
-  def assign_all_positions
-    all_pieces.each { |piece| piece.assign_initial_position }
   end
 
   def set_initial_positions
