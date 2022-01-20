@@ -1,6 +1,10 @@
 # frozen_string_literal: true
 
+require_relative '../lib/movement'
+
 class Board
+  include Movement
+  
   attr_reader :grid
   
   def initialize
@@ -21,6 +25,16 @@ class Board
     grid.each_with_index do |row, row_index|
       row_index.even? ? white_black_row(row) : black_white_row(row)
     end
+  end
+
+  def delete_piece_at(position)
+    row, column = position_to_array(position)
+    grid[row][column] = nil
+  end
+
+  def occupied?(array)
+    row, column = array
+    grid[row][column] ? true : false
   end
 
   private

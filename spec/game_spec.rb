@@ -45,5 +45,6 @@ RSpec.describe Game do
     expect(result).to be true
     end
   end
+
 end
 

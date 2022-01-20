@@ -28,6 +28,25 @@ class Game
     end
   end
 
+  def move_piece
+    selected_piece = select_piece
+    puts 'Enter a coordinate to move the piece to.'
+    input = gets.chomp.upcase
+    board.set_piece_at(input, selected_piece)
+    board.delete_piece_at(selected_piece.position)
+    selected_piece.position = input
+  end
+
+  def validate_move(input)
+  end
+
+  private
+
+  def select_piece
+    puts 'Enter a coordinate to select a piece.'
+    input = gets.chomp.upcase
+    board.piece_at(input)
+  end
 end
 
 =begin

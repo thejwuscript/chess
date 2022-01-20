@@ -27,4 +27,54 @@ RSpec.describe Rook do
       expect(third.position).to eql('H1')
     end
   end
+
+  describe '#move_by' do
+    subject(:move_rook) { described_class.new }
+    
+    it 'returns a two-element array by combining values of two arrays' do
+      move_rook.position = 'A1'
+      move_array = [-1, 0]
+      result = move_rook.move_by(move_array)
+      expect(result).to eql([6, 0])
+    end
+  end
+
+  describe '#within_limits?' do
+    subject(:limit_rook) { described_class.new }
+
+    context 'when elements greater than 7 is out of bounds' do
+      it 'returns false if the array provided is out of bounds' do
+        array = [8, 0]
+        expect(limit_rook).not_to be_within_limits(array)
+      end
+
+      it 'returns true if the array provided is within limits' do
+        array = [7, 7]
+        expect(limit_rook).to be_within_limits(array)
+      end
+    end
+  end
+
+  describe '#possible_moves' do
+    subject(:moving_rook) { described_class.new }
+
+    context 'when the rook is at position H8' do
+      it 'returns an array with 4 possible moves' do
+        moving_rook.position = 'H8'
+        result = moving_rook.possible_moves
+        expect(result).to contain_exactly([0, 6], [1, 7], [-1, 7], [0, 8])
+      end
+    end
+  end
+
+  describe '#filtered_possible_moves' do
+    subject(:filter_rook) { described_class.new }
+    
+    it 'returns an array of possible moves on a board' do
+      filter_rook.position = 'H8'
+      result = filter_rook.filtered_possible_moves
+      expect(result).to contain_exactly([0, 6], [1, 7])
+    end
+  end
+
 end
