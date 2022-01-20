@@ -34,7 +34,4 @@ module Movement
     
     search_target(next_array, manner, target_array)
   end
-
-  
-
 end
