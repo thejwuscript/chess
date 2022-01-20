@@ -32,11 +32,6 @@ class Board
     grid[row][column] = nil
   end
 
-  def occupied?(array)
-    row, column = array
-    grid[row][column] ? true : false
-  end
-
   private
 
   def position_to_array(position)
