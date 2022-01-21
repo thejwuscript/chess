@@ -210,5 +210,29 @@ RSpec.describe Board do
         expect(result).to be_nil
       end
     end
+
+    context 'when a king is moving from D4 to E5 unhindered' do
+      origin_ary = [4, 3]
+      target_ary = [3, 4]
+      manners = King.new.move_manner
+
+      it 'returns [3, 4]' do
+        result = board.breadth_search(origin_ary, manners, target_ary)
+        expect(result).to eql([3, 4])
+      end
+    end
+
+    context 'when a king makes a move out of his capacity' do
+      origin_ary = [3, 7]
+      target_ary = [2, 2]
+      manners = King.new.move_manner
+
+      it 'returns nil' do
+        result = board.breadth_search(origin_ary, manners, target_ary)
+        expect(result).to be_nil
+      end
+    end
   end
+
+  
 end
