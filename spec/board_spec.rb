@@ -162,15 +162,15 @@ RSpec.describe Board do
     end
   end
 
-  describe '#depth_search' do
+  describe '#recursive_search' do
     context 'when a rook is moving from A8 to F8 unhindered' do
       origin_ary = [0, 0]
       target_ary = [0, 5]
       manner = [0, 1]
 
-      it 'returns true' do
-        result = board.depth_search(origin_ary, manner, target_ary)
-        expect(result).to be true
+      it 'returns [0, 5]' do
+        result = board.recursive_search(origin_ary, manner, target_ary)
+        expect(result).to eql([0, 5])
       end
     end
 
@@ -181,7 +181,7 @@ RSpec.describe Board do
 
       it 'returns nil' do
         board.grid[3][1] = Queen.new
-        result = board.depth_search(origin_ary, manner, target_ary)
+        result = board.recursive_search(origin_ary, manner, target_ary)
         expect(result).to be_nil
       end
     end
