@@ -14,7 +14,7 @@ module Movement
     elsif piece.is_a?(King) || piece.is_a?(Knight)
       breadth_search(origin_ary, piece.move_manner, target_ary)
     elsif piece.is_a?(Pawn)
-      return true if pawn_search
+      pawn_search
     end
   end
 
@@ -47,10 +47,6 @@ module Movement
     
     recursive_search(next_array, manner, target_array)
   end
-
-
-
-
   
   def breadth_search(origin_array, manners, target_array)
     until manners.empty? do

@@ -188,7 +188,6 @@ RSpec.describe Board do
   end
 
   describe '#breadth_search' do
-    
     context 'when a knight is making a move from G2 to E3 unhindered' do
       origin_ary = [6, 6]
       target_ary = [5, 4]
@@ -233,6 +232,4 @@ RSpec.describe Board do
       end
     end
   end
-
-  
 end
