@@ -23,4 +23,8 @@ class Queen < Piece
     self.symbol = '♕' if @color == 'W'
     self.symbol = '♛' if @color == 'B'
   end
+
+  def move_manner
+    [1, 0, -1].repeated_permutation(2).to_a.reject { |ary| ary.all?(0) }
+  end
 end

@@ -17,3 +17,11 @@ game.set_initial_positions
 game.board.show_board
 game.move_piece
 game.board.show_board
+game.move_piece
+game.board.show_board
+game.move_piece
+game.board.show_board
+game.move_piece
+game.board.show_board
+
+

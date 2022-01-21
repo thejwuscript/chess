@@ -32,12 +32,12 @@ class Game
     selected_piece = select_piece
     puts 'Enter a coordinate to move the piece to.'
     input = gets.chomp.upcase
+    if selected_piece.is_a? Rook
+      return unless board.validate_rook_move(selected_piece, input)
+    end
     board.set_piece_at(input, selected_piece)
     board.delete_piece_at(selected_piece.position)
     selected_piece.position = input
-  end
-
-  def validate_move(input)
   end
 
   private

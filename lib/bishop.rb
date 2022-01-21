@@ -24,4 +24,8 @@ class Bishop < Piece
     self.symbol = '♝' if @color == 'B'
   end
 
+  def move_manner
+    [[1, 1], [-1, -1], [-1, 1], [1, -1]]
+  end
+
 end

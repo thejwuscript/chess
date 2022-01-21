@@ -48,15 +48,15 @@ RSpec.describe Board do
     end
   end
 
-  describe '#validate_rook_move' do
-    subject(:rook_board) { described_class.new }
+  describe '#validate_move' do
+    subject(:validate_board) { described_class.new }
     
     context 'when a rook on A8 is moving to A5 unhindered' do
       rook = Rook.new('W', 'A8')
       destination = 'A5'
       
-      it 'returns the input' do
-        result = rook_board.validate_rook_move(rook, destination)
+      it 'returns A5' do
+        result = validate_board.validate_move(rook, destination)
         expect(result).to eql('A5')
       end
     end
@@ -66,11 +66,54 @@ RSpec.describe Board do
       destination = 'A3'
       
       it 'returns nil' do
-        rook_board.grid[4][0] = Pawn.new
-        result = rook_board.validate_rook_move(blocked_rook, destination)
+        validate_board.grid[4][0] = Pawn.new
+        result = validate_board.validate_move(blocked_rook, destination)
         expect(result).to be_nil
       end
     end
+
+    context 'when a bishop on C1 is moving to H6 unhindered' do
+      bishop = Bishop.new('B', 'C1')
+      destination = 'H6'
+
+      it 'returns H6' do
+        result = validate_board.validate_move(bishop, destination)
+        expect(result).to eql('H6')
+      end
+    end
+
+    context 'when a bishop from F7 is blocked from going to B3' do
+      bishop = Bishop.new('W', 'F7')
+      destination = 'B3'
+      
+      it 'returns nil' do
+        validate_board.grid[2][4] = Rook.new
+        result = validate_board.validate_move(bishop, destination)
+        expect(result).to be_nil
+      end
+    end
+
+    context 'when a queen from D8 is moving to A5 unhindered' do
+      queen = Queen.new('W', 'D8')
+      destination = 'A5'
+
+      it 'returns A5' do
+        result = validate_board.validate_move(queen, destination)
+        expect(result).to eql('A5')
+      end
+    end
+
+    context 'when a queen from C6 is blocked from going to H1' do
+      queen = Queen.new('W', 'C6')
+      destination = 'H1'
+
+      it 'returns nil' do
+        validate_board.grid[6][6] = Knight.new
+        result = validate_board.validate_move(queen, destination)
+        expect(result).to be_nil
+      end
+    end
+  
   end
 
   describe '#within_limits?' do

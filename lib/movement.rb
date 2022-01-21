@@ -1,12 +1,11 @@
 module Movement
-
-  def validate_rook_move(piece, target)
+  def validate_move(piece, target)
     return if same_color_at?(target, piece)
     
     pos_array = piece.position_to_array
     target_array = position_to_array(target)
-    return unless piece.move_manner.each do |manner|
-      return target if search_target(pos_array, manner, target_array)
+    nil unless piece.move_manner.each do |manner|
+      return target if depth_search(pos_array, manner, target_array)
       
     end
   end
@@ -26,12 +25,12 @@ module Movement
     end
   end
 
-  def search_target(position_array, manner, target_array)
+  def depth_search(position_array, manner, target_array) # for Rook, Bishop, Queen
     next_array = position_array.zip(manner).map { |a, b| a + b }
     return unless within_limits?(next_array)
     return true if next_array == target_array
     return if occupied?(next_array)
     
-    search_target(next_array, manner, target_array)
+    depth_search(next_array, manner, target_array)
   end
 end
