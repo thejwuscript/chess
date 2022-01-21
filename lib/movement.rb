@@ -12,17 +12,16 @@ module Movement
     if piece.is_a?(Rook) || piece.is_a?(Bishop) || piece.is_a?(Queen)
       depth_first_search(origin_ary, piece.move_manner, target_ary)
     elsif piece.is_a?(King) || piece.is_a?(Knight)
-      return true if breadth_search
+      breadth_search(origin_ary, piece.move_manner, target_ary)
     elsif piece.is_a?(Pawn)
       return true if pawn_search
     end
   end
 
   def depth_first_search(origin_ary, manners, target_ary)
-    for i in 0..manners.size-1 do
+    nil unless for i in 0..manners.size-1 do
       return target_ary if recursive_search(origin_ary, manners[i], target_ary)
     end
-    nil
   end
 
   def within_limits?(array)
@@ -48,4 +47,16 @@ module Movement
     
     recursive_search(next_array, manner, target_array)
   end
+
+
+
+
+  
+  def breadth_search(origin_array, manners, target_array)
+    until manners.empty? do
+      next_array = origin_array.zip(manners.shift).map { |a, b| a + b }
+      return target_array if next_array == target_array
+    end
+  end
+  
 end

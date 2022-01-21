@@ -188,6 +188,27 @@ RSpec.describe Board do
   end
 
   describe '#breadth_search' do
-    #take move_manner's array. origin_ary. target_ary
+    
+    context 'when a knight is making a move from G2 to E3 unhindered' do
+      origin_ary = [6, 6]
+      target_ary = [5, 4]
+      manners = Knight.new.move_manner
+      
+      it 'returns [5, 4]' do
+        result = board.breadth_search(origin_ary, manners, target_ary)
+        expect(result).to eql([5, 4])
+      end
+    end
+
+    context 'when a knight cannot make a legal move' do
+      origin_ary = [5, 5]
+      target_ary = [1, 1]
+      manners = Knight.new.move_manner
+
+      it 'returns nil' do
+        result = board.breadth_search(origin_ary, manners, target_ary)
+        expect(result).to be_nil
+      end
+    end
   end
 end
