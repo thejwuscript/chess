@@ -134,7 +134,28 @@ RSpec.describe Board do
         expect(result).to be_nil
       end
     end
-  
+
+    context 'when a knight is moving from C4 to D2' do
+      knight = Knight.new
+      knight.position = 'C4'
+      destination = 'D2'
+
+      it 'returns D2' do
+        result = validate_board.validate_move(knight, destination)
+        expect(result).to eql('D2')
+      end
+    end
+
+    context 'when a king wants to move from D4 to F2' do
+      king = King.new
+      king.position = 'D4'
+      destination = 'F2'
+
+      it 'returns nil' do
+        result = validate_board.validate_move(king, destination)
+        expect(result).to be_nil
+      end
+    end
   end
 
   describe '#within_limits?' do
