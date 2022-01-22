@@ -113,6 +113,27 @@ RSpec.describe Board do
         expect(result).to be_nil
       end
     end
+
+    context 'when a white pawn is going from A2 to A4' do
+      pawn = Pawn.new('W', 'A2')
+      destination = 'A4'
+
+      it 'returns A4' do
+        result = validate_board.validate_move(pawn, destination)
+        expect(result).to eql('A4')
+      end
+    end
+
+    context 'when a black pawn started at A7 is going from B5 to B3' do
+      pawn = Pawn.new('B', 'A7')
+      pawn.position = 'B5'
+      destination = 'B3'
+
+      it 'returns nil' do
+        result = validate_board.validate_move(pawn, destination)
+        expect(result).to be_nil
+      end
+    end
   
   end
 
@@ -263,6 +284,65 @@ RSpec.describe Board do
       
       it 'returns nil' do
         result = board.white_pawn_search(origin_ary, pawn, target_ary)
+        expect(result).to be_nil
+      end
+    end
+
+    context 'when a white pawn initialized on G2 wants to move from G3 to G4' do
+      pawn = Pawn.new('W', 'G2')
+      pawn.position = 'G3'
+      origin_ary = [5, 6]
+      target_ary = [3, 6]
+      
+      it 'returns nil' do
+        result = board.white_pawn_search(origin_ary, pawn, target_ary)
+        expect(result).to be_nil
+      end
+    end
+  end
+
+  describe '#black_pawn_search' do
+    context 'when a black pawn is moving from E7 to E6' do
+      pawn = Pawn.new('B', 'E7')
+      origin_ary = [1, 4]
+      target_ary = [2, 4]
+
+      it 'returns [2, 4]' do
+        result = board.black_pawn_search(origin_ary, pawn, target_ary)
+        expect(result).to eql([2, 4])
+      end
+    end
+
+    context 'when a black pawn is moving from E7 to E5' do
+      pawn = Pawn.new('B', 'E7')
+      origin_ary = [1, 4]
+      target_ary = [3, 4]
+
+      it 'returns [3, 4]' do
+        result = board.black_pawn_search(origin_ary, pawn, target_ary)
+        expect(result).to eql([3, 4])
+      end
+    end
+
+    context 'when a black pawn wants to move from E7 to E4' do
+      pawn = Pawn.new('B', 'E7')
+      origin_ary = [1, 4]
+      target_ary = [4, 4]
+
+      it 'returns nil' do
+        result = board.black_pawn_search(origin_ary, pawn, target_ary)
+        expect(result).to be_nil
+      end
+    end
+
+    context 'when a black pawn initialized on E7 wants to move from E6 to E4' do
+      pawn = Pawn.new('B', 'E7')
+      pawn.position = 'E6'
+      origin_ary = [2, 4]
+      target_ary = [4, 4]
+      
+      it 'returns nil' do
+        result = board.black_pawn_search(origin_ary, pawn, target_ary)
         expect(result).to be_nil
       end
     end

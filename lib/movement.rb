@@ -14,7 +14,7 @@ module Movement
     elsif piece.is_a?(King) || piece.is_a?(Knight)
       breadth_search(origin_ary, piece.move_manner, target_ary)
     elsif piece.is_a?(Pawn)
-      pawn_search
+      pawn_search(origin_ary, piece, target_ary)
     end
   end
 
@@ -55,8 +55,29 @@ module Movement
     end
   end
 
+  def pawn_search(origin_array, piece, target_array)
+    if piece.color == 'W'
+      white_pawn_search(origin_array, piece, target_array)
+    else
+      black_pawn_search(origin_array, piece, target_array)
+    end
+  end
+
   def white_pawn_search(origin_array, piece, target_array)
     a, b = origin_array
-    target_array if [[a-1, b], [a-2, b]].any?(target_array)
+    if piece.start_position == piece.position
+      target_array if [[a-1, b], [a-2, b]].any?(target_array)
+    else
+      target_array if [a-1, b] == target_array
+    end
+  end
+
+  def black_pawn_search(origin_array, piece, target_array)
+    a, b = origin_array
+    if piece.start_position == piece.position
+      target_array if [[a+1, b], [a+2, b]].any?(target_array)
+    else
+      target_array if [a+1, b] == target_array
+    end
   end
 end
