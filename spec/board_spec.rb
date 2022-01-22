@@ -232,4 +232,39 @@ RSpec.describe Board do
       end
     end
   end
+
+  describe '#white_pawn_search' do
+    context 'when a white pawn is moving from G2 to G3' do
+      pawn = Pawn.new('W', 'G2')
+      origin_ary = [6, 6]
+      target_ary = [5, 6]
+      
+      it 'returns [5, 6]' do
+        result = board.white_pawn_search(origin_ary, pawn, target_ary)
+        expect(result).to eql([5, 6])
+      end
+    end
+
+    context 'when a white pawn is moving from G2 to G4' do
+      pawn = Pawn.new('W', 'G2')
+      origin_ary = [6, 6]
+      target_ary = [4, 6]
+      
+      it 'returns [4, 6]' do
+        result = board.white_pawn_search(origin_ary, pawn, target_ary)
+        expect(result).to eql([4, 6])
+      end
+    end
+
+    context 'when a white pawn wants to move from G2 to G5' do
+      pawn = Pawn.new('W', 'G2')
+      origin_ary = [6, 6]
+      target_ary = [3, 6]
+      
+      it 'returns nil' do
+        result = board.white_pawn_search(origin_ary, pawn, target_ary)
+        expect(result).to be_nil
+      end
+    end
+  end
 end

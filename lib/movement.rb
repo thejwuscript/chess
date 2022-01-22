@@ -54,5 +54,9 @@ module Movement
       return target_array if next_array == target_array
     end
   end
-  
+
+  def white_pawn_search(origin_array, piece, target_array)
+    a, b = origin_array
+    target_array if [[a-1, b], [a-2, b]].any?(target_array)
+  end
 end

@@ -3,8 +3,7 @@
 require_relative '../lib/piece'
 
 class Pawn < Piece
-  attr_accessor :move_count
-  attr_reader :start_position
+  attr_accessor :move_count, :start_position
   
   @assignment_count = 0
 
@@ -15,7 +14,7 @@ class Pawn < Piece
   def initialize(color = nil, position = nil)
     super(color, position)
     @type = 'pawn'
-    @start_position = nil
+    @start_position = position || nil
     @move_count = 0
   end
 
