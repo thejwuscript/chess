@@ -368,4 +368,52 @@ RSpec.describe Board do
       end
     end
   end
+
+  describe '#pawn_attack' do
+    context 'when a D4 white pawn is going to capture an E5 (black) piece' do
+      color = 'W'
+      origin_ary = [4, 3]
+      target_ary = [3, 4]
+      
+      it 'returns [3, 4]' do
+        board.grid[3][4] = Bishop.new('B', 'E5')
+        result = board.pawn_attack(origin_ary, color, target_ary)
+        expect(result).to eql([3, 4])
+      end
+    end
+
+    context 'when a G3 black pawn is going to capture an F2 (white) piece' do
+      color = 'B'
+      origin_ary = [5, 6]
+      target_ary = [6, 5]
+      
+      it 'returns [6, 5]' do
+        board.grid[6][5] = Rook.new('W', 'F2')
+        result = board.pawn_attack(origin_ary, color, target_ary)
+        expect(result).to eql([6, 5])
+      end
+    end
+
+    context 'when a D4 white pawn tries to move diagonally to an empty spot' do
+      color = 'W'
+      origin_ary = [4, 3]
+      target_ary = [3, 5]
+      
+      it 'receives w_en_passant method' do
+        expect(board).to receive(:w_en_passant).once
+        board.pawn_attack(origin_ary, color, target_ary)
+      end
+    end
+
+    context 'when an G3 black pawn tries to move diagonally to an empty spot' do
+      color = 'B'
+      origin_ary = [5, 6]
+      target_ary = [6, 7]
+
+      it 'receives b_en_passant method' do
+        expect(board).to receive(:b_en_passant).once
+        board.pawn_attack(origin_ary, color, target_ary)
+      end
+    end
+  end
 end

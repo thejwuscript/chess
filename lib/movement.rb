@@ -55,20 +55,22 @@ module Movement
     end
   end
 
-  def pawn_search(origin_array, piece, target_array)
-    if piece.color == 'W'
-      white_pawn_search(origin_array, piece, target_array)
+  def pawn_search(origin_ary, piece, target_ary)
+    if origin_ary.zip(target_ary).map { |a, b| ( a - b ).abs }.eql?([1, 1])
+      # pawn_attack(origin_ary, piece.color, target_ary)
+    elsif piece.color == 'W'
+      white_pawn_search(origin_ary, piece, target_ary)
     else
-      black_pawn_search(origin_array, piece, target_array)
+      black_pawn_search(origin_ary, piece, target_ary)
     end
   end
 
-  def white_pawn_search(origin_array, piece, target_array)
-    a, b = origin_array
+  def white_pawn_search(origin_ary, piece, target_ary)
+    a, b = origin_ary
     if piece.start_position == piece.position
-      target_array if [[a-1, b], [a-2, b]].any?(target_array)
+      target_ary if [[a-1, b], [a-2, b]].any?(target_ary)
     else
-      target_array if [a-1, b] == target_array
+      target_ary if [a-1, b] == target_ary
     end
   end
 
@@ -79,5 +81,21 @@ module Movement
     else
       target_array if [a+1, b] == target_array
     end
+  end
+
+  def pawn_attack(origin_ary, color, target_ary)
+    a, b = target_ary
+    if color == 'B' && a - origin_ary[0] == 1
+      return grid[a][b].nil? ?  b_en_passant : target_ary
+    elsif color == 'W' && a - origin_ary[0] == -1
+      return grid[a][b].nil? ? w_en_passant : target_ary
+    end
+    nil
+  end
+
+  def w_en_passant
+  end
+
+  def b_en_passant
   end
 end
