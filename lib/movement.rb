@@ -57,7 +57,7 @@ module Movement
 
   def pawn_search(origin_ary, piece, target_ary)
     if origin_ary.zip(target_ary).map { |a, b| ( a - b ).abs }.eql?([1, 1])
-      # pawn_attack(origin_ary, piece.color, target_ary)
+      pawn_attack(origin_ary, piece.color, target_ary)
     elsif piece.color == 'W'
       white_pawn_search(origin_ary, piece, target_ary)
     else
@@ -97,10 +97,12 @@ module Movement
   def w_en_passant(row, column)
     piece = grid[row+1][column]
     [row, column] if piece.is_a?(Pawn) && piece.en_passantable?('B')
+    # remove piece off of board here if true?
   end
 
   def b_en_passant(row, column)
     piece = grid[row-1][column]
     [row, column] if piece.is_a?(Pawn) && piece.en_passantable?('W')
+    # remove piece off of board here if true?
   end
 end

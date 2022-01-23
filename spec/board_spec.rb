@@ -156,6 +156,32 @@ RSpec.describe Board do
         expect(result).to be_nil
       end
     end
+
+    context 'when a white pawn on G5 tries en-passant a double-stepped black pawn on F5' do
+      pawn = Pawn.new('W', 'G5')
+      destination = 'F6'
+      enemy = Pawn.new('B', 'F5')
+      
+      it 'returns F6' do
+        validate_board.grid[3][5] = enemy
+        allow(enemy).to receive(:en_passantable?).with('B').and_return true
+        result = validate_board.validate_move(pawn, destination)
+        expect(result).to eql('F6')
+      end
+    end
+
+    context 'when a black pawn on A4 tries en-passant a double-stepped white pawn on B4' do
+      pawn = Pawn.new('B', 'A4')
+      destination = 'B3'
+      enemy = Pawn.new('W', 'B4')
+      
+      it 'returns B3' do
+        validate_board.grid[4][1] = enemy
+        allow(enemy).to receive(:en_passantable?).with('W').and_return true
+        result = validate_board.validate_move(pawn, destination)
+        expect(result).to eql('B3')
+      end
+    end
   end
 
   describe '#within_limits?' do
