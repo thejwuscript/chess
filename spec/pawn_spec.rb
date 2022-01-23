@@ -29,17 +29,6 @@ RSpec.describe Pawn do
     end
   end
 
-  describe '#en_passantable?' do
-    context 'when conditions for getting captured is met' do
-      pawn = Pawn.new('B', 'E7')
-      pawn.position = 'E5'
-      pawn.move_count = 1
-      
-      it 'returns true' do
-      end
-    end
-  end
-
   describe '#en_passant_position?' do
     context 'when a black pawn is in position' do
       subject(:risky_pawn) { described_class.new('B', 'G5') }

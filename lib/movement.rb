@@ -68,8 +68,7 @@ module Movement
   def white_pawn_search(origin_ary, pawn, target_ary)
     a, b = origin_ary
     if pawn.start_position == pawn.position && [a-2, b] == target_ary
-      # send message to pawn if double-stepping
-      pawn.record_turn_count
+      pawn.store_turn_count
       target_ary
     else
       target_ary if [a-1, b] == target_ary
@@ -79,7 +78,7 @@ module Movement
   def black_pawn_search(origin_array, pawn, target_array)
     a, b = origin_array
     if pawn.start_position == pawn.position && [a+2, b] == target_array
-      pawn.record_turn_count # record turn count when double-stepping.
+      pawn.store_turn_count
       target_array
     else
       target_array if [a+1, b] == target_array
@@ -101,5 +100,7 @@ module Movement
   end
 
   def b_en_passant(row, column)
+    piece = grid[row-1][column]
+    [row, column] if piece.is_a?(Pawn) && piece.en_passantable?('W')
   end
 end

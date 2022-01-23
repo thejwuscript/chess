@@ -434,6 +434,40 @@ RSpec.describe Board do
         expect(pawn).to receive(:en_passantable?).once
         board.w_en_passant(row, column)
       end
+
+      it 'returns target array when condition is met' do
+        board.grid[3][3] = pawn
+        allow(pawn).to receive(:en_passantable?).and_return true
+        result = board.w_en_passant(row, column)
+        expect(result).to eql([2, 3])
+      end
+    end
+  end
+
+  describe '#b_en_passant' do
+    it 'returns nil when no pawn exist for en passant' do
+      row, column = [5, 3]
+      board.grid[4][3] = Knight.new
+      result = board.b_en_passant(row, column)
+      expect(result).to be_nil
+    end
+
+    context 'when the target pawn exist' do
+      row, column = [5, 3]
+      pawn = Pawn.new
+
+      it 'sends a message to the pawn to check for en_passant condition' do
+        board.grid[4][3] = pawn
+        expect(pawn).to receive(:en_passantable?).once
+        board.b_en_passant(row, column)
+      end
+
+      it 'returns target array when condition is met' do
+        board.grid[4][3] = pawn
+        allow(pawn).to receive(:en_passantable?).and_return true
+        result = board.b_en_passant(row, column)
+        expect(result).to eql([5, 3])
+      end
     end
   end
 end

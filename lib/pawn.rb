@@ -45,7 +45,7 @@ class Pawn < Piece
     count - double_step_turn == 1 ? true : false
   end
 
-  def record_turn_count
-    # send message to Game to get turn_count and store in instance variable
+  def store_turn_count #when double-step
+    self.double_step_turn = Game.turn_count
   end
 end
