@@ -36,7 +36,8 @@ class Pawn < Piece
   end
 
   def en_passant_position?
-    true if color == 'B' && position[0] == 3 || color == 'W' && position[0] == 4
+    true if color == 'B' && position[1].to_i == 5 || 
+            color == 'W' && position[1].to_i == 4
   end
 
   def en_passantable_turn?

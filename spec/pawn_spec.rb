@@ -38,4 +38,22 @@ RSpec.describe Pawn do
       end
     end
   end
+
+  describe '#en_passant_position?' do
+    context 'when a black pawn is in position' do
+      subject(:risky_pawn) { described_class.new('B', 'G5') }
+      
+      it 'returns true' do
+        expect(risky_pawn).to be_en_passant_position
+      end
+    end
+
+    context 'when a white pawn is in position' do
+      subject(:risk_taking_pawn) { described_class.new('W', 'A4') }
+
+      it 'returns true' do
+        expect(risk_taking_pawn).to be_en_passant_position
+      end
+    end
+  end
 end
