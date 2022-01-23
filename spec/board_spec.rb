@@ -416,4 +416,24 @@ RSpec.describe Board do
       end
     end
   end
+
+  describe '#w_en_passant' do
+    it 'returns nil when no pawn exist for en passant' do
+      row, column = [2, 3]
+      board.grid[3][3] = Bishop.new
+      result = board.w_en_passant(row, column)
+      expect(result).to be_nil
+    end
+
+    context 'when the target pawn exist' do
+      row, column = [2, 3]
+      pawn = Pawn.new
+      
+      it 'sends a messsage to the target pawn to check for en_passant condition' do
+        board.grid[3][3] = pawn
+        expect(pawn).to receive(:en_passantable?).once
+        board.w_en_passant(row, column)
+      end
+    end
+  end
 end

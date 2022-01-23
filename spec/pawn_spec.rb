@@ -27,4 +27,15 @@ RSpec.describe Pawn do
       expect(third.position).to eql('B2')
     end
   end
+
+  describe '#en_passantable?' do
+    context 'when conditions for getting captured is met' do
+      pawn = Pawn.new('B', 'E7')
+      pawn.position = 'E5'
+      pawn.move_count = 1
+      
+      it 'returns true' do
+      end
+    end
+  end
 end

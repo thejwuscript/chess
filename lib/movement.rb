@@ -5,10 +5,10 @@ module Movement
     
     origin_array = piece.position_to_array
     target_array = position_to_array(target)
-    reach_target?(origin_array, piece, target_array) ? target : nil
+    reach_target(origin_array, piece, target_array) ? target : nil
   end
 
-  def reach_target?(origin_ary, piece, target_ary)
+  def reach_target(origin_ary, piece, target_ary)
     if piece.is_a?(Rook) || piece.is_a?(Bishop) || piece.is_a?(Queen)
       depth_first_search(origin_ary, piece.move_manner, target_ary)
     elsif piece.is_a?(King) || piece.is_a?(Knight)
@@ -65,19 +65,22 @@ module Movement
     end
   end
 
-  def white_pawn_search(origin_ary, piece, target_ary)
+  def white_pawn_search(origin_ary, pawn, target_ary)
     a, b = origin_ary
-    if piece.start_position == piece.position
-      target_ary if [[a-1, b], [a-2, b]].any?(target_ary)
+    if pawn.start_position == pawn.position && [a-2, b] == target_ary
+      # send message to pawn if double-stepping
+      pawn.record_turn_count
+      target_ary
     else
       target_ary if [a-1, b] == target_ary
     end
   end
 
-  def black_pawn_search(origin_array, piece, target_array)
+  def black_pawn_search(origin_array, pawn, target_array)
     a, b = origin_array
-    if piece.start_position == piece.position
-      target_array if [[a+1, b], [a+2, b]].any?(target_array)
+    if pawn.start_position == pawn.position && [a+2, b] == target_array
+      pawn.record_turn_count # record turn count when double-stepping.
+      target_array
     else
       target_array if [a+1, b] == target_array
     end
@@ -86,16 +89,17 @@ module Movement
   def pawn_attack(origin_ary, color, target_ary)
     a, b = target_ary
     if color == 'B' && a - origin_ary[0] == 1
-      return grid[a][b].nil? ?  b_en_passant : target_ary
+      grid[a][b].nil? ? b_en_passant(a, b) : target_ary
     elsif color == 'W' && a - origin_ary[0] == -1
-      return grid[a][b].nil? ? w_en_passant : target_ary
+      grid[a][b].nil? ? w_en_passant(a, b) : target_ary
     end
-    nil
   end
 
-  def w_en_passant
+  def w_en_passant(row, column)
+    piece = grid[row+1][column]
+    [row, column] if piece.is_a?(Pawn) && piece.en_passantable?('B')
   end
 
-  def b_en_passant
+  def b_en_passant(row, column)
   end
 end

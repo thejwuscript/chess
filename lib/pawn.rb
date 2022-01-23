@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require_relative '../lib/piece'
+require_relative '../lib/game'
 
 class Pawn < Piece
   attr_accessor :move_count, :start_position
@@ -28,5 +29,22 @@ class Pawn < Piece
   def assign_symbol
     self.symbol = '♙' if @color == 'W'
     self.symbol = '♟︎' if @color == 'B'
+  end
+
+  def en_passantable?(color)
+    true if en_passant_position? && en_passantable_turn?
+  end
+
+  def en_passant_position?
+    true if color == 'B' && position[0] == 3 || color == 'W' && position[0] == 4
+  end
+
+  def en_passantable_turn?
+    count = Game.turn_count
+    true if count - double_step_turn == 1
+  end
+
+  def record_turn_count
+    # send message to Game to get turn_count and store in instance variable
   end
 end
