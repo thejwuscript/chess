@@ -4,7 +4,7 @@ require_relative '../lib/piece'
 require_relative '../lib/game'
 
 class Pawn < Piece
-  attr_accessor :move_count, :start_position
+  attr_accessor :move_count, :start_position, :double_step_turn
   
   @assignment_count = 0
 
@@ -16,7 +16,7 @@ class Pawn < Piece
     super(color, position)
     @type = 'pawn'
     @start_position = position || nil
-    @move_count = 0
+    @double_step_turn = nil
   end
 
   def assign_initial_position
@@ -42,7 +42,7 @@ class Pawn < Piece
 
   def en_passantable_turn?
     count = Game.turn_count
-    true if count - double_step_turn == 1
+    count - double_step_turn == 1 ? true : false
   end
 
   def record_turn_count
