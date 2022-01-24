@@ -108,7 +108,8 @@ module Movement
     # remove piece off of board here if true?
   end
 
-  def checked_move?(color, target)
+  def checked?(king, target)
+    color = king.color
     enemies = grid.flatten.reject { |piece| piece.nil? || piece.color == color }
     enemies.any? { |enemy| validate_move(enemy, target) == target }
   end
@@ -116,7 +117,7 @@ module Movement
   def verify_king_move(king, target)
     original_piece = piece_at(target)
     hypothetical_move(target, king)
-    outcome = checked_move?(king.color, target)
+    outcome = checked?(king, target)
     set_piece_at(target, original_piece)
     set_piece_at(king.position, king)
     outcome

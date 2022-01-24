@@ -32,6 +32,12 @@ class Board
     grid[row][column] = nil
   end
 
+  def find_checked_king
+    kings = grid.flatten.keep_if { |piece| piece.is_a? King }
+    kings.each { |king| return king if checked?(king, king.position) }
+    nil
+  end
+
   #def move_piece_to(new_position, piece)
   #  set_piece_at(new_position, piece)
   #  delete_piece_at(piece.position)

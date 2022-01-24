@@ -527,4 +527,23 @@ RSpec.describe Board do
       expect(result).to be false
     end
   end
+
+  describe '#find_checked_king' do
+    king = King.new('B', 'C7')
+    
+    it 'returns the king that is being checked' do
+      board.grid[1][2] = king
+      board.grid[2][1] = Pawn.new('W', 'B6')
+      piece = board.find_checked_king
+      expect(piece).to eql(king)
+    end
+
+    it 'returns nil when no kings are in check' do
+      board.grid[1][2] = king
+      board.grid[7][2] = Queen.new('W', 'C1')
+      board.grid[2][2] = Queen.new('B', 'C6')
+      result = board.find_checked_king
+      expect(result).to be_nil
+    end
+  end
 end
