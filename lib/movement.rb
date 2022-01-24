@@ -105,4 +105,22 @@ module Movement
     [row, column] if piece.is_a?(Pawn) && piece.en_passantable?('W')
     # remove piece off of board here if true?
   end
+
+  def checked_move?(king, target)
+    original_piece = piece_at(target)
+    set_piece_at(target, king)
+    color = king.color
+    enemies = grid.flatten.reject { |piece| piece.nil? || piece.color == color }
+    outcome = enemies.any? { |enemy| validate_move(enemy, target) == target }
+    set_piece_at(target, original_piece)
+    outcome
+  end
+
+  def verify_king_move(king, target)
+    original_piece = piece_at(target)
+    set_piece_at(target, king)
+    outcome = checked_move?(king.color, target)
+    set_piece_at(target, original_piece)
+    outcome
+  end
 end
