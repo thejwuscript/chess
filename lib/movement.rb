@@ -5,7 +5,9 @@ module Movement
     
     origin_array = piece.position_to_array
     target_array = position_to_array(target)
-    reach_target(origin_array, piece, target_array) ? target : nil
+    return nil unless reach_target(origin_array, piece, target_array)
+
+    piece.is_a?(King) ? verify_king_move(piece, target) : target
   end
 
   def reach_target(origin_ary, piece, target_ary)
