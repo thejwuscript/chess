@@ -497,33 +497,33 @@ RSpec.describe Board do
     end
   end
 
-  describe '#checked_move?' do
+  describe '#verify_king_move' do
     subject(:king_board) { described_class.new }
     
     it 'returns true if the black king would be checked' do
-      king = King.new('B')
+      king = King.new('B', 'E6')
       target = 'F5'
       king_board.grid[3][0] = Rook.new('W', 'A5')
-      result = king_board.checked_move?(king, target)
+      result = king_board.verify_king_move(king, target)
       expect(result).to be true
     end
 
     it 'returns true if the white king would be checked' do
-      king = King.new('W')
+      king = King.new('W', 'D1')
       target = 'E1'
       king_board.grid[5][2] = Bishop.new('B', 'C3')
       king_board.grid[6][3] = Queen.new('W', 'D2')
       king_board.grid[6][5] = Pawn.new('B', 'F2')
-      result = king_board.checked_move?(king, target)
+      result = king_board.verify_king_move(king, target)
       expect(result).to be true
     end
 
     it 'returns false if the white king would be safe' do
-      king = King.new('W')
+      king = King.new('W', 'E2')
       target = 'E1'
       king_board.grid[5][2] = Bishop.new('B', 'C3')
       king_board.grid[6][3] = Queen.new('W', 'D2')
-      result = king_board.checked_move?(king, target)
+      result = king_board.verify_king_move(king, target)
       expect(result).to be false
     end
   end
