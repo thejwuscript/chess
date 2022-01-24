@@ -546,4 +546,18 @@ RSpec.describe Board do
       expect(result).to be_nil
     end
   end
+
+  describe '#checkmate?' do
+    subject(:mate_board) { described_class.new }
+    king = King.new('B', 'H8')
+    enemy_rook = Rook.new('W', 'E8')
+    
+    it 'returns true when a black king is mated' do
+      mate_board.grid[0][4] = enemy_rook
+      mate_board.grid[2][7] = King.new('W', 'H6')
+      mate_board.grid[0][7] = king
+      result = mate_board.checkmate?(king)
+      expect(result).to be true
+    end
+  end
 end

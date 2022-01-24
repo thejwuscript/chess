@@ -45,13 +45,4 @@ RSpec.describe Game do
     expect(result).to be true
     end
   end
-
-  describe '#force_king_play' do
-    it 'returns the position the king is at' do
-      
-    end
-  end
-
 end
-
-#nil unless .... || ...

@@ -27,7 +27,7 @@ module Movement
   end
 
   def within_limits?(array)
-    array.all? { |num| num.between?(0, 7) } ? true : false
+    array.all? { |num| num.between?(0, 7) }
   end
 
   def occupied?(array)
@@ -53,6 +53,7 @@ module Movement
   def breadth_search(origin_array, manners, target_array)
     until manners.empty? do
       next_array = origin_array.zip(manners.shift).map { |a, b| a + b }
+      next unless within_limits?(next_array)
       return target_array if next_array == target_array
     end
   end
@@ -108,19 +109,13 @@ module Movement
     # remove piece off of board here if true?
   end
 
-  def checked?(king, target)
-    color = king.color
-    enemies = grid.flatten.reject { |piece| piece.nil? || piece.color == color }
-    enemies.any? { |enemy| validate_move(enemy, target) == target }
-  end
-
   def verify_king_move(king, target)
     original_piece = piece_at(target)
     hypothetical_move(target, king)
     outcome = checked?(king, target)
     set_piece_at(target, original_piece)
     set_piece_at(king.position, king)
-    outcome
+    target if outcome
   end
 
   def hypothetical_move(target, piece)
@@ -128,4 +123,17 @@ module Movement
     delete_piece_at(piece.position)
   end
 
+  def checked?(king, target)
+    color = king.color
+    enemies = grid.flatten.reject { |piece| piece.nil? || piece.color == color }
+    enemies.any? { |enemy| validate_move(enemy, target) == target }
+  end
+
+  def checkmate?(king)
+    p king.possible_positions
+    king.possible_positions.none? do |position|
+      p verify_king_move(king, position)
+    end
+  end
+  
 end

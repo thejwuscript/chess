@@ -52,6 +52,12 @@ class Board
     [row, column]
   end
 
+  def array_to_position(array)
+    letter = ('A'..'Z').to_a[array.last]
+    number = (1..8).to_a.reverse[array.first]
+    letter + number
+  end
+
   def white_black_row(row)
     row.each_with_index do |piece, column|
       print column.even? ? white_square(piece) : black_square(piece)
