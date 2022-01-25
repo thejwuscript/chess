@@ -1,6 +1,10 @@
 # frozen_string_literal: true
 
+require_relative '../lib/game_message'
+
 class Game
+  include GameMessage
+  
   attr_reader :board, :all_pieces
 
   @turn_count = 0
@@ -34,16 +38,13 @@ class Game
     end
   end
 
-  def move_piece
-    selected_piece = select_piece
-    puts 'Enter a coordinate to move the piece to.'
+  def player_input
+    enter_input_message
     input = gets.chomp.upcase
-    if selected_piece.is_a? Rook
-      return unless board.validate_rook_move(selected_piece, input)
-    end
-    board.set_piece_at(input, selected_piece)
-    board.delete_piece_at(selected_piece.position)
-    selected_piece.position = input
+    return input if input.match?(/^[A-H][1-8]$/)
+
+    invalid_input_message
+    player_input
   end
 
   private

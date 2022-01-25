@@ -45,4 +45,40 @@ RSpec.describe Game do
     expect(result).to be true
     end
   end
+
+  describe '#select_piece' do
+  end
+
+  describe '#player_input' do
+    context 'when player enters a valid input' do
+      before do
+        allow(game).to receive(:enter_input_message)
+      end
+    
+      it 'returns the input' do
+        allow(game).to receive(:gets).and_return('A6')
+        result = game.player_input
+        expect(result).to eq('A6')
+      end
+
+      it 'does not display invalid entry message' do
+        allow(game).to receive(:gets).and_return('A6')
+        expect(game).not_to receive(:invalid_input_message)
+        game.player_input
+      end
+    end
+
+    context 'when player enters invalid input twice' do
+      before do
+        allow(game).to receive(:enter_input_message)
+      end
+
+      it 'displays invalid entry message twice' do
+        allow(game).to receive(:gets).and_return('KT', 'G0', 'D2')
+        expect(game).to receive(:invalid_input_message).twice
+        game.player_input
+      end
+    end
+  end 
+
 end
