@@ -38,6 +38,8 @@ class Board
     nil
   end
 
+
+
   #def move_piece_to(new_position, piece)
   #  set_piece_at(new_position, piece)
   #  delete_piece_at(piece.position)

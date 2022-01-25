@@ -6,7 +6,7 @@ class Game
   include GameMessage
   
   attr_reader :board, :all_pieces
-  attr_accessor :turn_count, :current_player, :player_white, :player_black
+  attr_accessor :turn_count, :current_player, :player_white, :player_black, :winner
   
   def initialize
     @board = Board.new
@@ -15,6 +15,18 @@ class Game
     @player_white = nil
     @player_black = nil
     @current_player = nil
+    @winner = nil
+  end
+
+  def play
+    puts "Welcome to CHESS."
+    the_game
+  end
+
+  def the_game
+    pregame
+    round
+    game_end
   end
 
   def player_names
@@ -31,11 +43,10 @@ class Game
     self.player_black = Player.new(names.last, 'B')
   end
 
-  def change_player
-   self.current_player = turn_count.odd? ? player_white : player_black
-  end
-
   def prep_board
+    create_all_pieces
+    assign_all_attributes
+    set_initial_positions
   end
 
   def create_all_pieces
@@ -58,6 +69,49 @@ class Game
     end
   end
 
+  def pregame
+    assign_players
+    prep_board
+  end
+
+  def round
+    board.show_board
+    update_turn_counts
+    change_player
+    return if game_over?
+
+    move_piece
+    round
+  end
+
+  def update_turn_counts
+    self.turn_count += 1
+    board.grid.flatten.compact.each { |piece| piece.turn_count += 1 }
+  end
+
+  def change_player
+   self.current_player = turn_count.odd? ? player_white : player_black
+  end
+
+  def move_piece
+    move_king if board.find_checked_king
+
+    chosen_piece = board.piece_at(verify_input_one)
+    target = verify_input_two(chosen)
+    verified_move = board.validate_move(chosen_piece, target)
+    finalize_move(chosen_piece, verified_move)
+  end
+
+  def move_king
+    # code here...
+  end
+
+  def finalize_move(piece, target)
+    board.set_piece_at(target, piece)
+    board.delete_piece_at(piece.position)
+    piece.position = target
+  end
+
   def player_input
     enter_input_message
     input = gets.chomp.upcase
@@ -66,6 +120,35 @@ class Game
     invalid_input_message
     player_input
   end
+
+  def verify_input_one
+    loop do
+      input = player_input
+      return input if board.piece_at(input).color == current_player.color
+
+      invalid_input_message
+    end
+  end
+
+  def verify_input_two(piece)
+    loop do
+      input = player_input
+      return input unless board.same_color_at?(input, piece)
+
+      invalid_input_message
+    end
+  end
+
+  def game_over?
+    return false if king = board.find_checked_king.nil?
+    return true if stalemate?(king)
+    
+    if checkmate?(king)
+      self.winner = king.color == 'W' ? player_black : player_white
+      true
+    end
+  end
+
 end
 
 =begin
@@ -75,12 +158,5 @@ def arrange_all_pieces
         result[piece.type].push(piece) : result[piece.type] = [piece]
       result
     end
-  end
-
-  
-  def select_piece
-    puts 'Enter a coordinate to select a piece.'
-    input = gets.chomp.upcase
-    board.piece_at(input)
   end
 =end
