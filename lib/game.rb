@@ -46,14 +46,6 @@ class Game
     invalid_input_message
     player_input
   end
-
-  private
-
-  def select_piece
-    puts 'Enter a coordinate to select a piece.'
-    input = gets.chomp.upcase
-    board.piece_at(input)
-  end
 end
 
 =begin
@@ -63,5 +55,12 @@ def arrange_all_pieces
         result[piece.type].push(piece) : result[piece.type] = [piece]
       result
     end
+  end
+
+  
+  def select_piece
+    puts 'Enter a coordinate to select a piece.'
+    input = gets.chomp.upcase
+    board.piece_at(input)
   end
 =end

@@ -8,6 +8,7 @@ require_relative '../lib/bishop'
 require_relative '../lib/queen'
 require_relative '../lib/king'
 require_relative '../lib/pawn'
+require_relative '../lib/player'
 
 RSpec.describe Game do
   subject(:game) { described_class.new }
@@ -81,4 +82,19 @@ RSpec.describe Game do
     end
   end 
 
+  describe '#player_turn' do
+    context 'if turn count is an odd number' do
+      player_white = Player.new(nil, 'W')
+      
+      it 'changes @current_player to player_white' do
+        game.turn_count = 1
+        expect { game.player_turn }.to change { game.current_player }.to(player_white)
+      end
+    end
+
+    context 'if turn count is an even number' do
+      it 'changes @current_player to player_black' do
+      end
+    end
+  end
 end
