@@ -500,31 +500,31 @@ RSpec.describe Board do
   describe '#verify_king_move' do
     subject(:king_board) { described_class.new }
     
-    it 'returns true if the black king would be checked' do
+    it 'returns nil if the black king would be checked' do
       king = King.new('B', 'E6')
       target = 'F5'
       king_board.grid[3][0] = Rook.new('W', 'A5')
       result = king_board.verify_king_move(king, target)
-      expect(result).to be true
+      expect(result).to be nil
     end
 
-    it 'returns true if the white king would be checked' do
+    it 'returns nil if the white king would be checked' do
       king = King.new('W', 'D1')
       target = 'E1'
       king_board.grid[5][2] = Bishop.new('B', 'C3')
       king_board.grid[6][3] = Queen.new('W', 'D2')
       king_board.grid[6][5] = Pawn.new('B', 'F2')
       result = king_board.verify_king_move(king, target)
-      expect(result).to be true
+      expect(result).to be nil
     end
 
-    it 'returns false if the white king would be safe' do
+    it 'returns target if the white king would be safe' do
       king = King.new('W', 'E2')
       target = 'E1'
       king_board.grid[5][2] = Bishop.new('B', 'C3')
       king_board.grid[6][3] = Queen.new('W', 'D2')
       result = king_board.verify_king_move(king, target)
-      expect(result).to be false
+      expect(result).to eql(target)
     end
   end
 
@@ -548,16 +548,34 @@ RSpec.describe Board do
   end
 
   describe '#checkmate?' do
-    subject(:mate_board) { described_class.new }
     king = King.new('B', 'H8')
     enemy_rook = Rook.new('W', 'E8')
     
     it 'returns true when a black king is mated' do
-      mate_board.grid[0][4] = enemy_rook
-      mate_board.grid[2][7] = King.new('W', 'H6')
-      mate_board.grid[0][7] = king
-      result = mate_board.checkmate?(king)
-      expect(result).to be true
+    end
+  end
+
+  describe '#all_enemies' do
+    it 'returns an array of enemies on the board' do
+      my_color = 'W'
+      rook = Rook.new('B')
+      board.grid[2][3] = rook
+      result = board.all_enemies(my_color)
+      expect(result.size).to eq(1)
+    end
+  end
+
+  describe '#checked?' do
+    context 'when a white rook is checking a black king' do
+      rook = Rook.new('W', 'A8')
+      king = King.new('B', 'G8')
+      
+      it 'returns true' do
+        board.grid[0][0] = rook
+        board.grid[0][7] = king
+        result = board.checked?(king, 'G8')
+        expect(result).to be true
+      end
     end
   end
 end

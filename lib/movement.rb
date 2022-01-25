@@ -3,7 +3,7 @@ module Movement
   def validate_move(piece, target)
     return if same_color_at?(target, piece)
     
-    origin_array = piece.position_to_array
+    origin_array = piece.position_to_array # Depend on inst var
     target_array = position_to_array(target)
     return nil unless reach_target(origin_array, piece, target_array)
 
@@ -112,10 +112,10 @@ module Movement
   def verify_king_move(king, target)
     original_piece = piece_at(target)
     hypothetical_move(target, king)
-    outcome = checked?(king, target)
+    king_checked = checked?(king, target)
     set_piece_at(target, original_piece)
     set_piece_at(king.position, king)
-    target if outcome
+    target unless king_checked
   end
 
   def hypothetical_move(target, piece)
@@ -125,15 +125,16 @@ module Movement
 
   def checked?(king, target)
     color = king.color
-    enemies = grid.flatten.reject { |piece| piece.nil? || piece.color == color }
-    enemies.any? { |enemy| validate_move(enemy, target) == target }
+    all_enemies(color).any? { |enemy| validate_move(enemy, target) == target }
+  end
+
+  def all_enemies(color)
+    grid.flatten.reject { |piece| piece.nil? || piece.color == color }
   end
 
   def checkmate?(king)
     p king.possible_positions
-    king.possible_positions.none? do |position|
-      p verify_king_move(king, position)
-    end
+    p verify_king_move(king, 'H7')
   end
   
 end
