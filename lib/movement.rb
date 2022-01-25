@@ -133,7 +133,15 @@ module Movement
   end
 
   def checkmate?(king)
+    no_legal_moves?(king) && checked?(king, king.position)
+  end
+
+  def stalemate?(king)
+    no_legal_moves?(king) && !(checked?(king, king.position))
+  end
+
+  def no_legal_moves?(king)
     king.possible_moves.none? { |move| verify_king_move(king, move) }
   end
-  
+
 end

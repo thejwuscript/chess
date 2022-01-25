@@ -593,4 +593,30 @@ RSpec.describe Board do
       end
     end
   end
+
+  describe '#stalemate?' do
+    context 'when a black king cannot make a legal move but is not in check' do
+      king = King.new('B', 'A8')
+      enemy = Queen.new('W', 'C7')
+      
+      it 'returns true' do
+        board.grid[0][0] = king
+        board.grid[1][2] = enemy
+        result = board.stalemate?(king)
+        expect(result).to be true
+      end
+    end
+
+    context 'when a black king is in check but can make a legal move' do
+      king = King.new('B', 'A8')
+      enemy = Queen.new('W', 'B7')
+
+      it 'returns false' do
+        board.grid[0][0] = king
+        board.grid[1][1] = enemy
+        result = board.stalemate?(king)
+        expect(result).to be false
+      end
+    end
+  end
 end
