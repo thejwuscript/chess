@@ -6,16 +6,25 @@ class Game
   include GameMessage
   
   attr_reader :board, :all_pieces
+  attr_accessor :turn_count, :current_player, :player_white, :player_black
 
-  @turn_count = 0
+  #@turn_count = 0
 
-  class << self
-    attr_accessor :turn_count
-  end
+  #class << self
+  #  attr_accessor :turn_count
+  #end
 
   def initialize
     @board = Board.new
     @all_pieces = []
+    @turn_count = 0
+    @player_white = Player.new(nil, 'W')
+    @player_black = Player.new(nil, 'B')
+    @current_player = nil
+  end
+
+  def change_player
+   self.current_player = turn_count.odd? ? player_white : player_black
   end
 
   def create_all_pieces

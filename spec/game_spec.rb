@@ -82,18 +82,24 @@ RSpec.describe Game do
     end
   end 
 
-  describe '#player_turn' do
+  describe '#change_player' do
     context 'if turn count is an odd number' do
-      player_white = Player.new(nil, 'W')
+      let(:player_white) { instance_double(Player) }
       
       it 'changes @current_player to player_white' do
+        game.instance_variable_set(:@player_white, player_white)
         game.turn_count = 1
-        expect { game.player_turn }.to change { game.current_player }.to(player_white)
+        expect { game.change_player }.to change { game.current_player }.to(player_white)
       end
     end
 
     context 'if turn count is an even number' do
+      let(:player_black) { instance_double(Player) }
+      
       it 'changes @current_player to player_black' do
+        game.instance_variable_set(:@player_black, player_black)
+        game.turn_count = 2
+        expect { game.change_player }.to change { game.current_player }.to(player_black)
       end
     end
   end
