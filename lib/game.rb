@@ -71,6 +71,7 @@ class Game
 
   def pregame
     assign_players
+    show_player_assignment
     prep_board
   end
 
@@ -94,12 +95,21 @@ class Game
   end
 
   def move_piece
-    move_king if board.find_checked_king
+    return move_king if board.find_checked_king
 
     chosen_piece = board.piece_at(verify_input_one)
-    target = verify_input_two(chosen)
-    verified_move = board.validate_move(chosen_piece, target)
+    verified_move = choose_target(chosen_piece)
     finalize_move(chosen_piece, verified_move)
+  end
+
+  def choose_target(chosen_piece)
+    loop do
+      target = verify_input_two(chosen_piece)
+      verified_move = board.validate_move(chosen_piece, target)
+      return verified_move if verified_move
+
+      invalid_input_message
+    end
   end
 
   def move_king
@@ -113,17 +123,19 @@ class Game
   end
 
   def player_input
-    enter_input_message
-    input = gets.chomp.upcase
-    return input if input.match?(/^[A-H][1-8]$/)
-
-    invalid_input_message
-    player_input
+    loop do
+      input = gets.chomp.upcase
+      return input if input.match?(/^[A-H][1-8]$/)
+  
+      invalid_input_message
+    end
   end
 
   def verify_input_one
+    choose_piece_message
     loop do
       input = player_input
+      next invalid_input_message if board.piece_at(input).nil?
       return input if board.piece_at(input).color == current_player.color
 
       invalid_input_message
@@ -131,6 +143,7 @@ class Game
   end
 
   def verify_input_two(piece)
+    choose_move_message
     loop do
       input = player_input
       return input unless board.same_color_at?(input, piece)
@@ -141,12 +154,20 @@ class Game
 
   def game_over?
     return false if king = board.find_checked_king.nil?
-    return true if stalemate?(king)
+    return true if board.stalemate?(king)
     
-    if checkmate?(king)
+    if board.checkmate?(king)
       self.winner = king.color == 'W' ? player_black : player_white
       true
     end
+  end
+
+  def game_end
+    winner ? declare_winner : declare_draw
+    play_again?
+  end
+
+  def play_again?
   end
 
 end

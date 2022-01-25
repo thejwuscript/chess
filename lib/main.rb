@@ -9,19 +9,8 @@ require_relative 'knight'
 require_relative 'bishop'
 require_relative 'queen'
 require_relative 'king'
+require_relative 'game_message'
+require_relative 'movement'
+require_relative 'player'
 
-game = Game.new
-game.create_all_pieces
-game.assign_all_attributes
-game.set_initial_positions
-game.board.show_board
-game.move_piece
-game.board.show_board
-game.move_piece
-game.board.show_board
-game.move_piece
-game.board.show_board
-game.move_piece
-game.board.show_board
-
-
+Game.new.play
