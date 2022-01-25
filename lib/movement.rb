@@ -133,8 +133,7 @@ module Movement
   end
 
   def checkmate?(king)
-    p king.possible_positions
-    p verify_king_move(king, 'H7')
+    king.possible_moves.none? { |move| verify_king_move(king, move) }
   end
   
 end
