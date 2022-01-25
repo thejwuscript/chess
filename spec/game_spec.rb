@@ -103,4 +103,26 @@ RSpec.describe Game do
       end
     end
   end
+
+  describe '#assign_players' do
+    context 'when two names in an array are provided' do
+      before do
+        array = ['Bob', 'Jane']
+        allow(game).to receive(:player_names).and_return(array)
+        allow(array).to receive(:shuffle).and_return(array)
+        allow(Player).to receive(:new).twice
+      end
+      
+      it 'assigns color white to the player of first element' do
+        expect(Player).to receive(:new).with('Bob', 'W')
+        game.assign_players
+      end
+
+      it 'assigns color black to the player of last element' do
+        expect(Player).to receive(:new).with('Jane', 'B')
+        game.assign_players
+      end
+    end
+  end
+
 end

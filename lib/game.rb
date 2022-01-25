@@ -12,13 +12,30 @@ class Game
     @board = Board.new
     @all_pieces = []
     @turn_count = 0
-    @player_white = Player.new(nil, 'W')
-    @player_black = Player.new(nil, 'B')
+    @player_white = nil
+    @player_black = nil
     @current_player = nil
+  end
+
+  def player_names
+    get_name_message { 'one' }
+    player_one_name = gets.chomp
+    get_name_message { 'two' }
+    player_two_name = gets.chomp
+    [player_one_name, player_two_name]
+  end
+
+  def assign_players
+    names = player_names.shuffle
+    self.player_white = Player.new(names.first, 'W')
+    self.player_black = Player.new(names.last, 'B')
   end
 
   def change_player
    self.current_player = turn_count.odd? ? player_white : player_black
+  end
+
+  def prep_board
   end
 
   def create_all_pieces
