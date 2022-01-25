@@ -50,9 +50,9 @@ RSpec.describe Pawn do
   describe '#en_passantable_turn?' do
     context 'when pawn took a double-step on turn 2 and it is now turn 4' do
       subject(:safe_pawn) { described_class.new }
-      Game.turn_count = 4
       
       it 'returns false' do
+        safe_pawn.turn_count = 4
         safe_pawn.double_step_turn = 2
         result = safe_pawn.en_passantable_turn?
         expect(result).to be false
@@ -61,9 +61,9 @@ RSpec.describe Pawn do
 
     context 'when pawn took a double-step on turn 4 and it is now turn 5' do
       subject(:danger_pawn) { described_class.new }
-      Game.turn_count = 5
       
       it 'returns true' do
+        danger_pawn.turn_count = 5
         danger_pawn.double_step_turn = 4
         result = danger_pawn.en_passantable_turn?
         expect(result).to be true

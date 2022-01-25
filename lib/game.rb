@@ -7,13 +7,7 @@ class Game
   
   attr_reader :board, :all_pieces
   attr_accessor :turn_count, :current_player, :player_white, :player_black
-
-  #@turn_count = 0
-
-  #class << self
-  #  attr_accessor :turn_count
-  #end
-
+  
   def initialize
     @board = Board.new
     @all_pieces = []

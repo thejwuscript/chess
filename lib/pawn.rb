@@ -41,11 +41,11 @@ class Pawn < Piece
   end
 
   def en_passantable_turn?
-    count = Game.turn_count
+    count = turn_count
     count - double_step_turn == 1 ? true : false
   end
 
-  def store_turn_count #when double-step
-    self.double_step_turn = Game.turn_count
+  def store_turn_count
+    self.double_step_turn = turn_count
   end
 end

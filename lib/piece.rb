@@ -1,12 +1,13 @@
 #frozen_string_literal: true
 
 class Piece
-  attr_accessor :position, :color, :symbol, :type
+  attr_accessor :position, :color, :symbol, :type, :turn_count
 
   def initialize(color, position)
     @color = color
     @position = position
     @symbol = assign_symbol
+    @turn_count = 0
   end
 
   def position_to_array
