@@ -135,10 +135,19 @@ class Game
     choose_piece_message
     loop do
       input = player_input
-      next invalid_input_message if board.piece_at(input).nil?
-      return input if board.piece_at(input).color == current_player.color
+      piece = board.piece_at(input)
+      current_color = current_player.color
+      next invalid_input_message if piece.nil?
+      return input if piece.color == current_color && moves_available?(piece)
 
       invalid_input_message
+    end
+  end
+
+  def moves_available?(piece)
+    p piece.possible_moves
+    piece.possible_moves.any? do |move|
+      board.validate_move(piece, move)
     end
   end
 
@@ -171,13 +180,3 @@ class Game
   end
 
 end
-
-=begin
-def arrange_all_pieces
-    create_all_pieces.reduce(Hash.new) do |result, piece|
-      result.key?(piece.type) ? 
-        result[piece.type].push(piece) : result[piece.type] = [piece]
-      result
-    end
-  end
-=end

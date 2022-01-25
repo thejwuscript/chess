@@ -32,17 +32,4 @@ class Rook < Piece
   def move_by(array) #necessary?
     position_to_array.zip(array).map { |a, b| a + b }
   end
-
-  def within_limits?(array) #necessary?
-    array.all? { |num| num.between?(0, 7) } ? true : false
-  end
-
-  def possible_moves #necessary?
-    move_manner.map { |manner| move_by(manner) }
-  end
-  
-  def filtered_possible_moves #necessary?
-    possible_moves.keep_if { |ary| within_limits?(ary) }
-  end
-
 end

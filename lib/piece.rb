@@ -21,4 +21,19 @@ class Piece
     number = (1..8).to_a.reverse[array.first]
     "#{letter}#{number}"
   end
+  
+  def within_limits?(array)
+    array.all? { |num| num.between?(0, 7) }
+  end
+
+  def possible_move_arrays
+    unfiltered = move_manner.map do |manner| 
+      position_to_array.zip(manner).map { |a, b| a + b }
+    end
+    unfiltered.keep_if { |item| within_limits?(item) }
+  end
+
+  def possible_moves
+    possible_move_arrays.map { |array| array_to_position(array) }
+  end 
 end

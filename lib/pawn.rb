@@ -48,4 +48,12 @@ class Pawn < Piece
   def store_turn_count
     self.double_step_turn = turn_count
   end
+
+  def move_manner
+    if color == 'W'
+      [[-1, 0], [-2, 0], [-1, 1], [-1, -1]]
+    elsif color == 'B'
+      [[1, 0], [2, 0], [1, 1], [1, -1]]
+    end
+  end
 end
