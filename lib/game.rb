@@ -148,10 +148,7 @@ class Game
   end
 
   def moves_available?(piece)
-    p piece.possible_moves
-    piece.possible_moves.any? do |move|
-      board.validate_move(piece, move)
-    end
+    piece.possible_moves.any? { |move| board.validate_move(piece, move) }
   end
 
   def game_over?

@@ -54,27 +54,4 @@ RSpec.describe Rook do
       end
     end
   end
-
-  describe '#possible_moves' do
-    subject(:moving_rook) { described_class.new }
-
-    context 'when the rook is at position H8' do
-      it 'returns an array with 4 possible moves' do
-        moving_rook.position = 'H8'
-        result = moving_rook.possible_moves
-        expect(result).to contain_exactly([0, 6], [1, 7], [-1, 7], [0, 8])
-      end
-    end
-  end
-
-  describe '#filtered_possible_moves' do
-    subject(:filter_rook) { described_class.new }
-    
-    it 'returns an array of possible moves on a board' do
-      filter_rook.position = 'H8'
-      result = filter_rook.filtered_possible_moves
-      expect(result).to contain_exactly([0, 6], [1, 7])
-    end
-  end
-
 end
