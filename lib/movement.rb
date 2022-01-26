@@ -69,9 +69,9 @@ module Movement
   end
 
   def white_pawn_search(origin_ary, pawn, target_ary)
-    return if occupied?(target_ary)
-    
     a, b = origin_ary
+    return if occupied?(target_ary) || occupied?([a-1, b])
+    
     if pawn.start_position == pawn.position && [a-2, b] == target_ary
       pawn.store_turn_count
       target_ary
@@ -81,9 +81,9 @@ module Movement
   end
 
   def black_pawn_search(origin_ary, pawn, target_ary)
-    return if occupied?(target_ary)
-    
     a, b = origin_ary
+    return if occupied?(target_ary) || occupied?([a+1, b])
+    
     if pawn.start_position == pawn.position && [a+2, b] == target_ary
       pawn.store_turn_count
       target_ary

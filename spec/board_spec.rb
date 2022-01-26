@@ -347,7 +347,7 @@ RSpec.describe Board do
       end
     end
 
-    context 'when a white pawn is blocked from moving forward to target position' do
+    context 'when a white pawn is blocked from moving forward' do
       pawn = Pawn.new('W', 'D2')
       origin_ary = [6, 3]
       
@@ -361,6 +361,13 @@ RSpec.describe Board do
       it 'returns nil for 2 spaces forward' do
         target_ary = [4, 3]
         board.grid[4][3] = Pawn.new
+        result = board.white_pawn_search(origin_ary, pawn, target_ary)
+        expect(result).to be_nil
+      end
+
+      it 'returns nil for blocked path for double-step' do
+        target_ary = [4, 3]
+        board.grid[5][3] = Knight.new
         result = board.white_pawn_search(origin_ary, pawn, target_ary)
         expect(result).to be_nil
       end
@@ -413,11 +420,11 @@ RSpec.describe Board do
       end
     end
 
-    context 'when a black pawn is block from moving forward to target position' do
+    context 'when a black pawn is block from moving forward' do
       pawn = Pawn.new('B', 'A7')
       origin_ary = [1, 0]
 
-      it 'returns nil for 1 spaces forward' do
+      it 'returns nil for 1 space forward' do
         target_ary = [2, 0]
         board.grid[2][0] = Knight.new
         result = board.black_pawn_search(origin_ary, pawn, target_ary)
@@ -427,6 +434,13 @@ RSpec.describe Board do
       it 'returns nil for 2 spaces forward' do
         target_ary = [3, 0]
         board.grid[3][0] = Bishop.new
+        result = board.black_pawn_search(origin_ary, pawn, target_ary)
+        expect(result).to be_nil
+      end
+
+      it 'returns nil for blocked path for double-step' do
+        target_ary = [3, 0]
+        board.grid[2][0] = King.new
         result = board.black_pawn_search(origin_ary, pawn, target_ary)
         expect(result).to be_nil
       end
