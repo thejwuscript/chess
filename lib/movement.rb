@@ -6,8 +6,18 @@ module Movement
     origin_array = piece.position_to_array # Depend on inst var
     target_array = position_to_array(target)
     return nil unless reach_target(origin_array, piece, target_array)
+    return if own_king_exposed?(piece, target)
 
     piece.is_a?(King) ? verify_king_move(piece, target) : target
+  end
+
+  def own_king_exposed?(piece, target)
+    removed_piece = piece_at(target)
+    hypothetical_move(target, piece)
+    king_checked = find_checked_king
+    set_piece_at(target, removed_piece)
+    set_piece_at(piece.position, piece)
+    king_checked && king_checked.color == current_player.color ? true : false
   end
 
   def reach_target(origin_ary, piece, target_ary)
@@ -103,14 +113,18 @@ module Movement
 
   def w_en_passant(row, column)
     piece = grid[row+1][column]
-    [row, column] if piece.is_a?(Pawn) && piece.en_passantable?('B')
-    # remove piece off of board here if true?
+    if piece.is_a?(Pawn) && piece.en_passantable?('B')
+      delete_piece_at(piece.position)
+      [row, column]
+    end
   end
 
   def b_en_passant(row, column)
     piece = grid[row-1][column]
-    [row, column] if piece.is_a?(Pawn) && piece.en_passantable?('W')
-    # remove piece off of board here if true?
+    if piece.is_a?(Pawn) && piece.en_passantable?('W')
+      delete_piece_at(piece.position)
+      [row, column] 
+    end
   end
 
   def verify_king_move(king, target)

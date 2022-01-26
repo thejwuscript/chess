@@ -505,7 +505,7 @@ RSpec.describe Board do
 
     context 'when the target pawn exist' do
       row, column = [2, 3]
-      pawn = Pawn.new
+      pawn = Pawn.new('B', 'D5')
       
       it 'sends a messsage to the target pawn to check for en_passant condition' do
         board.grid[3][3] = pawn
@@ -532,7 +532,7 @@ RSpec.describe Board do
 
     context 'when the target pawn exist' do
       row, column = [5, 3]
-      pawn = Pawn.new
+      pawn = Pawn.new('W', 'D4')
 
       it 'sends a message to the pawn to check for en_passant condition' do
         board.grid[4][3] = pawn
@@ -670,5 +670,9 @@ RSpec.describe Board do
         expect(result).to be false
       end
     end
+  end
+
+  describe '#own_king_exposed?' do
+    
   end
 end

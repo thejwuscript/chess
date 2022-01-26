@@ -95,7 +95,8 @@ class Game
   end
 
   def move_piece
-    return move_king if board.find_checked_king
+    checked_king = board.find_checked_king
+    return move_king(checked_king) if checked_king
 
     chosen_piece = board.piece_at(verify_input_one)
     verified_move = choose_target(chosen_piece)
@@ -103,7 +104,7 @@ class Game
   end
 
   def choose_target(chosen_piece)
-    choose_move_message
+    choose_move_message(chosen_piece)
     loop do
       target = player_input
       next invalid_input_message if board.same_color_at?(target, chosen_piece)
@@ -115,8 +116,10 @@ class Game
     end
   end
 
-  def move_king
-    # code here...
+  def move_king(king)
+    king_checked_message(king)
+    verified_move = choose_target(king)
+    finalize_move(king, verified_move)
   end
 
   def finalize_move(piece, target)
