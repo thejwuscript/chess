@@ -117,4 +117,6 @@ RSpec.describe Game do
     end
   end
 
+  describe '#promote_pawn' do
+  end
 end

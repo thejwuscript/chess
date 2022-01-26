@@ -41,6 +41,11 @@ class Board
     nil
   end
 
+  def promote_candidate
+    array = grid[0] + grid[7]
+    array.detect { |piece| piece.is_a? Pawn }
+  end
+
   private
 
   def position_to_array(position)

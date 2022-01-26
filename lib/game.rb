@@ -83,6 +83,7 @@ class Game
       return if game_over?
   
       move_piece
+      promote_pawn
     end
   end
 
@@ -163,6 +164,27 @@ class Game
     if board.checkmate?(king)
       self.winner = king.color == 'W' ? player_black : player_white
       true
+    end
+  end
+
+  def promote_pawn
+    pawn = board.promote_candidate
+    return if pawn.nil?
+
+    number = promotion_choice(pawn.position)
+    piece = [Queen, Rook, Bishop, Knight][number - 1].new
+    piece.position = pawn.position
+    piece.color = pawn.color
+    set_piece_at(piece.position, piece)
+  end
+
+  def promotion_choice(position)
+    promotion_message(position)
+    loop do
+      input = gets.chomp
+      return input if input.match?(/^[1-4]$/)
+  
+      invalid_input_message
     end
   end
 

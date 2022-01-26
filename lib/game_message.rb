@@ -41,4 +41,14 @@ module GameMessage
   def declare_draw
     puts "It's a draw!"
   end
+
+  def promotion_message(position)
+    puts "#{current_player.name}, your pawn at #{position} can be promoted!"
+    puts 'Choose the following options by entering a number from 1 to 4:'
+    puts '    [1] --> Queen'
+    puts '    [2] --> Rook'
+    puts '    [3] --> Bishop'
+    puts '    [4] --> Knight'
+    puts ''
+  end
 end

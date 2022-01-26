@@ -6,9 +6,9 @@ module Movement
     origin_array = piece.position_to_array # Depend on inst var
     target_array = position_to_array(target)
     return unless reach_target(origin_array, piece, target_array)
-    return if own_king_exposed?(piece, target)
-
-    piece.is_a?(King) ? verify_king_move(piece, target) : target
+    return verify_king_move(piece, target) if piece.is_a? King
+    
+    own_king_exposed?(piece, target) ? nil : target
   end
 
   def own_king_exposed?(piece, target)
