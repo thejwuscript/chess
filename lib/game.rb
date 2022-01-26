@@ -103,8 +103,11 @@ class Game
   end
 
   def choose_target(chosen_piece)
+    choose_move_message
     loop do
-      target = verify_input_two(chosen_piece)
+      target = player_input
+      next invalid_input_message if board.same_color_at?(target, chosen_piece)
+      
       verified_move = board.validate_move(chosen_piece, target)
       return verified_move if verified_move
 
@@ -148,16 +151,6 @@ class Game
     p piece.possible_moves
     piece.possible_moves.any? do |move|
       board.validate_move(piece, move)
-    end
-  end
-
-  def verify_input_two(piece)
-    choose_move_message
-    loop do
-      input = player_input
-      return input unless board.same_color_at?(input, piece)
-
-      invalid_input_message
     end
   end
 
