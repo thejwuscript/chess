@@ -22,6 +22,7 @@ class Board
   end
 
   def show_board
+    puts ''
     grid.each_with_index do |row, row_index|
       numbers_column(row_index)
       row_index.even? ? white_black_row(row) : black_white_row(row)

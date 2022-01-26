@@ -159,7 +159,7 @@ module Movement
   end
 
   def no_legal_moves?(king)
-    king.possible_moves.none? { |move| verify_king_move(king, move) }
+    king.possible_moves.none? { |move| validate_move(king, move) }
   end
 
 end

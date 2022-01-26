@@ -76,13 +76,14 @@ class Game
   end
 
   def round
-    board.show_board
-    update_turn_counts
-    change_player
-    return if game_over?
-
-    move_piece
-    round
+    loop do
+      board.show_board
+      update_turn_counts
+      change_player
+      return if game_over?
+  
+      move_piece
+    end
   end
 
   def update_turn_counts
@@ -155,9 +156,10 @@ class Game
   end
 
   def game_over?
-    return false if king = board.find_checked_king.nil?
+    king = board.find_checked_king
+    return false if king.nil?
     return true if board.stalemate?(king)
-    
+
     if board.checkmate?(king)
       self.winner = king.color == 'W' ? player_black : player_white
       true

@@ -33,6 +33,8 @@ module GameMessage
   end
 
   def declare_winner
+    puts ''
+    puts 'CHECKMATE!'
     puts "The winner is #{winner.name}! Congratulations!"
   end
 
