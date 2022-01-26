@@ -118,5 +118,16 @@ RSpec.describe Game do
   end
 
   describe '#promote_pawn' do
+    context 'when a white pawn can be promoted' do
+      white_pawn = Pawn.new('W', 'C8')
+      
+      it 'is replaced by a Queen' do
+        allow(game.board).to receive(:promote_candidate).and_return(white_pawn)
+        allow(game).to receive(:promotion_choice).with('C8').and_return(1)
+        game.promote_pawn
+        result = game.board.grid[0][2]
+        expect(result).to be_kind_of(Queen)
+      end
+    end
   end
 end

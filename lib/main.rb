@@ -13,4 +13,4 @@ require_relative 'game_message'
 require_relative 'movement'
 require_relative 'player'
 
-# Game.new.play
+Game.new.play

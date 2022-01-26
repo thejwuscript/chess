@@ -175,7 +175,7 @@ class Game
     piece = [Queen, Rook, Bishop, Knight][number - 1].new
     piece.position = pawn.position
     piece.color = pawn.color
-    set_piece_at(piece.position, piece)
+    board.set_piece_at(piece.position, piece)
   end
 
   def promotion_choice(position)

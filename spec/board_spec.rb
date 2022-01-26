@@ -616,8 +616,7 @@ RSpec.describe Board do
     it 'returns false when the black king can still move' do
       board.grid[0][7] = king
       board.grid[0][4] = enemy_rook
-      board.grid[2][7] = nil
-      p board.own_king_exposed?(king, 'H7')
+
       result = board.checkmate?(king)
       expect(result).to be false
     end
