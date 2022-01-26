@@ -673,6 +673,26 @@ RSpec.describe Board do
   end
 
   describe '#own_king_exposed?' do
+    king = King.new('B', 'H8')
+    enemy = Queen.new('W', 'F6')
+    piece = Queen.new('B', 'G7')
     
+    it 'returns true if own king would be exposed' do
+      board.grid[0][7] = king
+      board.grid[2][5] = enemy
+      board.grid[1][6] = piece
+      target = 'G1'
+      result = board.own_king_exposed?(piece, target)
+      expect(result).to be true
+    end
+
+    it 'returns false if own king would be safe' do
+      board.grid[0][7] = king
+      board.grid[2][5] = enemy
+      board.grid[1][6] = piece
+      target = 'F6'
+      result = board.own_king_exposed?(piece, target)
+      expect(result).to be false
+    end
   end
 end

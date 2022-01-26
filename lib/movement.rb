@@ -5,7 +5,7 @@ module Movement
     
     origin_array = piece.position_to_array # Depend on inst var
     target_array = position_to_array(target)
-    return nil unless reach_target(origin_array, piece, target_array)
+    return unless reach_target(origin_array, piece, target_array)
     return if own_king_exposed?(piece, target)
 
     piece.is_a?(King) ? verify_king_move(piece, target) : target
@@ -17,7 +17,7 @@ module Movement
     king_checked = find_checked_king
     set_piece_at(target, removed_piece)
     set_piece_at(piece.position, piece)
-    king_checked && king_checked.color == current_player.color ? true : false
+    king_checked && king_checked.color == piece.color ? true : false
   end
 
   def reach_target(origin_ary, piece, target_ary)
