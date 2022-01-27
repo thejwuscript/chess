@@ -128,12 +128,44 @@ module Movement
   end
 
   def verify_king_move(king, target)
+    return if castling?(king, target)
+    
     original_piece = piece_at(target)
     hypothetical_move(target, king)
     king_checked = checked?(king, target)
     set_piece_at(target, original_piece)
     set_piece_at(king.position, king)
     target unless king_checked
+  end
+
+  def castling?(king, target)
+    return false if king.move_count > 0
+    
+    origin_ary = king.position_to_array
+    target_ary = position_to_array(target)
+    diff = origin_ary.zip(target_ary).map { |a, b| a - b }
+    
+    return false unless diff == [0, 2] || diff == [0, -2]
+
+    return right_castling?(origin_ary, king) if diff == [0, -2]
+    
+    left_castling?(origin_ary, king, target_ary) if diff == [0, 2]
+  end
+
+  def right_castling?(origin_ary, king)
+    a, b = origin_ary
+    return false if checked?(king, array_to_position([a, b]))
+    
+    piece = grid[a][b + 1]
+    if piece.is_a?(Rook)
+      piece.move_count == 0 ? true : false
+    else
+      piece.nil? ? right_castling?([a, b + 1], king) : false
+    end
+  end
+
+  def left_castling?(origin_ary, king, target_ary)
+    # mind that no need to check for check condition for last square.
   end
 
   def hypothetical_move(target, piece)

@@ -649,6 +649,7 @@ RSpec.describe Board do
   describe '#stalemate?' do
     context 'when a black king cannot make a legal move but is not in check' do
       king = King.new('B', 'A8')
+      king.move_count = 5
       enemy = Queen.new('W', 'C7')
       
       it 'returns true' do
@@ -693,6 +694,38 @@ RSpec.describe Board do
       target = 'F6'
       result = board.own_king_exposed?(piece, target)
       expect(result).to be false
+    end
+  end
+
+  describe '#right_castling?' do
+    king = King.new('W', 'E1')
+    rook = Rook.new('W', 'H1')
+    enemy_rook = Rook.new('B', 'G4')
+    ally_pawn = Pawn.new('W', 'G2')
+    origin_ary = [7, 4]
+
+    before do
+      board.grid[7][4] = king
+      board.grid[7][7] = rook
+      board.grid[4][6] = enemy_rook
+      board.grid[6][6] = ally_pawn
+    end
+    
+    context 'when king would not be attacked during castling, path is empty, and the rook satifies the castling conditions' do
+      it 'returns true' do
+        result = board.right_castling?(origin_ary, king)
+        expect(result).to be true
+      end
+
+      it 'is not checked for three times' do
+        expect(board).to receive(:checked?).and_return(false, false, false)
+        board.right_castling?(origin_ary, king)
+      end
+
+      it 'sends message to rook to check move count' do
+        expect(rook).to receive(:move_count).once
+        board.right_castling?(origin_ary, king)
+      end
     end
   end
 end

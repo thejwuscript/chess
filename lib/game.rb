@@ -128,6 +128,7 @@ class Game
     board.set_piece_at(target, piece)
     board.delete_piece_at(piece.position)
     piece.position = target
+    piece.move_count += 1
   end
 
   def player_input

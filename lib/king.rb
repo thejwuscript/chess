@@ -25,6 +25,8 @@ class King < Piece
   end
 
   def move_manner
-    [1, 0, -1].repeated_permutation(2).to_a.reject { |ary| ary.all?(0) }
+    array = [1, 0, -1].repeated_permutation(2).to_a.reject { |ary| ary.all?(0) }
+    castling_manner = [[0, 2], [0, -2]]
+    move_count == 0 ? array + castling_manner : array
   end
 end
