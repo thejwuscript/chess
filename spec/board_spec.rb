@@ -728,4 +728,56 @@ RSpec.describe Board do
       end
     end
   end
+
+  describe '#left_castling?' do
+    king = King.new('B', 'E8')
+    rook = Rook.new('B', 'A8')
+    origin_ary = [0, 4]
+    target_ary = [0, 2]
+
+    before do
+      board.grid[0][4] = king
+      board.grid[0][0] = rook
+    end
+    
+    context 'when king would not be attacked during castling, path is empty, and the rook satifies the castling conditions' do
+      it 'returns true' do
+        result = board.left_castling?(origin_ary, king, target_ary)
+        expect(result).to be true
+      end
+
+      it 'king is not in check for three times' do
+        expect(board).to receive(:checked?).and_return(false, false, false)
+        board.left_castling?(origin_ary, king, target_ary)
+      end
+
+      it 'sends a message to rook to check move count' do
+        expect(rook).to receive(:move_count).once
+        board.left_castling?(origin_ary, king, target_ary)
+      end
+    end
+
+    context 'when the king would be in check at D8 during castling' do
+      enemy_knight = Knight.new('W', 'E6')
+
+      before do
+        board.grid[2][4] = enemy_knight
+      end
+
+      it 'returns false' do
+        result = board.left_castling?(origin_ary, king, target_ary)
+        expect(result).to be false
+      end
+
+      it 'calls #checked? twice, returning false then true' do
+        expect(board).to receive(:checked?).twice.and_return(false, true)
+        board.left_castling?(origin_ary, king, target_ary)
+      end
+
+      it 'does not send a message to rook to check move count' do
+        expect(rook).not_to receive(:move_count)
+        board.left_castling?(origin_ary, king, target_ary)
+      end
+    end
+  end
 end

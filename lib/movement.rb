@@ -165,7 +165,17 @@ module Movement
   end
 
   def left_castling?(origin_ary, king, target_ary)
-    # mind that no need to check for check condition for last square.
+    a, b = origin_ary
+    if b >= target_ary[1]
+      return false if checked?(king, array_to_position([a, b]))
+      
+    end
+    piece = grid[a][b - 1]
+    if piece.is_a?(Rook)
+      piece.move_count == 0 ? true : false
+    else
+      piece.nil? ? left_castling?([a, b - 1], king, target_ary) : false
+    end
   end
 
   def hypothetical_move(target, piece)
