@@ -98,7 +98,7 @@ class Game
 
   def move_piece
     checked_king = board.find_checked_king
-    return move_king(checked_king) if checked_king
+    king_checked_message(checked_king) if checked_king
 
     chosen_piece = board.piece_at(verify_input_one)
     verified_move = choose_target(chosen_piece)
@@ -118,11 +118,11 @@ class Game
     end
   end
 
-  def move_king(king)
-    king_checked_message(king)
-    verified_move = choose_target(king)
-    finalize_move(king, verified_move)
-  end
+  #def move_king(king)
+  #  king_checked_message(king)
+  #  verified_move = choose_target(king)
+  #  finalize_move(king, verified_move)
+  #end
 
   def finalize_move(piece, target)
     # move_castle if board.castling?(piece, target)

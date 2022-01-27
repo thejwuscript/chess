@@ -16,7 +16,7 @@ class Pawn < Piece
     super(color, position)
     @type = 'pawn'
     @start_position = position || nil
-    @double_step_turn = nil
+    @double_step_turn = 0
   end
 
   def assign_initial_position
