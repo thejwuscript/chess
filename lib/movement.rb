@@ -211,15 +211,28 @@ module Movement
   end
 
   def checkmate?(king)
-    no_legal_moves?(king) && checked?(king, king.position)
+    no_legal_moves?(king) && checked?(king, king.position) && no_counter?(king, king.color)
   end
 
   def stalemate?(king)
-    no_legal_moves?(king) && !(checked?(king, king.position))
+    no_legal_moves?(king) && !(checked?(king, king.position)) && no_counter?(king, king.color)
   end
 
   def no_legal_moves?(king)
     king.possible_moves.none? { |move| validate_move(king, move) }
   end
 
+  def enemy_checking(king, target)
+    color = king.color
+    all_enemies(color).each { |enemy| return enemy if validate_move(enemy, target) == target }
+  end
+
+  def all_allies(color)
+    grid.flatten.compact.keep_if { |piece| piece.color == color }
+  end
+
+  def no_counter?(king, color)
+    target = enemy_checking(king, king.position).position
+    all_allies(color).none? { |ally| validate_move(ally, target) }
+  end
 end
