@@ -128,8 +128,10 @@ module Movement
   end
 
   def verify_king_move(king, target)
-    return if castling?(king, target)
-    
+    if castling?(king, target)
+      move_castle(target)
+      return target
+    end
     original_piece = piece_at(target)
     hypothetical_move(target, king)
     king_checked = checked?(king, target)
@@ -137,6 +139,22 @@ module Movement
     set_piece_at(king.position, king)
     target unless king_checked
   end
+
+  def move_castle(target)
+    row = target[1]
+    if target[0] == 'C'
+      rook = piece_at("A#{row}")
+      set_piece_at("D#{row}", rook)
+      delete_piece_at(rook.position)
+      rook.position = "D#{row}"
+    elsif target[0] == 'G'
+      rook = piece_at("H#{row}")
+      set_piece_at("F#{row}", rook)
+      delete_piece_at(rook.position)
+      rook.position = "F#{row}"
+    end
+  end
+
 
   def castling?(king, target)
     return false if king.move_count > 0
