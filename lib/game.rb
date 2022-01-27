@@ -173,15 +173,15 @@ class Game
     pawn = board.promote_candidate
     return if pawn.nil?
 
-    number = promotion_choice(pawn.position)
-    piece = [Queen, Rook, Bishop, Knight][number - 1].new
+    number = promotion_choice
+    piece = [Queen, Rook, Bishop, Knight][number.to_i - 1].new
     piece.position = pawn.position
     piece.color = pawn.color
     board.set_piece_at(piece.position, piece)
   end
 
-  def promotion_choice(position)
-    promotion_message(position)
+  def promotion_choice
+    promotion_message
     loop do
       input = gets.chomp
       return input if input.match?(/^[1-4]$/)
