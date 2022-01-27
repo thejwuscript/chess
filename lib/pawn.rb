@@ -27,8 +27,8 @@ class Pawn < Piece
   end
 
   def assign_symbol
-    self.symbol = '♙' if @color == 'W'
-    self.symbol = '♟︎' if @color == 'B'
+    self.symbol = '♟' if @color == 'W'
+    self.symbol = "\e[30m♟" if @color == 'B'
   end
 
   def en_passantable?(color)
