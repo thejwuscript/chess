@@ -9,6 +9,12 @@ module GameMessage
     puts "Enter a coordinate to move your #{piece.type} to."
   end
 
+  def choose_game_message
+    puts "Press '1' for vs Computer."
+    puts "Press '2' for vs another player."
+    puts ''
+  end
+
   def invalid_input_message
     puts 'Invalid entry. Please try again.'
   end

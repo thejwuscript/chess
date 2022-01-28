@@ -12,5 +12,6 @@ require_relative 'king'
 require_relative 'game_message'
 require_relative 'movement'
 require_relative 'player'
+require_relative 'computer'
 
 Game.new.play

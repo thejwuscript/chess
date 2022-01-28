@@ -46,6 +46,12 @@ class Board
     array.detect { |piece| piece.is_a? Pawn }
   end
 
+  def array_to_position(array)
+    letter = ('A'..'Z').to_a[array.last]
+    number = (1..8).to_a.reverse[array.first]
+    letter + number.to_s
+  end
+
   private
 
   def position_to_array(position)
@@ -54,11 +60,7 @@ class Board
     [row, column]
   end
 
-  def array_to_position(array)
-    letter = ('A'..'Z').to_a[array.last]
-    number = (1..8).to_a.reverse[array.first]
-    letter + number.to_s
-  end
+  
 
   def white_black_row(row)
     row.each_with_index do |piece, column|

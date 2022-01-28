@@ -70,9 +70,30 @@ class Game
   end
 
   def pregame
-    assign_players
+    number = choose_game_format
+    number == 1 ? assign_ai_player : assign_players
     show_player_assignment
     prep_board
+  end
+
+  def assign_ai_player
+    get_name_message { 'one' }
+    player_one_name = gets.chomp
+    players = [Player.new(player_one_name), Computer.new].shuffle
+    self.player_black = players.pop
+    self.player_white = players.pop
+    player_black.color = 'B'
+    player_white.color = 'W'
+  end
+
+  def choose_game_format
+    choose_game_message
+    loop do
+      input = gets.chomp.to_i
+      return input if input.between?(1, 2)
+
+      invalid_input_message
+    end
   end
 
   def round
@@ -100,8 +121,10 @@ class Game
     checked_king = board.find_checked_king
     king_checked_message(checked_king) if checked_king
 
-    chosen_piece = board.piece_at(verify_input_one)
-    verified_move = choose_target(chosen_piece)
+    player = current_player
+    chosen_position = player.is_a?(Computer) ? ai_input : verify_input_one
+    chosen_piece = board.piece_at(chosen_position)
+    verified_move = player.is_a?(Computer) ? ai_target(chosen_piece) : choose_target(chosen_piece)
     finalize_move(chosen_piece, verified_move)
   end
 
@@ -155,7 +178,11 @@ class Game
   end
 
   def moves_available?(piece)
-    piece.possible_moves.any? { |move| board.validate_move(piece, move) }
+    array = []
+    ('A'..'H').to_a.each do |letter|
+      ('1'..'8').to_a.each { |number| array << letter + number }
+    end
+    array.any? { |move| board.validate_move(piece, move) }
   end
 
   def game_over?
@@ -174,7 +201,7 @@ class Game
     return if pawn.nil?
 
     number = promotion_choice
-    piece = [Queen, Rook, Bishop, Knight][number.to_i - 1].new(pawn.color, pawn.position)
+    piece = [Queen, Rook, Bishop, Knight][number - 1].new(pawn.color, pawn.position)
     piece.assign_symbol
     # set piece's turn count
     board.set_piece_at(piece.position, piece)
@@ -184,7 +211,7 @@ class Game
     promotion_message
     loop do
       input = gets.chomp
-      return input if input.match?(/^[1-4]$/)
+      return input.to_i if input.match?(/^[1-4]$/)
   
       invalid_input_message
     end
@@ -198,4 +225,17 @@ class Game
   def play_again?
   end
 
+  def ai_input # outputs a position(String)
+    color = current_player.color
+    valid_pieces = board.all_allies(color).keep_if { |piece| moves_available?(piece) }
+    valid_pieces.sample.position
+  end
+
+  def ai_target(piece)
+    array = []
+    ('A'..'H').to_a.each do |letter|
+      ('1'..'8').to_a.each { |number| array << letter + number }
+    end
+    array.keep_if { |position| board.validate_move(piece, position) }.sample
+  end
 end
