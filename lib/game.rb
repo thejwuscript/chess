@@ -144,7 +144,7 @@ class Game
   def verify_input_one
     choose_piece_message
     loop do
-      input = player_input
+      input = player_input #or computer input
       piece = board.piece_at(input)
       current_color = current_player.color
       next invalid_input_message if piece.nil?
@@ -176,6 +176,7 @@ class Game
     number = promotion_choice
     piece = [Queen, Rook, Bishop, Knight][number.to_i - 1].new(pawn.color, pawn.position)
     piece.assign_symbol
+    # set piece's turn count
     board.set_piece_at(piece.position, piece)
   end
 
