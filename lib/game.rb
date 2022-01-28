@@ -174,9 +174,8 @@ class Game
     return if pawn.nil?
 
     number = promotion_choice
-    piece = [Queen, Rook, Bishop, Knight][number.to_i - 1].new
-    piece.position = pawn.position
-    piece.color = pawn.color
+    piece = [Queen, Rook, Bishop, Knight][number.to_i - 1].new(pawn.color, pawn.position)
+    piece.assign_symbol
     board.set_piece_at(piece.position, piece)
   end
 
