@@ -20,7 +20,7 @@ class King < Piece
   end
 
   def assign_symbol
-    self.symbol = '♚' if @color == 'W'
+    self.symbol = "\e[46m♚" if @color == 'W'
     self.symbol = "\e[30m♚" if @color == 'B'
   end
 

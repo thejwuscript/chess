@@ -228,13 +228,15 @@ class Game
 
   def ai_input
     color = current_player.color
-    valid_pieces = board.all_allies(color).keep_if { |piece| moves_available?(piece) }
-    valid_pieces.shuffle.each do |piece|
+    valid_pieces = board.all_allies(color).keep_if { |piece| moves_available?(piece) }.shuffle
+    valid_pieces.each do |piece|
       piece.possible_moves.each do |move|
         next if board.same_color_at?(move, piece)
-        return piece.position if board.piece_at(move) || move == piece.possible_moves.last
+        return piece.position if board.piece_at(move)
+        
       end
     end
+    valid_pieces.sample.position
   end
 
   def ai_target(piece)
@@ -242,10 +244,11 @@ class Game
     ('A'..'H').to_a.each do |letter|
       ('1'..'8').to_a.each { |number| array << letter + number }
     end
-    validated = array.keep_if { |position| board.validate_move(piece, position) }
-    validated.each do |position|
-      return position if board.piece_at(position) || position == validated.last
+    validated = array.keep_if { |position| board.validate_move(piece, position) }.shuffle
+    #validated.each do |position|
+    #  return position if board.piece_at(position) || position == validated.last
 
-    end
+    #end
+    validated.find { |position| board.piece_at(position) } || validated.sample
   end
 end

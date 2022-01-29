@@ -122,7 +122,7 @@ module Movement
   end
 
   def delete_en_passant(piece, target)
-    return unless piece.is_a?(Pawn)
+    return unless piece.is_a?(Pawn) && target.match?(/3|6/)
     
     a, b = position_to_array(target)
     w_en_passant(a, b) ? grid[a+1][b] = nil : nil
