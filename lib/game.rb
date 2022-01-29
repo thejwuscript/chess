@@ -141,14 +141,7 @@ class Game
     end
   end
 
-  #def move_king(king)
-  #  king_checked_message(king)
-  #  verified_move = choose_target(king)
-  #  finalize_move(king, verified_move)
-  #end
-
   def finalize_move(piece, target)
-    # move_castle if board.castling?(piece, target)
     board.delete_en_passant(piece, target)
     board.set_piece_at(target, piece)
     board.delete_piece_at(piece.position)
@@ -168,7 +161,7 @@ class Game
   def verify_input_one
     choose_piece_message
     loop do
-      input = player_input #or computer input
+      input = player_input
       piece = board.piece_at(input)
       current_color = current_player.color
       next invalid_input_message if piece.nil?
@@ -203,7 +196,6 @@ class Game
     number = promotion_choice
     piece = [Queen, Rook, Bishop, Knight][number - 1].new(pawn.color, pawn.position)
     piece.assign_symbol
-    # set piece's turn count
     board.set_piece_at(piece.position, piece)
   end
 
@@ -231,10 +223,7 @@ class Game
     valid_pieces.each do |ally|
       board.grid.flatten.compact.shuffle.each do |piece|
         return ally.position if board.validate_move(ally, piece.position)
-     # piece.possible_moves.each do |move|
-     #   next if board.same_color_at?(move, piece)
-     #   return piece.position if board.piece_at(move) && board.validate_move(piece, move)
-     #   
+  
      end
     end
     valid_pieces.sample.position
@@ -245,7 +234,7 @@ class Game
     ('A'..'H').to_a.each do |letter|
       ('1'..'8').to_a.each { |number| array << letter + number }
     end
-    validated = array.keep_if { |position| board.validate_move(piece, position) }.shuffle
+    validated = array.keep_if { |position| board.validate_move(piece, position) }
     validated.find { |position| board.piece_at(position) } || validated.sample
   end
 end

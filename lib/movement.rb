@@ -213,15 +213,23 @@ module Movement
   end
 
   def checkmate?(king)
-    no_legal_moves?(king) && checked?(king, king.position) && no_counter?(king, king.color)
+    no_legal_moves?(king.color) && checked?(king, king.position) && no_counter?(king, king.color)
   end
 
   def stalemate?(king)
-    no_legal_moves?(king) && !(checked?(king, king.position)) && no_counter?(king, king.color)
+    no_legal_moves?(king.color) && !(checked?(king, king.position)) && no_counter?(king, king.color)
   end
 
-  def no_legal_moves?(king)
-    king.possible_moves.none? { |move| validate_move(king, move) }
+  def no_legal_moves?(color)
+    all_allies(color).none? { |piece| moves_available?(piece) }
+  end
+
+  def moves_available?(piece)
+    array = []
+    ('A'..'H').to_a.each do |letter|
+      ('1'..'8').to_a.each { |number| array << letter + number }
+    end
+    array.any? { |move| validate_move(piece, move) }
   end
 
   def enemy_checking(king, target)
