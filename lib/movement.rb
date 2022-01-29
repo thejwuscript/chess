@@ -3,7 +3,7 @@ module Movement
   def validate_move(piece, target)
     return if same_color_at?(target, piece)
     
-    origin_array = piece.position_to_array # Depend on inst var
+    origin_array = piece.position_to_array
     target_array = position_to_array(target)
     return unless reach_target(origin_array, piece, target_array)
     return verify_king_move(piece, target) if piece.is_a? King
@@ -113,18 +113,20 @@ module Movement
 
   def w_en_passant(row, column)
     piece = grid[row+1][column]
-    if piece.is_a?(Pawn) && piece.en_passantable?('B')
-      delete_piece_at(piece.position)
-      [row, column]
-    end
+    [row, column] if piece.is_a?(Pawn) && piece.en_passantable?('B')
   end
 
   def b_en_passant(row, column)
     piece = grid[row-1][column]
-    if piece.is_a?(Pawn) && piece.en_passantable?('W')
-      delete_piece_at(piece.position)
-      [row, column] 
-    end
+    [row, column] if piece.is_a?(Pawn) && piece.en_passantable?('W')
+  end
+
+  def delete_en_passant(piece, target)
+    return unless piece.is_a?(Pawn)
+    
+    a, b = position_to_array(target)
+    w_en_passant(a, b) ? grid[a+1][b] = nil : nil
+    b_en_passant(a, b) ? grid[a-1][b] = nil : nil
   end
 
   def verify_king_move(king, target)

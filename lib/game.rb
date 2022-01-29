@@ -149,6 +149,7 @@ class Game
 
   def finalize_move(piece, target)
     # move_castle if board.castling?(piece, target)
+    board.delete_en_passant(piece, target)
     board.set_piece_at(target, piece)
     board.delete_piece_at(piece.position)
     piece.position = target
@@ -228,7 +229,7 @@ class Game
   def ai_input
     color = current_player.color
     valid_pieces = board.all_allies(color).keep_if { |piece| moves_available?(piece) }
-    valid_pieces.each do |piece|
+    valid_pieces.shuffle.each do |piece|
       piece.possible_moves.each do |move|
         next if board.same_color_at?(move, piece)
         return piece.position if board.piece_at(move) || move == piece.possible_moves.last
