@@ -187,8 +187,7 @@ class Game
   end
 
   def game_over?
-    king = board.find_checked_king
-    return false if king.nil?
+    king = board.grid.flatten.find { |elem| elem.is_a?(King) && elem.color == current_player.color}
     return true if board.stalemate?(king)
 
     if board.checkmate?(king)

@@ -47,9 +47,6 @@ RSpec.describe Game do
     end
   end
 
-  describe '#select_piece' do
-  end
-
   describe '#player_input' do
     context 'when player enters a valid input' do
       it 'returns the input' do
@@ -123,7 +120,7 @@ RSpec.describe Game do
       
       it 'is replaced by a Queen' do
         allow(game.board).to receive(:promote_candidate).and_return(white_pawn)
-        allow(game).to receive(:promotion_choice).with('C8').and_return(1)
+        allow(game).to receive(:promotion_choice).and_return(1)
         game.promote_pawn
         result = game.board.grid[0][2]
         expect(result).to be_kind_of(Queen)

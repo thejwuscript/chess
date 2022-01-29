@@ -226,7 +226,7 @@ module Movement
 
   def enemy_checking(king, target)
     color = king.color
-    all_enemies(color).each { |enemy| return enemy if validate_move(enemy, target) == target }
+    all_enemies(color).each { |enemy| return enemy if validate_move(enemy, target) == target }[0]
   end
 
   def all_allies(color)
