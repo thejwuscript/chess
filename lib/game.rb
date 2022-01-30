@@ -142,7 +142,7 @@ class Game
   end
 
   def finalize_move(piece, target)
-    board.move_castle(target) if board.castling?(piece, target)
+    board.move_castle(target) if piece.is_a?(King) && board.castling?(piece, target)
     
     board.delete_en_passant(piece, target)
     board.set_piece_at(target, piece)
@@ -156,8 +156,9 @@ class Game
       input = gets.chomp.upcase
       return input if input.match?(/^[A-H][1-8]$/)
 
-      rescue ArgumentError => e
       invalid_input_message
+      rescue ArgumentError => e
+        puts e
     end
   end
 
