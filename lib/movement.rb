@@ -130,10 +130,8 @@ module Movement
   end
 
   def verify_king_move(king, target)
-    if castling?(king, target)
-      move_castle(target)
-      return target
-    end
+    return target if castling?(king, target)
+    
     original_piece = piece_at(target)
     hypothetical_move(target, king)
     king_checked = checked?(king, target)

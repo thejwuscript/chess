@@ -142,6 +142,8 @@ class Game
   end
 
   def finalize_move(piece, target)
+    board.move_castle(target) if board.castling?(piece, target)
+    
     board.delete_en_passant(piece, target)
     board.set_piece_at(target, piece)
     board.delete_piece_at(piece.position)
