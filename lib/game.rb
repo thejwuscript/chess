@@ -155,7 +155,8 @@ class Game
     loop do
       input = gets.chomp.upcase
       return input if input.match?(/^[A-H][1-8]$/)
-  
+
+      rescue ArgumentError => e
       invalid_input_message
     end
   end
