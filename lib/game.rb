@@ -1,10 +1,12 @@
 # frozen_string_literal: true
 
 require_relative '../lib/game_message'
+require_relative '../lib/save_and_load'
 require 'yaml'
 
 class Game
   include GameMessage
+  include SaveAndLoad
   
   attr_reader :all_pieces
   attr_accessor :board, :turn_count, :current_player, :player_white, :player_black, :winner
@@ -30,45 +32,7 @@ class Game
     game_end
   end
 
-  def load_saved_file
-    puts ''
-    puts 'Would you like to load a previous game?'
-    puts '    [1] -> Yes'
-    puts '    [2] -> No'
-    puts ''
-    gets.chomp == '1' ? true : false
-  end
-
-  def save_game
-    File.open("save_state.yaml", 'w') { |file| file.write save_to_yaml }
-    puts "Game saved."
-  end
-
-  def save_to_yaml
-    YAML.dump(
-      'board' => @board,
-      'turn_count' => @turn_count,
-      'player_white' => @player_white,
-      'player_black' => @player_black,
-      'current_player' => @current_player,
-      'winner' => @winner
-    )
-  end
-
-  def load_from_yaml
-    hash = YAML.load_file('save_state.yaml')
-    self.board = hash['board']
-    self.turn_count = hash['turn_count']
-    self.player_white = hash['player_white']
-    self.player_black = hash['player_black']
-    self.current_player = hash['current_player']
-    self.winner = hash['winner']
-    puts 'Game loaded.'
-    board.show_board
-    move_piece
-    promote_pawn
-  end
-
+  
   def player_names
     get_name_message { 'one' }
     player_one_name = gets.chomp
