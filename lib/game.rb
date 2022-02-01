@@ -31,7 +31,6 @@ class Game
     round
     game_end
   end
-
   
   def player_names
     get_name_message { 'one' }
@@ -84,8 +83,7 @@ class Game
     get_name_message { 'one' }
     player_one_name = gets.chomp
     players = [Player.new(player_one_name), Computer.new].shuffle
-    self.player_black = players.pop
-    self.player_white = players.pop
+    self.player_black, self.player_white = players
     player_black.color = 'B'
     player_white.color = 'W'
   end
@@ -147,8 +145,8 @@ class Game
 
   def finalize_move(piece, target)
     board.move_castle(target) if piece.is_a?(King) && board.castling?(piece, target)
+    board.delete_en_passant(piece, target) if piece.is_a?(Pawn)
     
-    board.delete_en_passant(piece, target)
     board.set_piece_at(target, piece)
     board.delete_piece_at(piece.position)
     piece.position = target
@@ -189,7 +187,7 @@ class Game
   end
 
   def game_over?
-    king = board.grid.flatten.find { |elem| elem.is_a?(King) && elem.color == current_player.color}
+    king = board.grid.flatten.find { |piece| piece.is_a?(King) && piece.color == current_player.color}
     return true if board.stalemate?(king)
 
     if board.checkmate?(king)
@@ -220,11 +218,11 @@ class Game
 
   def game_end
     winner ? declare_winner : declare_draw
-    play_again?
+    # play_again?
   end
 
-  def play_again?
-  end
+  # def play_again?
+  # end
 
   def ai_input
     color = current_player.color
@@ -233,7 +231,7 @@ class Game
       board.grid.flatten.compact.shuffle.each do |piece|
         return ally.position if board.validate_move(ally, piece.position)
   
-     end
+      end
     end
     valid_pieces.sample.position
   end

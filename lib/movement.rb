@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Movement
   
   def validate_move(piece, target)

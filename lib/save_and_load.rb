@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module SaveAndLoad
   def load_saved_file
     puts ''
