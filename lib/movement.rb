@@ -132,8 +132,10 @@ module Movement
   end
 
   def verify_king_move(king, target)
-    return target if castling?(king, target)
-    
+    if castling?(king, target)
+      return valid_castling?(king, target) ? target : nil
+      
+    end  
     original_piece = piece_at(target)
     hypothetical_move(target, king)
     king_checked = checked?(king, target)
@@ -164,13 +166,15 @@ module Movement
     origin_ary = king.position_to_array
     target_ary = position_to_array(target)
     diff = origin_ary.zip(target_ary).map { |a, b| a - b }
-    
-    return false unless diff == [0, 2] || diff == [0, -2]
-
-    return right_castling?(origin_ary, king) if diff == [0, -2]
-    
-    left_castling?(origin_ary, king, target_ary) if diff == [0, 2]
+    diff == [0, 2] || diff == [0, -2] ? true : false
   end
+
+  def valid_castling?(king, target)
+    origin_ary = king.position_to_array
+    target_ary = position_to_array(target)
+    true if right_castling?(origin_ary, king) || left_castling?(origin_ary, king, target_ary)
+  end
+
 
   def right_castling?(origin_ary, king)
     a, b = origin_ary
