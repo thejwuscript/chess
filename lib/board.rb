@@ -52,16 +52,14 @@ class Board
     letter + number.to_s
   end
 
-  private
-
   def position_to_array(position)
     row = (1..8).to_a.reverse.index(position[1].to_i)
     column = ('A'..'Z').to_a.index(position[0])
     [row, column]
   end
 
+  private
   
-
   def white_black_row(row)
     row.each_with_index do |piece, column|
       print column.even? ? white_square(piece) : black_square(piece)

@@ -2,12 +2,12 @@
 
 module Movement
   
-  def validate_move(piece, target)
+  def validate_move(piece, target, game = nil)
     return if same_color_at?(target, piece)
     
     origin_array = piece.position_to_array
     target_array = position_to_array(target)
-    return unless reach_target(origin_array, piece, target_array)
+    return unless reach_target(origin_array, piece, target_array, game)
     return verify_king_move(piece, target) if piece.is_a? King
     
     own_king_exposed?(piece, target) ? nil : target
@@ -22,13 +22,13 @@ module Movement
     king_checked && king_checked.color == piece.color ? true : false
   end
 
-  def reach_target(origin_ary, piece, target_ary)
+  def reach_target(origin_ary, piece, target_ary, game)
     if piece.is_a?(Rook) || piece.is_a?(Bishop) || piece.is_a?(Queen)
       depth_first_search(origin_ary, piece.move_manner, target_ary)
     elsif piece.is_a?(King) || piece.is_a?(Knight)
       breadth_search(origin_ary, piece.move_manner, target_ary)
     elsif piece.is_a?(Pawn)
-      pawn_search(origin_ary, piece, target_ary)
+      pawn_search(origin_ary, piece, target_ary, game)
     end
   end
 
@@ -70,9 +70,9 @@ module Movement
     end
   end
 
-  def pawn_search(origin_ary, piece, target_ary)
+  def pawn_search(origin_ary, piece, target_ary, game)
     if origin_ary.zip(target_ary).map { |a, b| ( a - b ).abs }.eql?([1, 1])
-      pawn_attack(origin_ary, piece.color, target_ary)
+      pawn_attack(origin_ary, piece.color, target_ary, game)
     elsif piece.color == 'W'
       white_pawn_search(origin_ary, piece, target_ary)
     else
@@ -82,53 +82,54 @@ module Movement
 
   def white_pawn_search(origin_ary, pawn, target_ary)
     a, b = origin_ary
-    return if occupied?(target_ary) || occupied?([a-1, b])
+    one_step = [a-1, b]
+    return if occupied?(one_step) || occupied?(target_ary)
     
-    if pawn.start_position == pawn.position && [a-2, b] == target_ary
-      pawn.store_turn_count
-      target_ary
-    else
-      target_ary if [a-1, b] == target_ary
-    end
+    target_ary if one_step == target_ary || pawn_double_step?(pawn, target_ary)
   end
 
   def black_pawn_search(origin_ary, pawn, target_ary)
     a, b = origin_ary
-    return if occupied?(target_ary) || occupied?([a+1, b])
+    one_step = [a+1, b]
+    return if occupied?(one_step) || occupied?(target_ary)
     
-    if pawn.start_position == pawn.position && [a+2, b] == target_ary
-      pawn.store_turn_count
-      target_ary
-    else
-      target_ary if [a+1, b] == target_ary
-    end
+    target_ary if one_step == target_ary || pawn_double_step?(pawn, target_ary)
   end
 
-  def pawn_attack(origin_ary, color, target_ary)
+  def pawn_double_step?(pawn, target_ary)
+    return if pawn.move_count > 0
+    
+    a, b = pawn.position_to_array
+    true if pawn.color == 'W' && [a-2, b] == target_ary ||
+            pawn.color == 'B' && [a+2, b] == target_ary
+  end
+
+
+  def pawn_attack(origin_ary, color, target_ary, game)
     a, b = target_ary
     if color == 'B' && a - origin_ary[0] == 1
-      grid[a][b].nil? ? b_en_passant(a, b) : target_ary
+      grid[a][b].nil? ? b_en_passant(a, b, game) : target_ary
     elsif color == 'W' && a - origin_ary[0] == -1
-      grid[a][b].nil? ? w_en_passant(a, b) : target_ary
+      grid[a][b].nil? ? w_en_passant(a, b, game) : target_ary
     end
   end
 
-  def w_en_passant(row, column)
+  def w_en_passant(row, column, game)
     piece = grid[row+1][column]
-    [row, column] if piece.is_a?(Pawn) && piece.en_passantable?('B')
+    [row, column] if piece.is_a?(Pawn) && piece.en_passantable?('B', game)
   end
 
-  def b_en_passant(row, column)
+  def b_en_passant(row, column, game)
     piece = grid[row-1][column]
-    [row, column] if piece.is_a?(Pawn) && piece.en_passantable?('W')
+    [row, column] if piece.is_a?(Pawn) && piece.en_passantable?('W', game)
   end
 
-  def delete_en_passant(piece, target)
+  def remove_pawn_captured_en_passant(piece, target, game)
     return unless piece.is_a?(Pawn) && target.match?(/3|6/)
     
     a, b = position_to_array(target)
-    w_en_passant(a, b) ? grid[a+1][b] = nil : nil
-    b_en_passant(a, b) ? grid[a-1][b] = nil : nil
+    w_en_passant(a, b, game) ? grid[a+1][b] = nil : nil
+    b_en_passant(a, b, game) ? grid[a-1][b] = nil : nil
   end
 
   def verify_king_move(king, target)

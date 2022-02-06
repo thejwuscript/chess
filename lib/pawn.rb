@@ -31,8 +31,8 @@ class Pawn < Piece
     self.symbol = "\e[30m♟" if @color == 'B'
   end
 
-  def en_passantable?(color)
-    true if en_passant_position? && en_passantable_turn?
+  def en_passantable?(color, game)
+    true if en_passant_position? && en_passantable_turn?(game)
   end
 
   def en_passant_position?
@@ -40,13 +40,13 @@ class Pawn < Piece
             color == 'W' && position[1].to_i == 4
   end
 
-  def en_passantable_turn?
-    count = turn_count
+  def en_passantable_turn?(game)
+    count = game.turn_count
     count - double_step_turn == 1 ? true : false
   end
 
-  def store_turn_count
-    self.double_step_turn = turn_count
+  def store_turn_count(count)
+    self.double_step_turn = count
   end
 
   def move_manner

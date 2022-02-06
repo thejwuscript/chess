@@ -111,7 +111,7 @@ class Game
 
   def update_turn_counts
     self.turn_count += 1
-    board.grid.flatten.compact.each { |piece| piece.turn_count += 1 }
+    #board.grid.flatten.compact.each { |piece| piece.turn_count += 1 }
   end
 
   def change_player
@@ -135,7 +135,7 @@ class Game
       target = player_input
       next invalid_input_message if board.same_color_at?(target, chosen_piece)
       
-      verified_move = board.validate_move(chosen_piece, target)
+      verified_move = board.validate_move(chosen_piece, target, self)
       return verified_move if verified_move
 
       invalid_input_message
@@ -143,14 +143,25 @@ class Game
   end
 
   def finalize_move(piece, target)
-    board.move_castle(target) if piece.is_a?(King) && board.castling?(piece, target)
-    board.delete_en_passant(piece, target) if piece.is_a?(Pawn)
+    king_follow_through(piece, target) if piece.is_a?(King)
+    pawn_follow_through(piece, target) if piece.is_a?(Pawn)
     
     board.set_piece_at(target, piece)
     board.delete_piece_at(piece.position)
     piece.position = target
     piece.move_count += 1
   end
+
+  def king_follow_through(king, target)
+    board.move_castle(target) if board.castling?(king, target)
+  end
+
+  def pawn_follow_through(pawn, target)
+    board.remove_pawn_captured_en_passant(pawn, target, self)
+    target_ary = board.position_to_array(target)
+    pawn.store_turn_count(@turn_count) if board.pawn_double_step?(pawn, target_ary)
+  end
+
 
   def player_input
     loop do
@@ -182,7 +193,7 @@ class Game
     ('A'..'H').to_a.each do |letter|
       ('1'..'8').to_a.each { |number| array << letter + number }
     end
-    array.any? { |move| board.validate_move(piece, move) }
+    array.any? { |move| board.validate_move(piece, move, self) }
   end
 
   def game_over?
@@ -228,7 +239,7 @@ class Game
     valid_pieces = board.all_allies(color).keep_if { |piece| moves_available?(piece) }.shuffle
     valid_pieces.each do |ally|
       board.grid.flatten.compact.shuffle.each do |piece|
-        return ally.position if board.validate_move(ally, piece.position)
+        return ally.position if board.validate_move(ally, piece.position, self)
   
       end
     end
@@ -240,7 +251,7 @@ class Game
     ('A'..'H').to_a.each do |letter|
       ('1'..'8').to_a.each { |number| array << letter + number }
     end
-    validated = array.keep_if { |position| board.validate_move(piece, position) }
+    validated = array.keep_if { |position| board.validate_move(piece, position, self) }
     validated.find { |position| board.piece_at(position) } || validated.sample
   end
 end

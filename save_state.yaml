@@ -5,51 +5,63 @@ board: !ruby/object:Board
       color: B
       position: A8
       symbol: "\e[30m♜"
-      turn_count: 9
+      turn_count: 0
       move_count: 0
       type: rook
     - !ruby/object:Knight
       color: B
       position: B8
       symbol: "\e[30m♞"
-      turn_count: 9
+      turn_count: 0
       move_count: 0
       type: knight
-    -
-    -
+    - !ruby/object:Bishop
+      color: B
+      position: C8
+      symbol: "\e[30m♝"
+      turn_count: 0
+      move_count: 0
+      type: bishop
+    - !ruby/object:Queen
+      color: B
+      position: D8
+      symbol: "\e[30m♛"
+      turn_count: 0
+      move_count: 0
+      type: queen
     - !ruby/object:King
       color: B
       position: E8
       symbol: "\e[30m♚"
-      turn_count: 9
+      turn_count: 0
       move_count: 0
       type: king
     - !ruby/object:Bishop
       color: B
       position: F8
       symbol: "\e[30m♝"
-      turn_count: 9
+      turn_count: 0
       move_count: 0
       type: bishop
     - !ruby/object:Knight
       color: B
       position: G8
       symbol: "\e[30m♞"
-      turn_count: 9
+      turn_count: 0
       move_count: 0
       type: knight
     - !ruby/object:Rook
       color: B
       position: H8
       symbol: "\e[30m♜"
-      turn_count: 9
+      turn_count: 0
       move_count: 0
       type: rook
   - - !ruby/object:Pawn
       color: B
       position: A7
       symbol: "\e[30m♟"
-      turn_count: 9
+      turn_count: 0
       move_count: 0
       type: pawn
       start_position: A7
@@ -58,36 +70,36 @@ board: !ruby/object:Board
       color: B
       position: B7
       symbol: "\e[30m♟"
-      turn_count: 9
+      turn_count: 0
       move_count: 0
       type: pawn
       start_position: B7
       double_step_turn: 0
-    - !ruby/object:Pawn
-      color: B
-      position: C7
-      symbol: "\e[30m♟"
-      turn_count: 9
-      move_count: 0
-      type: pawn
-      start_position: C7
-      double_step_turn: 0
-    -
     -
     - !ruby/object:Pawn
       color: B
-      position: F7
+      position: D7
       symbol: "\e[30m♟"
-      turn_count: 9
+      turn_count: 0
       move_count: 0
       type: pawn
-      start_position: F7
+      start_position: D7
       double_step_turn: 0
+    - !ruby/object:Pawn
+      color: B
+      position: E7
+      symbol: "\e[30m♟"
+      turn_count: 0
+      move_count: 0
+      type: pawn
+      start_position: E7
+      double_step_turn: 0
+    -
     - !ruby/object:Pawn
       color: B
       position: G7
       symbol: "\e[30m♟"
-      turn_count: 9
+      turn_count: 0
       move_count: 0
       type: pawn
       start_position: G7
@@ -96,7 +108,7 @@ board: !ruby/object:Board
       color: B
       position: H7
       symbol: "\e[30m♟"
-      turn_count: 9
+      turn_count: 0
       move_count: 0
       type: pawn
       start_position: H7
@@ -106,68 +118,48 @@ board: !ruby/object:Board
     -
     -
     -
-    -
-    -
-    -
-  - -
-    -
-    -
-    - !ruby/object:Pawn
-      color: B
-      position: D5
-      symbol: "\e[30m♟"
-      turn_count: 9
-      move_count: 1
-      type: pawn
-      start_position: D7
-      double_step_turn: 4
-    - !ruby/object:Pawn
-      color: B
-      position: E5
-      symbol: "\e[30m♟"
-      turn_count: 9
-      move_count: 1
-      type: pawn
-      start_position: E7
-      double_step_turn: 2
-    -
-    - !ruby/object:Queen
-      color: B
-      position: G5
-      symbol: "\e[30m♛"
-      turn_count: 9
-      move_count: 1
-      type: queen
-    -
-  - -
-    -
-    -
     - !ruby/object:Pawn
       color: W
-      position: D4
+      position: F6
       symbol: "\e[46m♟"
-      turn_count: 9
-      move_count: 1
-      type: pawn
-      start_position: D2
-      double_step_turn: 3
-    - !ruby/object:Pawn
-      color: W
-      position: E4
-      symbol: "\e[46m♟"
-      turn_count: 9
-      move_count: 1
+      turn_count: 0
+      move_count: 3
       type: pawn
       start_position: E2
       double_step_turn: 1
     -
-    - !ruby/object:Queen
+    -
+  - -
+    -
+    -
+    -
+    -
+    -
+    -
+    -
+  - -
+    - !ruby/object:Pawn
       color: W
-      position: G4
-      symbol: "\e[46m♛"
-      turn_count: 9
+      position: B4
+      symbol: "\e[46m♟"
+      turn_count: 0
       move_count: 1
-      type: queen
+      type: pawn
+      start_position: B2
+      double_step_turn: 7
+    - !ruby/object:Pawn
+      color: B
+      position: C4
+      symbol: "\e[30m♟"
+      turn_count: 0
+      move_count: 2
+      type: pawn
+      start_position: C7
+      double_step_turn: 2
+    -
+    -
+    -
+    -
     -
   - -
     -
@@ -181,36 +173,36 @@ board: !ruby/object:Board
       color: W
       position: A2
       symbol: "\e[46m♟"
-      turn_count: 9
+      turn_count: 0
       move_count: 0
       type: pawn
       start_position: A2
       double_step_turn: 0
-    - !ruby/object:Pawn
-      color: W
-      position: B2
-      symbol: "\e[46m♟"
-      turn_count: 9
-      move_count: 0
-      type: pawn
-      start_position: B2
-      double_step_turn: 0
+    -
     - !ruby/object:Pawn
       color: W
       position: C2
       symbol: "\e[46m♟"
-      turn_count: 9
+      turn_count: 0
       move_count: 0
       type: pawn
       start_position: C2
       double_step_turn: 0
-    -
+    - !ruby/object:Pawn
+      color: W
+      position: D2
+      symbol: "\e[46m♟"
+      turn_count: 0
+      move_count: 0
+      type: pawn
+      start_position: D2
+      double_step_turn: 0
     -
     - !ruby/object:Pawn
       color: W
       position: F2
       symbol: "\e[46m♟"
-      turn_count: 9
+      turn_count: 0
       move_count: 0
       type: pawn
       start_position: F2
@@ -219,7 +211,7 @@ board: !ruby/object:Board
       color: W
       position: G2
       symbol: "\e[46m♟"
-      turn_count: 9
+      turn_count: 0
       move_count: 0
       type: pawn
       start_position: G2
@@ -228,7 +220,7 @@ board: !ruby/object:Board
       color: W
       position: H2
       symbol: "\e[46m♟"
-      turn_count: 9
+      turn_count: 0
       move_count: 0
       type: pawn
       start_position: H2
@@ -237,52 +229,64 @@ board: !ruby/object:Board
       color: W
       position: A1
       symbol: "\e[46m♜"
-      turn_count: 9
+      turn_count: 0
       move_count: 0
       type: rook
     - !ruby/object:Knight
       color: W
       position: B1
       symbol: "\e[46m♞"
-      turn_count: 9
+      turn_count: 0
       move_count: 0
       type: knight
-    -
-    -
+    - !ruby/object:Bishop
+      color: W
+      position: C1
+      symbol: "\e[46m♝"
+      turn_count: 0
+      move_count: 0
+      type: bishop
+    - !ruby/object:Queen
+      color: W
+      position: D1
+      symbol: "\e[46m♛"
+      turn_count: 0
+      move_count: 0
+      type: queen
     - !ruby/object:King
       color: W
       position: E1
       symbol: "\e[46m♚"
-      turn_count: 9
+      turn_count: 0
       move_count: 0
       type: king
     - !ruby/object:Bishop
       color: W
       position: F1
       symbol: "\e[46m♝"
-      turn_count: 9
+      turn_count: 0
       move_count: 0
       type: bishop
     - !ruby/object:Knight
       color: W
       position: G1
       symbol: "\e[46m♞"
-      turn_count: 9
+      turn_count: 0
       move_count: 0
       type: knight
     - !ruby/object:Rook
       color: W
       position: H1
       symbol: "\e[46m♜"
-      turn_count: 9
+      turn_count: 0
       move_count: 0
       type: rook
-turn_count: 9
-player_white: &1 !ruby/object:Player
-  name: eaw;fije
+turn_count: 8
+player_white: !ruby/object:Player
+  name: efae
   color: W
-player_black: !ruby/object:Player
-  name: daf
+player_black: &1 !ruby/object:Player
+  name: aefae
   color: B
 current_player: *1
 winner:
