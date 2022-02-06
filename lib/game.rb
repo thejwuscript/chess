@@ -7,13 +7,11 @@ require 'yaml'
 class Game
   include GameMessage
   include SaveAndLoad
-  
-  attr_reader :all_pieces
+
   attr_accessor :board, :turn_count, :current_player, :player_white, :player_black, :winner
   
   def initialize
     @board = Board.new
-    @all_pieces = []
     @turn_count = 0
     @player_white = nil
     @player_black = nil
@@ -47,27 +45,28 @@ class Game
   end
 
   def prep_board
-    create_all_pieces
-    assign_all_attributes
-    set_initial_positions
+    all_pieces = create_all_pieces
+    pieces_with_attributes = assign_attributes(all_pieces)
+    set_pieces_on_board(pieces_with_attributes)
   end
 
-  def create_all_pieces
-    16.times { all_pieces.push(Pawn.new) }
-    [Rook, Bishop, Knight].each { |klass| 4.times { all_pieces << klass.new }}
-    [Queen, King].each { |klass| 2.times { all_pieces << klass.new }}
+  def create_all_pieces(array = [])
+    16.times { array.push(Pawn.new) }
+    [Rook, Bishop, Knight].each { |klass| 4.times { array << klass.new } }
+    [Queen, King].each { |klass| 2.times { array << klass.new } }
+    array
   end
 
-  def assign_all_attributes
-    all_pieces.each_with_index do |piece, index|
+  def assign_attributes(array)
+    array.each_with_index do |piece, index|
       index.even? ? piece.color = 'W' : piece.color = 'B'
       piece.assign_symbol
       piece.assign_initial_position
     end
   end
 
-  def set_initial_positions
-    all_pieces.each do |piece|
+  def set_pieces_on_board(array)
+    array.each do |piece|
       board.set_piece_at(piece.position, piece)
     end
   end
