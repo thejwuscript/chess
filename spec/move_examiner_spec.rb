@@ -1,10 +1,35 @@
 # frozen_string_literal: true
 
 require_relative '../lib/move_examiner'
+require_relative '../lib/board'
 
 RSpec.describe MoveExaminer do
   subject(:examiner) { described_class.new }
-  
+  let(:board) { instance_double(Board) }
+  let(:piece) { double('piece') }
+
+  describe '#position_to_array' do
+    it 'converts A1(lower-left corner) to [7, 0]' do
+      result = examiner.position_to_array('A1')
+      expect(result).to eq([7, 0])
+    end
+
+    it 'converts A8(upper-left corner) to [0, 0]' do
+      result = examiner.position_to_array('A8')
+      expect(result).to eq([0, 0])
+    end
+
+    it 'converts H8(upper-right corner) to [0, 7]' do
+      result = examiner.position_to_array('H8')
+      expect(result).to eq([0, 7])
+    end
+
+    it 'converts H1(lower-right corner) to [7, 7]' do
+      result = examiner.position_to_array('H1')
+      expect(result).to eq([7, 7])
+    end
+  end
+
   describe '#within_limits?' do
     context 'when elements greater than 7 is out of bounds' do
       array = [8, 0]
@@ -18,16 +43,26 @@ RSpec.describe MoveExaminer do
   end
 
   describe '#depth_search' do
-    context 'when a rook is moving from A8 to F8 unhindered' do
-      it 'returns [0, 5]' do
-        result = board.depth_search
-        expect(result).to eql([0, 5])
+    context 'when the path from [0, 0] to [5, 0] is clear' do
+      it 'returns [5, 0]' do
+        start = [0, 0]
+        target_ary = [5, 0]
+        manner = [1, 0]
+        examiner.board = board
+        allow(board).to receive(:occupied?).and_return(false).exactly(4).times
+        result = examiner.depth_search(start, manner, target_ary)
+        expect(result).to eql([5, 0])
       end
     end
 
-    context 'when a rook is trying to move from B2 to B6 with a piece in between' do
+    context 'when a piece is blocking the path from [0, 0] to [5, 0]' do
       it 'returns nil' do
-        result = board.depth_search
+        start = [0, 0]
+        target_ary = [5, 0]
+        manner = [1, 0]
+        examiner.board = board
+        allow(board).to receive(:occupied?).and_return(false, false, true)
+        result = examiner.depth_search(start, manner, target_ary)
         expect(result).to be_nil
       end
     end
