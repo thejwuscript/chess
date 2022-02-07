@@ -31,9 +31,9 @@ class Game
   end
   
   def player_names
-    get_name_message { 'one' }
+    get_name_message { 'Player One' }
     player_one_name = gets.chomp
-    get_name_message { 'two' }
+    get_name_message { 'Player Two' }
     player_two_name = gets.chomp
     [player_one_name, player_two_name]
   end
@@ -100,7 +100,7 @@ class Game
   def round
     loop do
       board.show_board
-      update_turn_counts
+      update_turn_count
       change_player
       return if game_over?
   
@@ -109,9 +109,8 @@ class Game
     end
   end
 
-  def update_turn_counts
+  def update_turn_count
     self.turn_count += 1
-    #board.grid.flatten.compact.each { |piece| piece.turn_count += 1 }
   end
 
   def change_player
@@ -198,9 +197,9 @@ class Game
 
   def game_over?
     king = board.grid.flatten.find { |piece| piece.is_a?(King) && piece.color == current_player.color}
-    return true if board.stalemate?(king)
+    return true if board.stalemate?(king, self)
 
-    if board.checkmate?(king)
+    if board.checkmate?(king, self)
       self.winner = king.color == 'W' ? player_black : player_white
       true
     end

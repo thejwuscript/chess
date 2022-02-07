@@ -217,24 +217,24 @@ module Movement
     grid.flatten.reject { |piece| piece.nil? || piece.color == color }
   end
 
-  def checkmate?(king)
-    no_legal_moves?(king.color) && checked?(king, king.position) && no_counter?(king, king.color)
+  def checkmate?(king, game)
+    no_legal_moves?(king.color, game) && checked?(king, king.position) && no_counter?(king, king.color)
   end
 
-  def stalemate?(king)
-    no_legal_moves?(king.color) && !(checked?(king, king.position)) && no_counter?(king, king.color)
+  def stalemate?(king, game)
+    no_legal_moves?(king.color, game) && !(checked?(king, king.position)) && no_counter?(king, king.color)
   end
 
-  def no_legal_moves?(color)
-    all_allies(color).none? { |piece| moves_available?(piece) }
+  def no_legal_moves?(color, game)
+    all_allies(color).none? { |piece| moves_available?(piece, game) }
   end
 
-  def moves_available?(piece)
+  def moves_available?(piece, game)
     array = []
     ('A'..'H').to_a.each do |letter|
       ('1'..'8').to_a.each { |number| array << letter + number }
     end
-    array.any? { |move| validate_move(piece, move) }
+    array.any? { |move| validate_move(piece, move, game) }
   end
 
   def enemy_checking(king, target)

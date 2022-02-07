@@ -22,7 +22,7 @@ module GameMessage
 
   def get_name_message
     puts ''
-    print "Player #{yield}, please enter your name: "
+    print "#{yield}, please enter your name: "
   end
 
   def show_player_assignment
