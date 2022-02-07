@@ -1,4 +1,4 @@
-run = 'ruby lib/main.rb'
+run = 'rspec spec/move_checker_spec.rb'
 
 [packager]
 language = "ruby"

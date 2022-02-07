@@ -1,9 +1,11 @@
 # frozen_string_literal: true
 
 require_relative '../lib/movement'
+require_relative '../lib/converter'
 
 class Board
   include Movement
+  include Converter
   
   attr_reader :grid
   
@@ -44,18 +46,6 @@ class Board
   def promote_candidate
     array = grid[0] + grid[7]
     array.detect { |piece| piece.is_a? Pawn }
-  end
-
-  def array_to_position(array)
-    letter = ('A'..'Z').to_a[array.last]
-    number = (1..8).to_a.reverse[array.first]
-    letter + number.to_s
-  end
-
-  def position_to_array(position)
-    row = (1..8).to_a.reverse.index(position[1].to_i)
-    column = ('A'..'Z').to_a.index(position[0])
-    [row, column]
   end
 
   private
