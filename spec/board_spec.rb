@@ -184,17 +184,7 @@ RSpec.describe Board do
     end
   end
 
-  describe '#within_limits?' do
-    context 'when elements greater than 7 is out of bounds' do
-      array = [8, 0]
-      it { is_expected.not_to be_within_limits(array) }
-    end
-
-    context 'when elements 7 or less is within limits' do
-      array = [7, 7]
-      it { is_expected.to be_within_limits(array) }
-    end
-  end
+  
 
   describe '#same_color_at?' do
     context 'when the origin piece and the piece on said position have the same color' do
@@ -230,30 +220,7 @@ RSpec.describe Board do
     end
   end
 
-  describe '#recursive_search' do
-    context 'when a rook is moving from A8 to F8 unhindered' do
-      origin_ary = [0, 0]
-      target_ary = [0, 5]
-      manner = [0, 1]
-
-      it 'returns [0, 5]' do
-        result = board.recursive_search(origin_ary, manner, target_ary)
-        expect(result).to eql([0, 5])
-      end
-    end
-
-    context 'when a rook is trying to move from B2 to B6 with a piece in between' do
-      origin_ary = [6, 1]
-      target_ary = [2, 1]
-      manner = [-1, 0]
-
-      it 'returns nil' do
-        board.grid[3][1] = Queen.new
-        result = board.recursive_search(origin_ary, manner, target_ary)
-        expect(result).to be_nil
-      end
-    end
-  end
+  
 
   describe '#breadth_search' do
     context 'when a knight is making a move from G2 to E3 unhindered' do

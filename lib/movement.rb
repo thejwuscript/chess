@@ -38,10 +38,6 @@ module Movement
     end
   end
 
-  def within_limits?(array)
-    array.all? { |num| num.between?(0, 7) }
-  end
-
   def occupied?(array)
     row, column = array
     grid[row][column] ? true : false
