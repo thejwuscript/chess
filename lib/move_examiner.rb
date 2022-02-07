@@ -36,7 +36,8 @@ class MoveExaminer
   def pawn_move_search(pawn, target_ary)
     row, column = position_to_array(pawn.position)
     modifier = pawn.color.eql?('W') ? -1 : 1
-    return if board.occupied?([row + modifier, column]) || board.occupied?(target_ary)
+    one_step = [row + modifier, column]
+    return if board.occupied?(one_step) || board.occupied?(target_ary)
     
     pawn.possible_moves.include?(target_ary) ? target_ary : nil
   end
