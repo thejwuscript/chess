@@ -58,13 +58,7 @@ module Movement
     recursive_search(next_array, manner, target_array)
   end
   
-  def breadth_search(origin_array, manners, target_array)
-    until manners.empty? do
-      next_array = origin_array.zip(manners.shift).map { |a, b| a + b }
-      next unless within_limits?(next_array)
-      return target_array if next_array == target_array
-    end
-  end
+  
 
   def pawn_search(origin_ary, piece, target_ary, game)
     if origin_ary.zip(target_ary).map { |a, b| ( a - b ).abs }.eql?([1, 1])

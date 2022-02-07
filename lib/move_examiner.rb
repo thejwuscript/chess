@@ -24,4 +24,12 @@ class MoveExaminer
     
     board.occupied?(next_ary) ? nil : depth_search(next_ary, manner, target_ary)
   end
+
+  def breadth_search(start, manners, target_ary)
+    until manners.empty? do
+      next_ary = start.zip(manners.shift).map { |a, b| a + b }
+      next unless within_limits?(next_ary)
+      return target_ary if next_ary == target_ary
+    end
+  end
 end

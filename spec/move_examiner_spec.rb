@@ -67,4 +67,23 @@ RSpec.describe MoveExaminer do
       end
     end
   end
+
+  describe '#breadth_search' do
+    context 'when a piece is making a move from [6, 6] to [5, 4] unhindered' do
+      start = [6, 6]
+      target_ary = [5, 4]
+      
+      it 'returns [5, 4]' do
+        manners = [[1, 2], [2, 1], [-1, -2]]
+        result = examiner.breadth_search(start, manners, target_ary)
+        expect(result).to eql([5, 4])
+      end
+
+      it 'loops through manners array until the target array is found' do
+        manners = [[1, 2], [2, 1], [-1, -2]]
+        expect(examiner).to receive(:within_limits?).exactly(3).times
+        examiner.breadth_search(start, manners, target_ary)
+      end
+    end
+  end
 end
