@@ -32,4 +32,12 @@ class MoveExaminer
       return target_ary if next_ary == target_ary
     end
   end
+
+  def pawn_move_search(pawn, target_ary)
+    row, column = position_to_array(pawn.position)
+    modifier = pawn.color.eql?('W') ? -1 : 1
+    return if board.occupied?([row + modifier, column]) || board.occupied?(target_ary)
+    
+    pawn.possible_moves.include?(target_ary) ? target_ary : nil
+  end
 end

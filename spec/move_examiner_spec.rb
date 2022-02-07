@@ -8,6 +8,10 @@ RSpec.describe MoveExaminer do
   let(:board) { instance_double(Board) }
   let(:piece) { double('piece') }
 
+  before do
+    examiner.board = board
+  end
+
   describe '#position_to_array' do
     it 'converts A1(lower-left corner) to [7, 0]' do
       result = examiner.position_to_array('A1')
@@ -48,7 +52,6 @@ RSpec.describe MoveExaminer do
         start = [0, 0]
         target_ary = [5, 0]
         manner = [1, 0]
-        examiner.board = board
         allow(board).to receive(:occupied?).and_return(false).exactly(4).times
         result = examiner.depth_search(start, manner, target_ary)
         expect(result).to eql([5, 0])
@@ -60,7 +63,6 @@ RSpec.describe MoveExaminer do
         start = [0, 0]
         target_ary = [5, 0]
         manner = [1, 0]
-        examiner.board = board
         allow(board).to receive(:occupied?).and_return(false, false, true)
         result = examiner.depth_search(start, manner, target_ary)
         expect(result).to be_nil
@@ -83,6 +85,30 @@ RSpec.describe MoveExaminer do
         manners = [[1, 2], [2, 1], [-1, -2]]
         expect(examiner).to receive(:within_limits?).exactly(3).times
         examiner.breadth_search(start, manners, target_ary)
+      end
+    end
+  end
+
+  describe '#pawn_move_search' do
+    context 'when a white pawn is moving from [6, 1] to [4, 1]' do
+      target_ary = [4, 1]
+      
+      before do
+        allow(piece).to receive(:position).and_return('B2')
+        allow(piece).to receive(:color).and_return('W')
+        allow(piece).to receive(:possible_moves).and_return([[5, 1], [4, 1]])
+      end
+    
+      it 'returns [4, 1] when unobstructed' do
+        allow(board).to receive(:occupied?).and_return(false, false)
+        result = examiner.pawn_move_search(piece, target_ary)
+        expect(result).to eq([4, 1])
+      end
+
+      it 'returns nil when obstructed' do
+        allow(board).to receive(:occupied?).and_return(false, true)
+        result = examiner.pawn_move_search(piece, target_ary)
+        expect(result).to be_nil
       end
     end
   end

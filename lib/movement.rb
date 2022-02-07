@@ -49,17 +49,6 @@ module Movement
     end
   end
 
-  def recursive_search(origin_array, manner, target_array)
-    next_array = origin_array.zip(manner).map { |a, b| a + b }
-    return nil unless within_limits?(next_array)
-    return target_array if next_array == target_array
-    return nil if occupied?(next_array)
-    
-    recursive_search(next_array, manner, target_array)
-  end
-  
-  
-
   def pawn_search(origin_ary, piece, target_ary, game)
     if origin_ary.zip(target_ary).map { |a, b| ( a - b ).abs }.eql?([1, 1])
       pawn_attack(origin_ary, piece.color, target_ary, game)
