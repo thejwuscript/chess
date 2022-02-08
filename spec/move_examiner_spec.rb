@@ -101,7 +101,7 @@ RSpec.describe MoveExaminer do
   end
 
   describe '#pawn_move_search' do
-    subject(:pawn_move_examiner) { described_class.new(board, piece, 'B4') }
+    subject(:pawn_move_examiner) { described_class.new(board, piece, 'B4', game) }
     
     context 'when a white pawn is moving from B2 to B4' do
       
@@ -112,18 +112,44 @@ RSpec.describe MoveExaminer do
       end
     
       it 'returns [4, 1] when unobstructed' do
-        pawn_move_examiner.instance_variable_set(:@game, game)
         allow(board).to receive(:occupied?).and_return(false, false)
         result = pawn_move_examiner.pawn_move_search
         expect(result).to eq([4, 1])
       end
 
       it 'returns nil when obstructed' do
-        pawn_move_examiner.instance_variable_set(:@game, game)
         allow(board).to receive(:occupied?).and_return(false, true)
         result = pawn_move_examiner.pawn_move_search
         expect(result).to be_nil
       end
+    end
+  end
+
+  describe '#pawn_attack' do
+    subject(:pawn_attack_examiner) { described_class.new(board, piece, 'F4', game) }
+
+    before do
+      allow(piece).to receive(:position) { 'E3' }
+      allow(piece).to receive(:color) { 'W' }
+    end
+  
+    it 'returns nil when the move is not an attacking move' do
+      pawn_attack_examiner.instance_variable_set(:@target, 'A3')
+      pawn_attack_examiner.instance_variable_set(:@target_ary, [5, 0])
+      result = pawn_attack_examiner.pawn_attack
+      expect(result).to be_nil
+    end
+
+    it 'returns target_ary if the attacking spot is occupied' do
+      allow(board).to receive(:occupied?) { true }
+      result = pawn_attack_examiner.pawn_attack
+      expect(result).to eq([4, 5])
+    end
+
+    it 'initializes EnPassantChecker when the attacking spot is empty' do
+      allow(board).to receive(:occupied?) { false }
+      result = pawn_attack_examiner.pawn_attack
+      expect(result).to be_kind_of(EnPassantChecker)
     end
   end
 end

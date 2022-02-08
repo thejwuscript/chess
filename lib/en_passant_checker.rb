@@ -1,0 +1,2 @@
+class EnPassantChecker
+end

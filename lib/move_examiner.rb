@@ -1,6 +1,7 @@
 #frozen_string_literal: true
 
 require_relative '../lib/converter'
+require_relative '../lib/en_passant_checker'
 
 class MoveExaminer
   include Converter
@@ -63,6 +64,14 @@ class MoveExaminer
     end
   end
 
+  def pawn_attack
+    modifier = piece.color.eql?('W') ? -1 : 1
+    return unless start_ary.zip(target_ary).map { |a, b| ( a - b ).abs }.eql?([1, 1])   
+    return unless (target_ary[0] - start_ary[0]) == modifier
+
+    board.occupied?(target_ary) ?  target_ary : EnPassantChecker.new
+  end
+
   def search_target
     case piece
     when Rook || Bishop || Queen
@@ -70,8 +79,7 @@ class MoveExaminer
     when Knight || King
       breadth_search
     when Pawn
-      pawn_move_search # || pawn_attack
+      pawn_attack || pawn_move_search
     end
   end
-
 end
