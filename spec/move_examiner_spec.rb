@@ -2,10 +2,12 @@
 
 require_relative '../lib/move_examiner'
 require_relative '../lib/board'
+require_relative '../lib/game'
 
 RSpec.describe MoveExaminer do
   let(:board) { instance_double(Board) }
   let(:piece) { double('piece') }
+  let(:game) { instance_double(Game) }
 
   describe '#initialize' do
     subject(:initial_examiner) { described_class.new(board, piece, 'D3') }
@@ -106,16 +108,18 @@ RSpec.describe MoveExaminer do
       before do
         allow(piece).to receive(:position).and_return('B2')
         allow(piece).to receive(:color).and_return('W')
-        allow(piece).to receive(:possible_moves).and_return([[5, 1], [4, 1]])
+        allow(pawn_move_examiner).to receive(:double_step?).and_return(true)
       end
     
       it 'returns [4, 1] when unobstructed' do
+        pawn_move_examiner.instance_variable_set(:@game, game)
         allow(board).to receive(:occupied?).and_return(false, false)
         result = pawn_move_examiner.pawn_move_search
         expect(result).to eq([4, 1])
       end
 
       it 'returns nil when obstructed' do
+        pawn_move_examiner.instance_variable_set(:@game, game)
         allow(board).to receive(:occupied?).and_return(false, true)
         result = pawn_move_examiner.pawn_move_search
         expect(result).to be_nil

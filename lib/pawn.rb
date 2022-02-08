@@ -51,9 +51,9 @@ class Pawn < Piece
 
   def move_manner
     if color == 'W'
-      [[-1, 0], [-2, 0], [-1, 1], [-1, -1]]
+      [[-1, 0], [-2, 0]]
     elsif color == 'B'
-      [[1, 0], [2, 0], [1, 1], [1, -1]]
+      [[1, 0], [2, 0]]
     end
   end
 end

@@ -48,6 +48,11 @@ class Board
     array.detect { |piece| piece.is_a? Pawn }
   end
 
+  def occupied?(array)
+    row, column = array
+    grid[row][column] ? true : false
+  end
+
   private
   
   def white_black_row(row)

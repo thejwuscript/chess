@@ -22,27 +22,6 @@ module Movement
     king_checked && king_checked.color == piece.color ? true : false
   end
 
-  def reach_target(origin_ary, piece, target_ary, game)
-    if piece.is_a?(Rook) || piece.is_a?(Bishop) || piece.is_a?(Queen)
-      depth_first_search(origin_ary, piece.move_manner, target_ary)
-    elsif piece.is_a?(King) || piece.is_a?(Knight)
-      breadth_search(origin_ary, piece.move_manner, target_ary)
-    elsif piece.is_a?(Pawn)
-      pawn_search(origin_ary, piece, target_ary, game)
-    end
-  end
-
-  def depth_first_search(origin_ary, manners, target_ary)
-    nil unless for i in 0..manners.size-1 do
-      return target_ary if recursive_search(origin_ary, manners[i], target_ary)
-    end
-  end
-
-  def occupied?(array)
-    row, column = array
-    grid[row][column] ? true : false
-  end
-
   def same_color_at?(position, piece)
     if other_piece = piece_at(position)
       piece.color == other_piece.color ? true : false
@@ -58,31 +37,6 @@ module Movement
       black_pawn_search(origin_ary, piece, target_ary)
     end
   end
-
-  def white_pawn_search(origin_ary, pawn, target_ary)
-    a, b = origin_ary
-    one_step = [a-1, b]
-    return if occupied?(one_step) || occupied?(target_ary)
-    
-    target_ary if one_step == target_ary || pawn_double_step?(pawn, target_ary)
-  end
-
-  def black_pawn_search(origin_ary, pawn, target_ary)
-    a, b = origin_ary
-    one_step = [a+1, b]
-    return if occupied?(one_step) || occupied?(target_ary)
-    
-    target_ary if one_step == target_ary || pawn_double_step?(pawn, target_ary)
-  end
-
-  def pawn_double_step?(pawn, target_ary)
-    return if pawn.move_count > 0
-    
-    a, b = pawn.position_to_array
-    true if pawn.color == 'W' && [a-2, b] == target_ary ||
-            pawn.color == 'B' && [a+2, b] == target_ary
-  end
-
 
   def pawn_attack(origin_ary, color, target_ary, game)
     a, b = target_ary

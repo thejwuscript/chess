@@ -4,13 +4,13 @@ require_relative '../lib/converter'
 
 class MoveExaminer
   include Converter
-  attr_reader :board, :piece, :target, :color, :start_ary, :target_ary
+  attr_reader :board, :piece, :target, :color, :start_ary, :target_ary, :game
 
-  def initialize(board = nil, piece = nil, target = nil, color = nil)
+  def initialize(board = nil, piece = nil, target = nil, game = nil)
     @board = board
     @piece = piece
     @target = target
-    @color = color
+    @game = game
     @start_ary = position_to_array(piece.position)
     @target_ary = position_to_array(target)
   end
@@ -49,7 +49,18 @@ class MoveExaminer
     one_step = [row + modifier, column]
     return if board.occupied?(one_step) || board.occupied?(target_ary)
     
-    piece.possible_moves.include?(target_ary) ? target_ary : nil
+    target_ary if double_step? || one_step.eql?(target_ary)
+  end
+
+  def double_step?
+    return if piece.move_count > 0
+
+    a, b = start_ary
+    if piece.color == 'W' && [a-2, b] == target_ary || 
+       piece.color == 'B' && [a+2, b] == target_ary
+          piece.store_turn_count(game.turn_count)
+          true
+    end
   end
 
   def search_target
