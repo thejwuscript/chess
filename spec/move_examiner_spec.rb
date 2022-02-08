@@ -4,94 +4,109 @@ require_relative '../lib/move_examiner'
 require_relative '../lib/board'
 
 RSpec.describe MoveExaminer do
-  subject(:examiner) { described_class.new }
   let(:board) { instance_double(Board) }
   let(:piece) { double('piece') }
 
-  before do
-    examiner.board = board
-  end
+  describe '#initialize' do
+    subject(:initial_examiner) { described_class.new(board, piece, 'D3') }
 
-  describe '#position_to_array' do
-    it 'converts A1(lower-left corner) to [7, 0]' do
-      result = examiner.position_to_array('A1')
-      expect(result).to eq([7, 0])
+    before do
+      allow(piece).to receive(:position).and_return('A8')
     end
-
-    it 'converts A8(upper-left corner) to [0, 0]' do
-      result = examiner.position_to_array('A8')
+  
+    it 'stores [0, 0] in @start_ary when position of piece is A8' do
+      result = initial_examiner.start_ary
       expect(result).to eq([0, 0])
     end
 
-    it 'converts H8(upper-right corner) to [0, 7]' do
-      result = examiner.position_to_array('H8')
-      expect(result).to eq([0, 7])
-    end
-
-    it 'converts H1(lower-right corner) to [7, 7]' do
-      result = examiner.position_to_array('H1')
-      expect(result).to eq([7, 7])
+    it 'stores [5, 3] in @target_ary when the target is D3' do
+      result = initial_examiner.target_ary
+      expect(result).to eq([5, 3])
     end
   end
 
   describe '#within_limits?' do
-    context 'when elements greater than 7 is out of bounds' do
+    subject(:examiner_limits) { described_class.new(board, piece, 'F3') }
+    
+    before do
+      allow(piece).to receive(:position) { 'F2'}
+      allow(examiner_limits).to receive(:position_to_array)
+    end
+  
+    it 'returns false when either row or column is greater than 7' do
       array = [8, 0]
-      it { is_expected.not_to be_within_limits(array) }
+      result = examiner_limits.within_limits?(array)
+      expect(result).to be false
     end
 
-    context 'when elements 7 or less is within limits' do
-      array = [7, 7]
-      it { is_expected.to be_within_limits(array) }
+    it 'returns true when both row and column are 7 or less' do
+      array = [6, 5]
+      result = examiner_limits.within_limits?(array)
+      expect(result).to be true
     end
   end
 
   describe '#depth_search' do
-    context 'when the path from [0, 0] to [5, 0] is clear' do
+    subject(:depth_examiner) { described_class.new(board, piece, 'A3') }
+
+    before do
+      allow(piece).to receive(:position) { 'A8' }
+      
+    end
+    
+    context 'when the path from A8 to A3 is clear' do
       it 'returns [5, 0]' do
-        start = [0, 0]
-        target_ary = [5, 0]
         manner = [1, 0]
         allow(board).to receive(:occupied?).and_return(false).exactly(4).times
-        result = examiner.depth_search(start, manner, target_ary)
+        start_ary = depth_examiner.start_ary
+        target_ary = depth_examiner.target_ary
+        result = depth_examiner.depth_search(start_ary, manner, target_ary)
         expect(result).to eql([5, 0])
       end
     end
 
     context 'when a piece is blocking the path from [0, 0] to [5, 0]' do
       it 'returns nil' do
-        start = [0, 0]
-        target_ary = [5, 0]
         manner = [1, 0]
         allow(board).to receive(:occupied?).and_return(false, false, true)
-        result = examiner.depth_search(start, manner, target_ary)
+        start_ary = depth_examiner.start_ary
+        target_ary = depth_examiner.target_ary
+        result = depth_examiner.depth_search(start_ary, manner, target_ary)
         expect(result).to be_nil
       end
     end
   end
 
   describe '#breadth_search' do
-    context 'when a piece is making a move from [6, 6] to [5, 4] unhindered' do
-      start = [6, 6]
-      target_ary = [5, 4]
+    subject(:breadth_examiner) {described_class.new(board, piece, 'E3') }
+    
+    context 'when a piece is making a move from G2 to E3 unhindered' do
+      before do
+        allow(piece).to receive(:position).and_return('G2')
+      end
       
       it 'returns [5, 4]' do
         manners = [[1, 2], [2, 1], [-1, -2]]
-        result = examiner.breadth_search(start, manners, target_ary)
+        start_ary = breadth_examiner.start_ary
+        target_ary = breadth_examiner.target_ary
+        result = breadth_examiner.breadth_search(start_ary, manners, target_ary)
         expect(result).to eql([5, 4])
       end
 
       it 'loops through manners array until the target array is found' do
         manners = [[1, 2], [2, 1], [-1, -2]]
-        expect(examiner).to receive(:within_limits?).exactly(3).times
-        examiner.breadth_search(start, manners, target_ary)
+        expect(breadth_examiner).to receive(:within_limits?).exactly(3).times
+        start_ary = breadth_examiner.start_ary
+        target_ary = breadth_examiner.target_ary
+        breadth_examiner.breadth_search(start_ary, manners, target_ary)
       end
     end
   end
 
   describe '#pawn_move_search' do
-    context 'when a white pawn is moving from [6, 1] to [4, 1]' do
-      target_ary = [4, 1]
+    subject(:pawn_move_examiner) { described_class.new(board, piece, 'B4') }
+    
+    context 'when a white pawn is moving from B2 to B4' do
       
       before do
         allow(piece).to receive(:position).and_return('B2')
@@ -100,16 +115,28 @@ RSpec.describe MoveExaminer do
       end
     
       it 'returns [4, 1] when unobstructed' do
+        target_ary = pawn_move_examiner.target_ary
         allow(board).to receive(:occupied?).and_return(false, false)
-        result = examiner.pawn_move_search(piece, target_ary)
+        result = pawn_move_examiner.pawn_move_search(piece, target_ary)
         expect(result).to eq([4, 1])
       end
 
       it 'returns nil when obstructed' do
+        target_ary = pawn_move_examiner.target_ary
         allow(board).to receive(:occupied?).and_return(false, true)
-        result = examiner.pawn_move_search(piece, target_ary)
+        result = pawn_move_examiner.pawn_move_search(piece, target_ary)
         expect(result).to be_nil
       end
+    end
+  end
+
+  describe '#search_target' do
+    subject(:search_examiner) { described_class.new(board, piece, 'E6') }
+    
+    it 'sends a message #search_method to piece' do
+      allow(piece).to receive(:position).and_return('G4')
+      expect(piece).to receive(:search_method).with([4, 6], [2, 4])
+      search_examiner.search_target
     end
   end
 end
