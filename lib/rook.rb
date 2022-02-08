@@ -28,8 +28,4 @@ class Rook < Piece
   def move_manner
     [[1, 0],[-1, 0], [0, 1], [0,-1]]
   end
-
-  def move_by(array) #necessary?
-    position_to_array.zip(array).map { |a, b| a + b }
-  end
 end

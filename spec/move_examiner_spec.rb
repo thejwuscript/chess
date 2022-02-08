@@ -46,7 +46,7 @@ RSpec.describe MoveExaminer do
     end
   end
 
-  describe '#depth_search' do
+  describe '#recursive_search' do
     subject(:depth_examiner) { described_class.new(board, piece, 'A3') }
 
     before do
@@ -60,7 +60,7 @@ RSpec.describe MoveExaminer do
         allow(board).to receive(:occupied?).and_return(false).exactly(4).times
         start_ary = depth_examiner.start_ary
         target_ary = depth_examiner.target_ary
-        result = depth_examiner.depth_search(start_ary, manner, target_ary)
+        result = depth_examiner.recursive_search(start_ary, manner, target_ary)
         expect(result).to eql([5, 0])
       end
     end
@@ -71,7 +71,7 @@ RSpec.describe MoveExaminer do
         allow(board).to receive(:occupied?).and_return(false, false, true)
         start_ary = depth_examiner.start_ary
         target_ary = depth_examiner.target_ary
-        result = depth_examiner.depth_search(start_ary, manner, target_ary)
+        result = depth_examiner.recursive_search(start_ary, manner, target_ary)
         expect(result).to be_nil
       end
     end
@@ -83,22 +83,17 @@ RSpec.describe MoveExaminer do
     context 'when a piece is making a move from G2 to E3 unhindered' do
       before do
         allow(piece).to receive(:position).and_return('G2')
+        allow(piece).to receive(:move_manner).and_return([[1, 2], [2, 1], [-1, -2]])
       end
       
       it 'returns [5, 4]' do
-        manners = [[1, 2], [2, 1], [-1, -2]]
-        start_ary = breadth_examiner.start_ary
-        target_ary = breadth_examiner.target_ary
-        result = breadth_examiner.breadth_search(start_ary, manners, target_ary)
+        result = breadth_examiner.breadth_search
         expect(result).to eql([5, 4])
       end
 
       it 'loops through manners array until the target array is found' do
-        manners = [[1, 2], [2, 1], [-1, -2]]
         expect(breadth_examiner).to receive(:within_limits?).exactly(3).times
-        start_ary = breadth_examiner.start_ary
-        target_ary = breadth_examiner.target_ary
-        breadth_examiner.breadth_search(start_ary, manners, target_ary)
+        breadth_examiner.breadth_search
       end
     end
   end
@@ -115,28 +110,16 @@ RSpec.describe MoveExaminer do
       end
     
       it 'returns [4, 1] when unobstructed' do
-        target_ary = pawn_move_examiner.target_ary
         allow(board).to receive(:occupied?).and_return(false, false)
-        result = pawn_move_examiner.pawn_move_search(piece, target_ary)
+        result = pawn_move_examiner.pawn_move_search
         expect(result).to eq([4, 1])
       end
 
       it 'returns nil when obstructed' do
-        target_ary = pawn_move_examiner.target_ary
         allow(board).to receive(:occupied?).and_return(false, true)
-        result = pawn_move_examiner.pawn_move_search(piece, target_ary)
+        result = pawn_move_examiner.pawn_move_search
         expect(result).to be_nil
       end
-    end
-  end
-
-  describe '#search_target' do
-    subject(:search_examiner) { described_class.new(board, piece, 'E6') }
-    
-    it 'sends a message #search_method to piece' do
-      allow(piece).to receive(:position).and_return('G4')
-      expect(piece).to receive(:search_method).with([4, 6], [2, 4])
-      search_examiner.search_target
     end
   end
 end

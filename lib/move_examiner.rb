@@ -19,32 +19,48 @@ class MoveExaminer
     array.all? { |num| num.between?(0, 7) }
   end
 
-  def depth_search(start, manner, goal)
+  def depth_search
+    manners = piece.move_manner
+    for i in manners.size - 1 do
+      return target if recursive_search(start_ary, manners[i], target_ary)
+    end
+  end
+
+  def recursive_search(start, manner, goal)
     next_ary = start.zip(manner).map { |a, b| a + b }
     return unless within_limits?(next_ary)
     return goal if next_ary == goal
     
-    board.occupied?(next_ary) ? nil : depth_search(next_ary, manner, goal)
+    board.occupied?(next_ary) ? nil : recursive_search(next_ary, manner, goal)
   end
 
-  def breadth_search(start, manners, goal)
+  def breadth_search
+    manners = piece.move_manner
     until manners.empty? do
-      next_ary = start.zip(manners.shift).map { |a, b| a + b }
+      next_ary = start_ary.zip(manners.shift).map { |a, b| a + b }
       next unless within_limits?(next_ary)
-      return goal if next_ary == goal
+      return target_ary if next_ary == target_ary
     end
   end
 
-  def pawn_move_search(pawn, goal)
+  def pawn_move_search
     row, column = start_ary
-    modifier = pawn.color.eql?('W') ? -1 : 1
+    modifier = piece.color.eql?('W') ? -1 : 1
     one_step = [row + modifier, column]
-    return if board.occupied?(one_step) || board.occupied?(goal)
+    return if board.occupied?(one_step) || board.occupied?(target_ary)
     
-    pawn.possible_moves.include?(goal) ? goal : nil
+    piece.possible_moves.include?(target_ary) ? target_ary : nil
   end
 
   def search_target
-    piece.search_method(start_ary, target_ary)
+    case piece
+    when Rook || Bishop || Queen
+      depth_search
+    when Knight || King
+      breadth_search
+    when Pawn
+      pawn_move_search # || pawn_attack
+    end
   end
+
 end
