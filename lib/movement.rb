@@ -22,12 +22,6 @@ module Movement
     king_checked && king_checked.color == piece.color ? true : false
   end
 
-  def same_color_at?(position, piece)
-    if other_piece = piece_at(position)
-      piece.color == other_piece.color ? true : false
-    end
-  end
-
   def pawn_attack(origin_ary, color, target_ary, game)
     a, b = target_ary
     if color == 'B' && a - origin_ary[0] == 1
@@ -83,7 +77,6 @@ module Movement
     end
   end
 
-
   def castling?(king, target)
     return false if king.move_count > 0
     
@@ -98,7 +91,6 @@ module Movement
     target_ary = position_to_array(target)
     true if right_castling?(origin_ary, king) || left_castling?(origin_ary, king, target_ary)
   end
-
 
   def right_castling?(origin_ary, king)
     a, b = origin_ary

@@ -156,19 +156,28 @@ RSpec.describe MoveExaminer do
 
   describe '#check_en_passant' do
     subject(:pawn_examiner) { described_class.new(board, piece, 'D6') }
-    let(:checker) { instance_double(EnPassantChecker) }
     
     before do
       allow(piece).to receive(:position) { 'E5'}
     end
 
-    it 'sends a message to en_passant_checker' do
-      pawn_examiner.en_passant_checker = checker
-      expect(checker).to receive(:validate_en_passant_capture)
+    it 'sends a command message to EnPassantChecker' do
+      expect_any_instance_of(EnPassantChecker).to receive(:validate_capture_condition)
       pawn_examiner.check_en_passant
     end
 
-    it 'returns nil when the en passant checker disqualifies the move' do
+    it "returns target_ary if EnPassantChecker's finding is 'pass'" do
+      allow_any_instance_of(EnPassantChecker).to receive(:validate_capture_condition)
+      allow_any_instance_of(EnPassantChecker).to receive(:finding).and_return('pass')
+      result = pawn_examiner.check_en_passant
+      expect(result).to eq([2, 3])
+    end
+
+    it "returns nil if EnPassantChecker's finding is not 'pass'" do
+      allow_any_instance_of(EnPassantChecker).to receive(:validate_capture_condition)
+      allow_any_instance_of(EnPassantChecker).to receive(:finding)
+      result = pawn_examiner.check_en_passant
+      expect(result).to be_nil
     end
   end
 end

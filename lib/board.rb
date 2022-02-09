@@ -53,6 +53,12 @@ class Board
     grid[row][column] ? true : false
   end
 
+  def same_color_at?(position, piece)
+    if other_piece = piece_at(position)
+      piece.color == other_piece.color ? true : false
+    end
+  end
+
   private
   
   def white_black_row(row)

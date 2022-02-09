@@ -6,7 +6,6 @@ require_relative 'en_passant_checker'
 class MoveExaminer
   include Converter
   attr_reader :board, :piece, :target, :color, :start_ary, :target_ary, :game
-  attr_accessor :en_passant_checker
 
   def initialize(board = nil, piece = nil, target = nil, game = nil)
     @board = board
@@ -14,8 +13,7 @@ class MoveExaminer
     @target = target
     @game = game
     @start_ary = position_to_array(piece.position) unless piece.nil?
-    @target_ary = position_to_array(target) unless target.nil?
-    @en_passant_checker = EnPassantChecker.new 
+    @target_ary = position_to_array(target) unless target.nil? 
   end
 
   def within_limits?(array)
@@ -74,7 +72,9 @@ class MoveExaminer
   end
 
   def check_en_passant
-    en_passant_checker.validate_en_passant_capture
+    checker = EnPassantChecker.new(board, piece, target_ary, game)
+    checker.validate_capture_condition
+    target_ary if checker.finding == 'pass'
   end
 
   def search_target
