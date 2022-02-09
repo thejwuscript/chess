@@ -23,9 +23,12 @@ class EnPassantChecker
 
   def validate_capture_condition
     enemy_piece = locate_enemy_pawn
-    enemy_piece.en_passantable?(enemy_color, game) unless enemy_piece.nil?
+    return if enemy_piece.nil?
+    
+    enemy_piece.en_passantable?(enemy_color, game)
   end
 
   def update_finding
+    self.finding = validate_capture_condition ? 'pass' : 'fail'
   end
 end

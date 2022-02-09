@@ -47,4 +47,21 @@ RSpec.describe EnPassantChecker do
       checker.validate_capture_condition
     end
   end
+
+  describe '#update_finding' do
+    it 'updates @finding to pass when the capturing condition is met' do
+      allow(checker).to receive(:validate_capture_condition) { true }
+      checker.update_finding
+      result = checker.finding
+      expect(result).to eq('pass')
+    end
+
+    it 'updates @finding to fail when the capturing condition is not met' do
+      allow(checker).to receive(:validate_capture_condition)
+      checker.update_finding
+      result = checker.finding
+      expect(result).to eq('fail')
+    end
+  end
+
 end
