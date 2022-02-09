@@ -73,8 +73,7 @@ class MoveExaminer
 
   def check_en_passant
     checker = EnPassantChecker.new(board, piece, target_ary, game)
-    checker.validate_capture_condition
-    target_ary if checker.finding == 'pass'
+    target_ary if checker.validate_capture_condition == true
   end
 
   def search_target
@@ -84,7 +83,7 @@ class MoveExaminer
     when Knight || King
       breadth_search
     when Pawn
-      pawn_attack || pawn_move_search
+      pawn_attack_search || pawn_move_search
     end
   end
 end

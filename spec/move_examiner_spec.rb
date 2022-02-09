@@ -167,15 +167,13 @@ RSpec.describe MoveExaminer do
     end
 
     it "returns target_ary if EnPassantChecker's finding is 'pass'" do
-      allow_any_instance_of(EnPassantChecker).to receive(:validate_capture_condition)
-      allow_any_instance_of(EnPassantChecker).to receive(:finding).and_return('pass')
+      allow_any_instance_of(EnPassantChecker).to receive(:validate_capture_condition).and_return(true)
       result = pawn_examiner.check_en_passant
       expect(result).to eq([2, 3])
     end
 
     it "returns nil if EnPassantChecker's finding is not 'pass'" do
-      allow_any_instance_of(EnPassantChecker).to receive(:validate_capture_condition)
-      allow_any_instance_of(EnPassantChecker).to receive(:finding)
+      allow_any_instance_of(EnPassantChecker).to receive(:validate_capture_condition).and_return(false)
       result = pawn_examiner.check_en_passant
       expect(result).to be_nil
     end
