@@ -1,19 +1,21 @@
 #frozen_string_literal: true
 
-require_relative '../lib/converter'
-require_relative '../lib/en_passant_checker'
+require_relative 'converter'
+require_relative 'en_passant_checker'
 
 class MoveExaminer
   include Converter
   attr_reader :board, :piece, :target, :color, :start_ary, :target_ary, :game
+  attr_accessor :en_passant_checker
 
   def initialize(board = nil, piece = nil, target = nil, game = nil)
     @board = board
     @piece = piece
     @target = target
     @game = game
-    @start_ary = position_to_array(piece.position)
-    @target_ary = position_to_array(target)
+    @start_ary = position_to_array(piece.position) unless piece.nil?
+    @target_ary = position_to_array(target) unless target.nil?
+    @en_passant_checker = EnPassantChecker.new 
   end
 
   def within_limits?(array)
@@ -57,10 +59,9 @@ class MoveExaminer
     return if piece.move_count > 0
 
     a, b = start_ary
-    if piece.color == 'W' && [a-2, b] == target_ary || 
-       piece.color == 'B' && [a+2, b] == target_ary
-          piece.store_turn_count(game.turn_count)
-          true
+    if piece.color == 'W' && [a-2, b] == target_ary || piece.color == 'B' && [a+2, b] == target_ary
+      piece.store_turn_count(game.turn_count)
+      true
     end
   end
 
@@ -68,8 +69,12 @@ class MoveExaminer
     modifier = piece.color.eql?('W') ? -1 : 1
     return unless start_ary.zip(target_ary).map { |a, b| ( a - b ).abs }.eql?([1, 1])   
     return unless (target_ary[0] - start_ary[0]) == modifier
+    
+    board.occupied?(target_ary) ?  target_ary : check_en_passant
+  end
 
-    board.occupied?(target_ary) ?  target_ary : EnPassantChecker.new
+  def check_en_passant
+    en_passant_checker.validate_en_passant_capture
   end
 
   def search_target

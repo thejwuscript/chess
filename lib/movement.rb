@@ -28,16 +28,6 @@ module Movement
     end
   end
 
-  def pawn_search(origin_ary, piece, target_ary, game)
-    if origin_ary.zip(target_ary).map { |a, b| ( a - b ).abs }.eql?([1, 1])
-      pawn_attack(origin_ary, piece.color, target_ary, game)
-    elsif piece.color == 'W'
-      white_pawn_search(origin_ary, piece, target_ary)
-    else
-      black_pawn_search(origin_ary, piece, target_ary)
-    end
-  end
-
   def pawn_attack(origin_ary, color, target_ary, game)
     a, b = target_ary
     if color == 'B' && a - origin_ary[0] == 1

@@ -3,6 +3,7 @@
 require_relative '../lib/move_examiner'
 require_relative '../lib/board'
 require_relative '../lib/game'
+require_relative '../lib/en_passant_checker'
 
 RSpec.describe MoveExaminer do
   let(:board) { instance_double(Board) }
@@ -146,10 +147,28 @@ RSpec.describe MoveExaminer do
       expect(result).to eq([4, 5])
     end
 
-    it 'initializes EnPassantChecker when the attacking spot is empty' do
+    it 'sends #check_en_passant when the attacking spot is empty' do
       allow(board).to receive(:occupied?) { false }
-      result = pawn_attack_examiner.pawn_attack
-      expect(result).to be_kind_of(EnPassantChecker)
+      expect(pawn_attack_examiner).to receive(:check_en_passant)
+      pawn_attack_examiner.pawn_attack
+    end
+  end
+
+  describe '#check_en_passant' do
+    subject(:pawn_examiner) { described_class.new(board, piece, 'D6') }
+    let(:checker) { instance_double(EnPassantChecker) }
+    
+    before do
+      allow(piece).to receive(:position) { 'E5'}
+    end
+
+    it 'sends a message to en_passant_checker' do
+      pawn_examiner.en_passant_checker = checker
+      expect(checker).to receive(:validate_en_passant_capture)
+      pawn_examiner.check_en_passant
+    end
+
+    it 'returns nil when the en passant checker disqualifies the move' do
     end
   end
 end
