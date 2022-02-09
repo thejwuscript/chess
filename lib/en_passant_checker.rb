@@ -10,6 +10,10 @@ class EnPassantChecker
     @finding = nil
   end
 
+  def enemy_color
+    pawn.color == 'W' ? 'B' : 'W'
+  end
+
   def locate_enemy_pawn
     row, column = target_ary
     modifier = pawn.color == 'W' ? 1 : -1
@@ -18,7 +22,10 @@ class EnPassantChecker
   end
 
   def validate_capture_condition
-    # create a modifier which is a value of -1 or 1 depending on the pawn's color
-    
+    enemy_piece = locate_enemy_pawn
+    enemy_piece.en_passantable?(enemy_color, game) unless enemy_piece.nil?
+  end
+
+  def update_finding
   end
 end
