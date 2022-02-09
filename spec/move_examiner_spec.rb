@@ -137,20 +137,20 @@ RSpec.describe MoveExaminer do
     it 'returns nil when the move is not an attacking move' do
       pawn_attack_examiner.instance_variable_set(:@target, 'A3')
       pawn_attack_examiner.instance_variable_set(:@target_ary, [5, 0])
-      result = pawn_attack_examiner.pawn_attack
+      result = pawn_attack_examiner.pawn_attack_search
       expect(result).to be_nil
     end
 
     it 'returns target_ary if the attacking spot is occupied' do
       allow(board).to receive(:occupied?) { true }
-      result = pawn_attack_examiner.pawn_attack
+      result = pawn_attack_examiner.pawn_attack_search
       expect(result).to eq([4, 5])
     end
 
     it 'sends #check_en_passant when the attacking spot is empty' do
       allow(board).to receive(:occupied?) { false }
       expect(pawn_attack_examiner).to receive(:check_en_passant)
-      pawn_attack_examiner.pawn_attack
+      pawn_attack_examiner.pawn_attack_search
     end
   end
 

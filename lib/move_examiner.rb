@@ -63,7 +63,7 @@ class MoveExaminer
     end
   end
 
-  def pawn_attack
+  def pawn_attack_search
     modifier = piece.color.eql?('W') ? -1 : 1
     return unless start_ary.zip(target_ary).map { |a, b| ( a - b ).abs }.eql?([1, 1])   
     return unless (target_ary[0] - start_ary[0]) == modifier
