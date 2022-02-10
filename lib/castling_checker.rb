@@ -16,13 +16,15 @@ class CastlingChecker
   def meet_castling_condition?(array = start_ary, i = 0)
     row, column = array
     return false unless array.all? { |n| n.between?(0, 7) }
-    return false if i < 3 && board.checked?(king, king.position)
+    return false if i < 3 && board.checked?(king, array_to_position(array))
 
     piece = board.grid[row][column + modifier]
     if piece.is_a?(Rook)
       piece.move_count == 0 ? true : false
     else
-      piece.nil? ? meet_castling_condition?([row, column + modifier], i += 1) : false
+      return false unless piece.nil? 
+      
+      meet_castling_condition?([row, column + modifier], i += 1)
     end
   end
 
