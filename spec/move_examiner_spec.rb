@@ -181,13 +181,13 @@ RSpec.describe MoveExaminer do
 
   describe '#king_search' do
     context 'when the king has not moved from the starting point and tries to move two steps horizontally' do
-      subject(:castling_examiner) { described_class.new(board, piece, 'G1') }
+      subject(:two_steps_examiner) { described_class.new(board, piece, 'G1') }
       
       it 'sends a message to self to validate castling' do
         allow(piece).to receive(:position) { 'E1' }
         allow(piece).to receive(:move_count) { 0 }
-        expect(castling_examiner).to receive(:validate_castling)
-        castling_examiner.king_search
+        expect(two_steps_examiner).to receive(:validate_castling)
+        two_steps_examiner.king_search
       end
     end
 
@@ -211,6 +211,36 @@ RSpec.describe MoveExaminer do
         expect(moved_king_examiner).to receive(:breadth_search)
         moved_king_examiner.king_search
       end
+    end
+  end
+
+  describe '#validate_castling' do
+    subject(:castling_examiner) { described_class.new(board, piece, 'G1') }
+    
+    it 'instantiates CastlingChecker' do
+      allow(piece).to receive(:position) { 'E1' }
+      expect_any_instance_of(CastlingChecker).to receive(:initialize).with(board, piece, [7, 6])
+      castling_examiner.validate_castling
+    end
+
+    it 'sends a query message to CastlingChecker' do
+      allow(piece).to receive(:position) { 'E1' }
+      expect_any_instance_of(CastlingChecker).to receive(:meet_castling_condition?)
+      castling_examiner.validate_castling
+    end
+
+    it 'returns target_ary if castling conditions are met' do
+      allow(piece).to receive(:position) { 'E1' }
+      allow_any_instance_of(CastlingChecker).to receive(:meet_castling_condition?).and_return(true)
+      result = castling_examiner.validate_castling
+      expect(result).to eq([7, 6])
+    end
+
+    it 'returns nil if castling conditions are not met' do
+      allow(piece).to receive(:position) { 'E1' }
+      allow_any_instance_of(CastlingChecker).to receive(:meet_castling_condition?).and_return(false)
+      result = castling_examiner.validate_castling
+      expect(result).to be_nil
     end
   end
 end

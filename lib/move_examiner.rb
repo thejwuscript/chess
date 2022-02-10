@@ -2,6 +2,7 @@
 
 require_relative 'converter'
 require_relative 'en_passant_checker'
+require_relative 'castling_checker'
 
 class MoveExaminer
   include Converter
@@ -82,6 +83,8 @@ class MoveExaminer
   end
 
   def validate_castling
+    checker = CastlingChecker.new(board, piece, target_ary)
+    target_ary if checker.meet_castling_condition?
   end
 
   def search_target
