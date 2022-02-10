@@ -104,10 +104,7 @@ module Movement
     delete_piece_at(piece.position)
   end
 
-  def checked?(king, target)
-    color = king.color
-    all_enemies(color).any? { |enemy| validate_move(enemy, target) == target }
-  end
+  
 
   def all_enemies(color)
     grid.flatten.reject { |piece| piece.nil? || piece.color == color }

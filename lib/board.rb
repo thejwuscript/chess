@@ -59,6 +59,11 @@ class Board
     end
   end
 
+  def checked?(king, target)
+    color = king.color
+    all_enemies(color).any? { |enemy| validate_move(enemy, target) == target }
+  end
+
   private
   
   def white_black_row(row)
