@@ -203,6 +203,14 @@ RSpec.describe MoveExaminer do
     end
 
     context 'when the king has moved once or more' do
+      subject(:moved_king_examiner) { described_class.new(board, piece, 'C1') }
+
+      it 'sends #bredth_search to self' do
+        allow(piece).to receive(:position) { 'E1' }
+        allow(piece).to receive(:move_count) { 1 }
+        expect(moved_king_examiner).to receive(:breadth_search)
+        moved_king_examiner.king_search
+      end
     end
   end
 end
