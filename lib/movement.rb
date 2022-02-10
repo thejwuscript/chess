@@ -58,53 +58,10 @@ module Movement
     end
   end
 
-  def castling?(king, target)
-    return false if king.move_count > 0
-    
-    origin_ary = king.position_to_array
-    target_ary = position_to_array(target)
-    diff = origin_ary.zip(target_ary).map { |a, b| a - b }
-    diff == [0, 2] || diff == [0, -2] ? true : false
-  end
-
-  def valid_castling?(king, target)
-    origin_ary = king.position_to_array
-    target_ary = position_to_array(target)
-    true if right_castling?(origin_ary, king) || left_castling?(origin_ary, king, target_ary)
-  end
-
-  def right_castling?(origin_ary, king)
-    a, b = origin_ary
-    return false if checked?(king, array_to_position([a, b]))
-    
-    piece = grid[a][b + 1]
-    if piece.is_a?(Rook)
-      piece.move_count == 0 ? true : false
-    else
-      piece.nil? ? right_castling?([a, b + 1], king) : false
-    end
-  end
-
-  def left_castling?(origin_ary, king, target_ary)
-    a, b = origin_ary
-    if b >= target_ary[1]
-      return false if checked?(king, array_to_position([a, b]))
-      
-    end
-    piece = grid[a][b - 1]
-    if piece.is_a?(Rook)
-      piece.move_count == 0 ? true : false
-    else
-      piece.nil? ? left_castling?([a, b - 1], king, target_ary) : false
-    end
-  end
-
   def hypothetical_move(target, piece)
     set_piece_at(target, piece)
     delete_piece_at(piece.position)
   end
-
-  
 
   def all_enemies(color)
     grid.flatten.reject { |piece| piece.nil? || piece.color == color }
