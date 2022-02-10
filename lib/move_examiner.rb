@@ -76,12 +76,22 @@ class MoveExaminer
     target_ary if checker.validate_capture_condition == true
   end
 
+  def king_search
+    two_steps = start_ary.zip(target_ary).map { |a, b| (a - b).abs } == [0, 2]
+    two_steps && piece.move_count == 0 ? validate_castling : breadth_search
+  end
+
+  def validate_castling
+  end
+
   def search_target
     case piece
     when Rook || Bishop || Queen
       depth_search
-    when Knight || King
+    when Knight
       breadth_search
+    when King
+      king_search
     when Pawn
       pawn_attack_search || pawn_move_search
     end

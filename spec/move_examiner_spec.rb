@@ -161,21 +161,48 @@ RSpec.describe MoveExaminer do
       allow(piece).to receive(:position) { 'E5'}
     end
 
-    it 'sends a command message to EnPassantChecker' do
+    it 'sends a query message to EnPassantChecker' do
       expect_any_instance_of(EnPassantChecker).to receive(:validate_capture_condition)
       pawn_examiner.check_en_passant
     end
 
-    it "returns target_ary if EnPassantChecker's finding is 'pass'" do
+    it "returns target_ary if en passant condition is met" do
       allow_any_instance_of(EnPassantChecker).to receive(:validate_capture_condition).and_return(true)
       result = pawn_examiner.check_en_passant
       expect(result).to eq([2, 3])
     end
 
-    it "returns nil if EnPassantChecker's finding is not 'pass'" do
+    it "returns nil if en passant condition is not met" do
       allow_any_instance_of(EnPassantChecker).to receive(:validate_capture_condition).and_return(false)
       result = pawn_examiner.check_en_passant
       expect(result).to be_nil
+    end
+  end
+
+  describe '#king_search' do
+    context 'when the king has not moved from the starting point and tries to move two steps horizontally' do
+      subject(:castling_examiner) { described_class.new(board, piece, 'G1') }
+      
+      it 'sends a message to self to validate castling' do
+        allow(piece).to receive(:position) { 'E1' }
+        allow(piece).to receive(:move_count) { 0 }
+        expect(castling_examiner).to receive(:validate_castling)
+        castling_examiner.king_search
+      end
+    end
+
+    context 'when the king does not move in a castling-like behavior' do
+      subject(:king_examiner) { described_class.new(board, piece, 'D2') }
+      
+      it 'sends #breadth_search to self' do
+        allow(piece).to receive(:position) { 'E1' }
+        allow(piece).to receive(:move_count) { 0 }
+        expect(king_examiner).to receive(:breadth_search)
+        king_examiner.king_search
+      end
+    end
+
+    context 'when the king has moved once or more' do
     end
   end
 end

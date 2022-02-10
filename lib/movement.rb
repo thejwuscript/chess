@@ -22,25 +22,6 @@ module Movement
     king_checked && king_checked.color == piece.color ? true : false
   end
 
-  def pawn_attack(origin_ary, color, target_ary, game)
-    a, b = target_ary
-    if color == 'B' && a - origin_ary[0] == 1
-      grid[a][b].nil? ? b_en_passant(a, b, game) : target_ary
-    elsif color == 'W' && a - origin_ary[0] == -1
-      grid[a][b].nil? ? w_en_passant(a, b, game) : target_ary
-    end
-  end
-
-  def w_en_passant(row, column, game)
-    piece = grid[row+1][column]
-    [row, column] if piece.is_a?(Pawn) && piece.en_passantable?('B', game)
-  end
-
-  def b_en_passant(row, column, game)
-    piece = grid[row-1][column]
-    [row, column] if piece.is_a?(Pawn) && piece.en_passantable?('W', game)
-  end
-
   def remove_pawn_captured_en_passant(piece, target, game)
     return unless piece.is_a?(Pawn) && target.match?(/3|6/)
     
