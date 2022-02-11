@@ -121,12 +121,6 @@ class MoveExaminer
     end
   end
 
-  def moves_available?
-    array = []
-    ('A'..'H').to_a.each do |letter|
-      ('1'..'8').to_a.each { |number| array << letter + number }
-    end
-    array.any? { |move| validate_move }
-  end
+
 
 end

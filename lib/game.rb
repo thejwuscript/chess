@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require_relative 'move_examiner'
 require_relative '../lib/game_message'
 require_relative '../lib/save_and_load'
 require 'yaml'
@@ -187,19 +188,11 @@ class Game
     end
   end
 
-  def moves_available?(piece)
-    array = []
-    ('A'..'H').to_a.each do |letter|
-      ('1'..'8').to_a.each { |number| array << letter + number }
-    end
-    array.any? { |move| board.validate_move(piece, move, self) }
-  end
-
   def game_over?
     king = board.grid.flatten.find { |piece| piece.is_a?(King) && piece.color == current_player.color}
-    return true if board.stalemate?(king, self)
+    return true if stalemate?(king, self)
 
-    if board.checkmate?(king, self)
+    if checkmate?(king, self)
       self.winner = king.color == 'W' ? player_black : player_white
       true
     end
@@ -227,11 +220,7 @@ class Game
 
   def game_end
     winner ? declare_winner : declare_draw
-    # play_again?
   end
-
-  # def play_again?
-  # end
 
   def ai_input
     color = current_player.color
@@ -252,5 +241,35 @@ class Game
     end
     validated = array.keep_if { |position| board.validate_move(piece, position, self) }
     validated.find { |position| board.piece_at(position) } || validated.sample
+  end
+
+  def checkmate?(king, game)
+    no_legal_moves?(king.color, game) && checked?(king, king.position) && no_counterattack?(king, king.color)
+  end
+
+  def stalemate?(king, game)
+    no_legal_moves?(king.color, game) && !(checked?(king, king.position)) && no_counterattack?(king, king.color)
+  end
+
+  def no_legal_moves?(color, game)
+    all_allies(color).none? { |piece| moves_available?(piece, game) }
+  end
+
+  def no_counterattack?(king, color)
+    target = enemies_checking(king, king.position).position
+    all_allies(color).none? { |ally| validate_move(ally, target) }
+  end
+
+  def enemies_checking(king, target)
+    color = king.color
+    all_enemies(color).each { |enemy| return enemy if validate_move(enemy, target) == target }[0]
+  end
+
+  def moves_available?
+    array = []
+    ('A'..'H').to_a.each do |letter|
+      ('1'..'8').to_a.each { |number| array << letter + number }
+    end
+    array.any? { |move| validate_move }
   end
 end

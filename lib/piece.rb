@@ -1,5 +1,7 @@
 #frozen_string_literal: true
 
+require_relative 'move_examiner'
+
 class Piece
   attr_accessor :position, :color, :symbol, :type, :turn_count, :move_count
 
@@ -36,5 +38,25 @@ class Piece
 
   def possible_moves
     possible_move_arrays.map { |array| array_to_position(array) }
-  end 
+  end
+
+  def all_squares(array = [])
+    ('A'..'H').to_a.each do |letter|
+      ('1'..'8').to_a.each { |number| array << letter + number }
+    end
+    array
+  end
+
+  def available_moves(board, game, array = [])
+    all_squares.each do |square|
+      examiner = MoveExaminer.new(board, self, square, game)
+      array << square if examiner.validate_move 
+    end
+    array
+  end
+
+  def moves_available?(board, game)
+    available_moves(board, game).any?
+  end
+  
 end

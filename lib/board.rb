@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
-require_relative '../lib/movement'
 require_relative '../lib/converter'
-require_relative 'move_examiner'
 require_relative 'board_display'
 
 class Board
@@ -90,32 +88,7 @@ class Board
     grid.flatten.reject { |piece| piece.nil? || piece.color == color }
   end
 
-  def checkmate?(king, game)
-    no_legal_moves?(king.color, game) && checked?(king, king.position) && no_counterattack?(king, king.color)
-  end
-
-  def stalemate?(king, game)
-    no_legal_moves?(king.color, game) && !(checked?(king, king.position)) && no_counterattack?(king, king.color)
-  end
-
-  def no_legal_moves?(color, game)
-    all_allies(color).none? { |piece| moves_available?(piece, game) }
-  end
-
-  def enemies_checking(king, target)
-    color = king.color
-    all_enemies(color).each { |enemy| return enemy if validate_move(enemy, target) == target }[0]
-  end
-
   def all_allies(color)
     grid.flatten.compact.keep_if { |piece| piece.color == color }
   end
-
-  def no_counterattack?(king, color)
-    target = enemies_checking(king, king.position).position
-    all_allies(color).none? { |ally| validate_move(ally, target) }
-  end
-
-  private
-  
 end
