@@ -2,10 +2,12 @@
 
 require_relative '../lib/movement'
 require_relative '../lib/converter'
+require_relative 'move_examiner'
+require_relative 'board_display'
 
 class Board
-  include Movement
   include Converter
+  include BoardDisplay
   
   attr_reader :grid
   
@@ -21,15 +23,6 @@ class Board
   def set_piece_at(position, piece)
     row, column = position_to_array(position)
     grid[row][column] = piece
-  end
-
-  def show_board
-    puts ''
-    grid.each_with_index do |row, row_index|
-      numbers_column(row_index)
-      row_index.even? ? white_black_row(row) : black_white_row(row)
-    end
-    letter_coordinates
   end
 
   def delete_piece_at(position)
@@ -78,36 +71,51 @@ class Board
     piece.position = target
   end
 
+  def move_castle(target)
+    row = target[1]
+    if target[0] == 'C'
+      rook = piece_at("A#{row}")
+      set_piece_at("D#{row}", rook)
+      delete_piece_at(rook.position)
+      rook.position = "D#{row}"
+    elsif target[0] == 'G'
+      rook = piece_at("H#{row}")
+      set_piece_at("F#{row}", rook)
+      delete_piece_at(rook.position)
+      rook.position = "F#{row}"
+    end
+  end
+
+  def all_enemies(color)
+    grid.flatten.reject { |piece| piece.nil? || piece.color == color }
+  end
+
+  def checkmate?(king, game)
+    no_legal_moves?(king.color, game) && checked?(king, king.position) && no_counterattack?(king, king.color)
+  end
+
+  def stalemate?(king, game)
+    no_legal_moves?(king.color, game) && !(checked?(king, king.position)) && no_counterattack?(king, king.color)
+  end
+
+  def no_legal_moves?(color, game)
+    all_allies(color).none? { |piece| moves_available?(piece, game) }
+  end
+
+  def enemies_checking(king, target)
+    color = king.color
+    all_enemies(color).each { |enemy| return enemy if validate_move(enemy, target) == target }[0]
+  end
+
+  def all_allies(color)
+    grid.flatten.compact.keep_if { |piece| piece.color == color }
+  end
+
+  def no_counterattack?(king, color)
+    target = enemies_checking(king, king.position).position
+    all_allies(color).none? { |ally| validate_move(ally, target) }
+  end
+
   private
   
-  def white_black_row(row)
-    row.each_with_index do |piece, column|
-      print column.even? ? white_square(piece) : black_square(piece)
-    end
-    print "\n"
-  end
-  
-  def black_white_row(row)
-    row.each_with_index do |piece, column|
-      print column.even? ? black_square(piece) : white_square(piece)
-    end
-    print "\n"
-  end
-
-  def white_square(piece)
-    piece.nil? ? "\e[48;5;245m   \e[0m" : "\e[48;5;245m #{piece.symbol} \e[0m"
-  end
-
-  def black_square(piece)
-    piece.nil? ? "\e[48;5;237m   \e[0m" : "\e[48;5;237m #{piece.symbol} \e[0m"
-  end
-
-  def letter_coordinates
-    puts "     #{('a'..'h').to_a.join('  ')}"
-  end
-
-  def numbers_column(index)
-    numbers = (1..8).to_a.reverse
-    print "  #{numbers[index]} "
-  end
 end

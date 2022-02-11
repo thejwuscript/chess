@@ -20,6 +20,12 @@ class MoveExaminer
     @castling = false
   end
 
+  def validate_move
+    return if board.same_color_at?(target, piece) || !(search_target)
+    
+    own_king_exposed? ? nil : target
+  end
+
   def within_limits?(array)
     array.all? { |num| num.between?(0, 7) }
   end
@@ -96,6 +102,8 @@ class MoveExaminer
 
   def own_king_exposed?
     board.move_piece_to_target(target, piece)
+    board.remove_pawn_captured_en_passant(piece, target, game) if en_passant
+    
     checked_kings = board.find_checked_king
     checked_kings.include?(piece)
   end
@@ -112,4 +120,13 @@ class MoveExaminer
       pawn_attack_search || pawn_move_search
     end
   end
+
+  def moves_available?
+    array = []
+    ('A'..'H').to_a.each do |letter|
+      ('1'..'8').to_a.each { |number| array << letter + number }
+    end
+    array.any? { |move| validate_move }
+  end
+
 end
