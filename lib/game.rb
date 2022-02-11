@@ -199,7 +199,7 @@ class Game
   end
 
   def promote_pawn
-    pawn = board.promote_candidate
+    pawn = board.promotion_candidate
     return if pawn.nil?
 
     number = promotion_choice
@@ -251,19 +251,12 @@ class Game
     no_legal_moves?(king.color, game) && !(checked?(king, king.position)) && no_counterattack?(king, king.color)
   end
 
-  def no_legal_moves?(color, game)
-    all_allies(color).none? { |piece| moves_available?(piece, game) }
-  end
-
   def no_counterattack?(king, color)
     target = enemies_checking(king, king.position).position
     all_allies(color).none? { |ally| validate_move(ally, target) }
   end
 
-  def enemies_checking(king, target)
-    color = king.color
-    all_enemies(color).each { |enemy| return enemy if validate_move(enemy, target) == target }[0]
-  end
+  
 
   def moves_available?
     array = []

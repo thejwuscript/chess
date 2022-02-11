@@ -34,7 +34,7 @@ class Board
     array
   end
 
-  def promote_candidate
+  def promotion_candidate
     array = grid[0] + grid[7]
     array.detect { |piece| piece.is_a? Pawn }
   end
@@ -50,9 +50,9 @@ class Board
     end
   end
 
-  def checked?(king, target)
+  def enemies_checking(king, target)
     color = king.color
-    all_enemies(color).any? { |enemy| validate_move(enemy, target) == target }
+    all_enemies(color).each { |enemy| return enemy if validate_move(enemy, target) == target }[0]
   end
 
   def remove_pawn_captured_en_passant(piece, target, game)
