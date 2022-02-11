@@ -7,14 +7,17 @@ require_relative 'castling_checker'
 class MoveExaminer
   include Converter
   attr_reader :board, :piece, :target, :color, :start_ary, :target_ary, :game
-
+  attr_accessor :en_passant, :castling
+  
   def initialize(board = nil, piece = nil, target = nil, game = nil)
     @board = board
     @piece = piece
     @target = target
     @game = game
     @start_ary = position_to_array(piece.position) unless piece.nil?
-    @target_ary = position_to_array(target) unless target.nil? 
+    @target_ary = position_to_array(target) unless target.nil?
+    @en_passant = false
+    @castling = false
   end
 
   def within_limits?(array)
@@ -74,7 +77,9 @@ class MoveExaminer
 
   def check_en_passant
     checker = EnPassantChecker.new(board, piece, target_ary, game)
-    target_ary if checker.validate_capture_condition == true
+    if checker.validate_capture_condition == true
+      self.en_passant = true; target_ary
+    end
   end
 
   def king_search
@@ -84,7 +89,15 @@ class MoveExaminer
 
   def validate_castling
     checker = CastlingChecker.new(board, piece, target_ary)
-    target_ary if checker.meet_castling_condition?
+    if checker.meet_castling_condition?
+      self.castling = true; target_ary
+    end
+  end
+
+  def own_king_exposed?
+    board.move_piece_to_target(target, piece)
+    checked_kings = board.find_checked_king
+    checked_kings.include?(piece)
   end
 
   def search_target

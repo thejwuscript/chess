@@ -37,10 +37,10 @@ class Board
     grid[row][column] = nil
   end
 
-  def find_checked_king
+  def find_checked_king(array = [])
     kings = grid.flatten.keep_if { |piece| piece.is_a? King }
-    kings.each { |king| return king if checked?(king, king.position) }
-    nil
+    kings.each { |king| array << king if checked?(king, king.position) }
+    array
   end
 
   def promote_candidate
@@ -62,6 +62,20 @@ class Board
   def checked?(king, target)
     color = king.color
     all_enemies(color).any? { |enemy| validate_move(enemy, target) == target }
+  end
+
+  def remove_pawn_captured_en_passant(piece, target, game)
+    return unless piece.is_a?(Pawn) && target.match?(/3|6/)
+    
+    a, b = position_to_array(target)
+    w_en_passant(a, b, game) ? grid[a+1][b] = nil : nil
+    b_en_passant(a, b, game) ? grid[a-1][b] = nil : nil
+  end
+
+  def move_piece_to_target(target, piece)
+    set_piece_at(target, piece)
+    delete_piece_at(piece.position)
+    piece.position = target
   end
 
   private

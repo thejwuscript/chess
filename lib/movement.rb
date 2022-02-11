@@ -14,20 +14,9 @@ module Movement
   end
 
   def own_king_exposed?(piece, target)
-    removed_piece = piece_at(target)
-    hypothetical_move(target, piece)
+    move_piece_to_target(target, piece)
     king_checked = find_checked_king
-    set_piece_at(target, removed_piece)
-    set_piece_at(piece.position, piece)
     king_checked && king_checked.color == piece.color ? true : false
-  end
-
-  def remove_pawn_captured_en_passant(piece, target, game)
-    return unless piece.is_a?(Pawn) && target.match?(/3|6/)
-    
-    a, b = position_to_array(target)
-    w_en_passant(a, b, game) ? grid[a+1][b] = nil : nil
-    b_en_passant(a, b, game) ? grid[a-1][b] = nil : nil
   end
 
   def verify_king_move(king, target)
@@ -56,11 +45,6 @@ module Movement
       delete_piece_at(rook.position)
       rook.position = "F#{row}"
     end
-  end
-
-  def hypothetical_move(target, piece)
-    set_piece_at(target, piece)
-    delete_piece_at(piece.position)
   end
 
   def all_enemies(color)

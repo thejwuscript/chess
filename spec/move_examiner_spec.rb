@@ -4,6 +4,7 @@ require_relative '../lib/move_examiner'
 require_relative '../lib/board'
 require_relative '../lib/game'
 require_relative '../lib/en_passant_checker'
+require_relative '../lib/king'
 
 RSpec.describe MoveExaminer do
   let(:board) { instance_double(Board) }
@@ -177,6 +178,11 @@ RSpec.describe MoveExaminer do
       result = pawn_examiner.check_en_passant
       expect(result).to be_nil
     end
+
+    it 'updates @en_passant to true if condition is met' do
+      allow_any_instance_of(EnPassantChecker).to receive(:validate_capture_condition).and_return(true)
+      expect { pawn_examiner.check_en_passant }.to change { pawn_examiner.en_passant }.to true
+    end
   end
 
   describe '#king_search' do
@@ -219,6 +225,7 @@ RSpec.describe MoveExaminer do
     
     it 'instantiates CastlingChecker' do
       allow(piece).to receive(:position) { 'E1' }
+      allow_any_instance_of(CastlingChecker).to receive(:meet_castling_condition?)
       expect_any_instance_of(CastlingChecker).to receive(:initialize).with(board, piece, [7, 6])
       castling_examiner.validate_castling
     end
@@ -241,6 +248,41 @@ RSpec.describe MoveExaminer do
       allow_any_instance_of(CastlingChecker).to receive(:meet_castling_condition?).and_return(false)
       result = castling_examiner.validate_castling
       expect(result).to be_nil
+    end
+
+    it 'updates @castling when conditions are met' do
+      allow(piece).to receive(:position) { 'E1' }
+      allow_any_instance_of(CastlingChecker).to receive(:meet_castling_condition?).and_return(true)
+      expect { castling_examiner.validate_castling }.to change { castling_examiner.castling }.to true
+    end
+  end
+
+  describe 'own_king_exposed?' do
+    let(:piece) { instance_double(King, is_a?: King, color: 'W') }
+    let(:enemy) { instance_double(King, is_a?: King, color: 'B', position: 'E5') }
+    let(:board) { instance_double(Board) }
+    subject(:exposed_king_examiner) { described_class.new(board, piece, 'E4') }
+    
+    it 'sends board a message to move the piece to target' do
+      allow(piece).to receive(:position).and_return('E3')
+      allow(board).to receive(:find_checked_king).and_return([])
+      expect(board).to receive(:move_piece_to_target).with('E4', piece)
+      exposed_king_examiner.own_king_exposed?
+    end
+
+    it 'sends board a message to retreive any checked kings(it can return two kings)' do
+      allow(board).to receive(:move_piece_to_target)
+      allow(piece).to receive(:position).and_return('E4')
+      expect(board).to receive(:find_checked_king).and_return([piece, enemy])
+      exposed_king_examiner.own_king_exposed?
+    end
+
+    it 'it returns true if own king would be in check' do
+      allow(board).to receive(:move_piece_to_target)
+      allow(piece).to receive(:position).and_return('E4')
+      allow(board).to receive(:find_checked_king).and_return([piece, enemy])
+      result = exposed_king_examiner.own_king_exposed?
+      expect(result).to be true
     end
   end
 end
