@@ -51,49 +51,24 @@ RSpec.describe GameStatusChecker do
   describe '#own_king_in_check?' do
     let(:board) { instance_double(Board) }
     let(:game) { instance_double(Game) }
-    let(:bishop) { instance_double(Bishop, position: 'H1', color: 'W') }
-    let(:rook) { instance_double(Rook, position: 'A5', color: 'W') }
-    let(:king) { instance_double(King, color: 'B', position: 'C5') }
-    let(:examiner1) { instance_double(MoveExaminer, validate_move: nil) }
-    let(:examiner2) { instance_double(MoveExaminer, validate_move: 'C5') }
     color = 'B'
+    let(:enemy1) { instance_double(Bishop, position: 'H1', color: 'W') }
+    let(:enemy2) { instance_double(Rook, position: 'A5', color: 'W') }
     subject(:king_checker) { described_class.new(color, board, game) }
-    
-    it 'sends a query message #all_enemies to @board' do
-      allow(board).to receive(:find_own_king) { king }
-      allow_any_instance_of(MoveExaminer).to receive(:validate_move)
-      expect(board).to receive(:all_enemies).with('B') { [bishop, rook] }
+
+    it 'sends a query message to board' do
+      expect(board).to receive(:enemies_giving_check).with('B') { [enemy1, enemy2] }
       king_checker.own_king_in_check?
     end
 
-    it 'sends a query message #find_own_king to @board' do
-      allow(board).to receive(:all_enemies).with('B') { [bishop, rook] }
-      allow_any_instance_of(MoveExaminer).to receive(:validate_move)
-      expect(board).to receive(:find_own_king) { king }
-      king_checker.own_king_in_check?
-    end
-
-    it 'sends message to 1 or more MoveExaminer till an enemy piece giving check is found' do
-      allow(board).to receive(:find_own_king) { king }
-      allow(board).to receive(:all_enemies).with('B') { [bishop, rook] }
-      allow(MoveExaminer).to receive(:new).twice.and_return(examiner1, examiner2)
-      expect(examiner1).to receive(:validate_move)
-      expect(examiner2).to receive(:validate_move)
-      king_checker.own_king_in_check?
-    end
-
-    it 'returns true if a MoveExaminer found an enemy piece giving check' do
-      allow(board).to receive(:find_own_king) { king }
-      allow(board).to receive(:all_enemies).with('B') { [bishop, rook] }
-      allow(MoveExaminer).to receive(:new).twice.and_return(examiner1, examiner2)
+    it 'returns true if the message to board returns a non-empty array' do
+      allow(board).to receive(:enemies_giving_check).with('B') { [enemy1, enemy2] }
       result = king_checker.own_king_in_check?
       expect(result).to be true
     end
 
-    it 'returns false if no MoveExaminer found any enemy piece giving check' do
-      allow(board).to receive(:find_own_king) { king }
-      allow(board).to receive(:all_enemies).with('B') { [bishop] }
-      allow(MoveExaminer).to receive(:new).and_return(examiner1)
+    it 'returns false if the message to board returns an empty array' do
+      allow(board).to receive(:enemies_giving_check).with('B') { [] }
       result = king_checker.own_king_in_check?
       expect(result).to be false
     end
