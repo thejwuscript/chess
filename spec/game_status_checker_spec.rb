@@ -125,38 +125,60 @@ RSpec.describe GameStatusChecker do
   end
 
   describe '#stalemate?' do
+    let(:board) { instance_double(Board) }
+    let(:game) { instance_double(Game) }
+    color = 'W'
+    
     context 'when no legal moves left, no counterattacks and own king is not in check' do
-      let(:board) { instance_double(Board) }
-      let(:game) { instance_double(Game) }
-      color = 'W'
       subject(:yes_stalemate) { described_class.new(color, board, game) }
 
-      before do
+      it 'returns true' do
         allow(yes_stalemate).to receive(:no_legal_moves?) { true }
         allow(yes_stalemate).to receive(:no_counterattack?) { true }
         allow(yes_stalemate).to receive(:own_king_in_check?) { false }
-      end
-    
-      it 'returns true' do
         result = yes_stalemate.stalemate?
         expect(result).to be true
       end
     end
 
     context 'when any of the three conditions above is not met' do
-      let(:board) { instance_double(Board) }
-      let(:game) { instance_double(Game) }
-      color = 'W'
-      subject(:yes_stalemate) { described_class.new(color, board, game) }
+      subject(:no_stalemate) { described_class.new(color, board, game) }
 
-      before do
-        allow(yes_stalemate).to receive(:no_legal_moves?) { true }
-        allow(yes_stalemate).to receive(:no_counterattack?) { true }
-        allow(yes_stalemate).to receive(:own_king_in_check?) { true }
-      end
-    
       it 'returns false' do
-        result = yes_stalemate.stalemate?
+        allow(no_stalemate).to receive(:no_legal_moves?) { true }
+        allow(no_stalemate).to receive(:no_counterattack?) { true }
+        allow(no_stalemate).to receive(:own_king_in_check?) { true }
+        result = no_stalemate.stalemate?
+        expect(result).to be false
+      end
+    end
+  end
+
+  describe 'checkmate?' do
+    let(:board) { instance_double(Board) }
+    let(:game) { instance_double(Game) }
+    color = 'W'
+    
+    context 'when no legal moves left, no counterattacks and own king is in check' do
+      subject(:yes_checkmate) { described_class.new(color, board, game) }
+      
+      it 'returns true' do
+        allow(yes_checkmate).to receive(:no_legal_moves?) { true }
+        allow(yes_checkmate).to receive(:no_counterattack?) { true }
+        allow(yes_checkmate).to receive(:own_king_in_check?) { true }
+        result = yes_checkmate.checkmate?
+        expect(result).to be true
+      end
+    end
+
+    context 'when any of the three conditions above is not met' do
+      subject(:no_checkmate) { described_class.new(color, board, game) }
+      
+      it 'returns false' do
+        allow(no_checkmate).to receive(:no_legal_moves?) { true }
+        allow(no_checkmate).to receive(:no_counterattack?) { true }
+        allow(no_checkmate).to receive(:own_king_in_check?) { false }
+        result = no_checkmate.checkmate?
         expect(result).to be false
       end
     end

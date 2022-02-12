@@ -35,5 +35,7 @@ class GameStatusChecker
     no_legal_moves? && no_counterattack? && !(own_king_in_check?)
   end
 
-  
+  def checkmate?
+    no_legal_moves? && no_counterattack? && own_king_in_check?
+  end
 end
