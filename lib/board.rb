@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 
-require_relative '../lib/converter'
+require_relative 'converter'
 require_relative 'board_display'
+require_relative 'game_status_checker'
 
 class Board
   include Converter
@@ -28,10 +29,13 @@ class Board
     grid[row][column] = nil
   end
 
-  def find_checked_king(array = [])
-    kings = grid.flatten.keep_if { |piece| piece.is_a? King }
-    kings.each { |king| array << king if checked?(king, king.position) }
-    array
+  def find_own_king(color)
+    grid.flatten.find { |piece| piece.is_a?(King) && piece.color == color }
+  end
+
+  def find_own_king_in_check(color)
+    king = find_own_king(color)
+    GameStatusChecker.new(color, self).own_king_in_check? ? king : nil
   end
 
   def promotion_candidate

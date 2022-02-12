@@ -265,22 +265,22 @@ RSpec.describe MoveExaminer do
     
     it 'sends board a message to move the piece to target' do
       allow(piece).to receive(:position).and_return('E3')
-      allow(board).to receive(:find_checked_king).and_return([])
+      allow(board).to receive(:find_own_king_in_check).with('W')
       expect(board).to receive(:move_piece_to_target).with('E4', piece)
       exposed_king_examiner.own_king_exposed?
     end
 
-    it 'sends board a message to retreive any checked kings(it can return two kings)' do
+    it 'sends board a message to retreive king in check, if any' do
       allow(board).to receive(:move_piece_to_target)
       allow(piece).to receive(:position).and_return('E4')
-      expect(board).to receive(:find_checked_king).and_return([piece, enemy])
+      expect(board).to receive(:find_own_king_in_check).with('W')
       exposed_king_examiner.own_king_exposed?
     end
 
     it 'it returns true if own king would be in check' do
       allow(board).to receive(:move_piece_to_target)
       allow(piece).to receive(:position).and_return('E4')
-      allow(board).to receive(:find_checked_king).and_return([piece, enemy])
+      allow(board).to receive(:find_own_king_in_check).with('W').and_return(piece)
       result = exposed_king_examiner.own_king_exposed?
       expect(result).to be true
     end

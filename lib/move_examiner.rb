@@ -3,6 +3,7 @@
 require_relative 'converter'
 require_relative 'en_passant_checker'
 require_relative 'castling_checker'
+require_relative 'game_status_checker'
 
 class MoveExaminer
   include Converter
@@ -104,8 +105,7 @@ class MoveExaminer
     board.move_piece_to_target(target, piece)
     board.remove_pawn_captured_en_passant(piece, target, game) if en_passant
     
-    checked_kings = board.find_checked_king
-    checked_kings.include?(piece)
+    board.find_own_king_in_check(piece.color) ? true : false
   end
 
   def search_target

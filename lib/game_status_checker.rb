@@ -5,7 +5,7 @@ require_relative '../lib/move_examiner'
 class GameStatusChecker
   attr_reader :color, :board, :game
 
-  def initialize(color, board, game)
+  def initialize(color, board, game = nil) #game object is optional.
     @color = color
     @board = board
     @game = game
@@ -15,13 +15,11 @@ class GameStatusChecker
     board.all_allies(color).none? { |piece| piece.moves_available?(board, game) }
   end
 
-  def king_in_check?
-    array = board.find_checked_king
-    king = array.find { |king| king.color == color } unless array.empty?
-
+  def own_king_in_check? # no need for game instant variable here. The 'target' is the king.
+    king = board.find_own_king(color)
     target = king.position
     board.all_enemies(color).any? do |enemy|
-      MoveExaminer.new(board, enemy, target, game).validate_move
+      MoveExaminer.new(board, enemy, target).validate_move
     end
   end
 end
