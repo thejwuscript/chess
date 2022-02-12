@@ -73,4 +73,54 @@ RSpec.describe GameStatusChecker do
       expect(result).to be false
     end
   end
+
+  describe '#no_counterattack?' do
+    let(:board) { instance_double(Board) }
+    let(:game) { instance_double(Game) }
+    let(:enemy_rook) { instance_double(Rook, position: 'B3') }
+    let(:enemy_bishop) {instance_double(Bishop, position: 'B6') }
+    let(:ally_rook) { instance_double(Rook, position: 'H8') }
+    let(:own_king) { instance_double(King, position: 'E3') }
+    let(:examiner1) { instance_double(MoveExaminer, validate_move: nil) }
+    let(:examiner2) { instance_double(MoveExaminer, validate_move: nil) }
+    color = 'W'
+    subject(:counterattack_checker) { described_class.new(color, board, game) }
+
+    before do
+      allow(board).to receive(:enemies_giving_check).with('W') { [enemy_rook, enemy_bishop] }
+      allow(board).to receive(:all_allies).with('W') { [ally_rook, own_king] }
+      allow(MoveExaminer).to receive(:new).and_return(examiner1, examiner2)
+    end
+  
+    it 'sends message #enemies_giving_check to board' do
+      expect(board).to receive(:enemies_giving_check).with('W')
+      counterattack_checker.no_counterattack?
+    end
+
+    it 'sends message #all_allies to board' do
+      expect(board).to receive(:all_allies).with('W')
+      counterattack_checker.no_counterattack?
+    end
+
+    it 'instantiates MoveExaminer at least once' do
+      expect(MoveExaminer).to receive(:new)
+      counterattack_checker.no_counterattack?
+    end
+  
+    context 'when all allies cannot capture the enemy pieces giving check' do
+      it 'returns true' do
+        result = counterattack_checker.no_counterattack?
+        expect(result).to be true
+      end
+    end
+
+    context 'when one or more allies can capture the enemy pieces giving check' do
+      it 'returns false' do
+        allow(own_king).to receive(:position) { 'C3' }
+        allow(examiner2).to receive(:validate_move) { 'B3' }
+        result = counterattack_checker.no_counterattack?
+        expect(result).to be false
+      end
+    end
+  end
 end
