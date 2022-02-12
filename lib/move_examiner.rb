@@ -120,7 +120,4 @@ class MoveExaminer
       pawn_attack_search || pawn_move_search
     end
   end
-
-
-
 end

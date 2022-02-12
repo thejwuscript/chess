@@ -222,11 +222,12 @@ RSpec.describe MoveExaminer do
 
   describe '#validate_castling' do
     subject(:castling_examiner) { described_class.new(board, piece, 'G1') }
+    let(:castling_checker) { instance_double(CastlingChecker) }
     
     it 'instantiates CastlingChecker' do
       allow(piece).to receive(:position) { 'E1' }
-      allow_any_instance_of(CastlingChecker).to receive(:meet_castling_condition?)
-      expect_any_instance_of(CastlingChecker).to receive(:initialize).with(board, piece, [7, 6])
+      allow(castling_checker).to receive(:meet_castling_condition?)
+      expect(CastlingChecker).to receive(:new).with(board, piece, [7, 6]) { castling_checker }
       castling_examiner.validate_castling
     end
 
