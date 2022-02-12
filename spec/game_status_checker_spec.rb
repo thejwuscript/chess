@@ -123,4 +123,42 @@ RSpec.describe GameStatusChecker do
       end
     end
   end
+
+  describe '#stalemate?' do
+    context 'when no legal moves left, no counterattacks and own king is not in check' do
+      let(:board) { instance_double(Board) }
+      let(:game) { instance_double(Game) }
+      color = 'W'
+      subject(:yes_stalemate) { described_class.new(color, board, game) }
+
+      before do
+        allow(yes_stalemate).to receive(:no_legal_moves?) { true }
+        allow(yes_stalemate).to receive(:no_counterattack?) { true }
+        allow(yes_stalemate).to receive(:own_king_in_check?) { false }
+      end
+    
+      it 'returns true' do
+        result = yes_stalemate.stalemate?
+        expect(result).to be true
+      end
+    end
+
+    context 'when any of the three conditions above is not met' do
+      let(:board) { instance_double(Board) }
+      let(:game) { instance_double(Game) }
+      color = 'W'
+      subject(:yes_stalemate) { described_class.new(color, board, game) }
+
+      before do
+        allow(yes_stalemate).to receive(:no_legal_moves?) { true }
+        allow(yes_stalemate).to receive(:no_counterattack?) { true }
+        allow(yes_stalemate).to receive(:own_king_in_check?) { true }
+      end
+    
+      it 'returns false' do
+        result = yes_stalemate.stalemate?
+        expect(result).to be false
+      end
+    end
+  end
 end

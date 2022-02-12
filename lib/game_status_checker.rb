@@ -31,4 +31,9 @@ class GameStatusChecker
     true
   end
 
+  def stalemate?
+    no_legal_moves? && no_counterattack? && !(own_king_in_check?)
+  end
+
+  
 end
