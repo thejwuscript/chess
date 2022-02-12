@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 require_relative 'converter'
+require_relative 'game_status_checker'
+require_relative 'move_examiner'
 
 class CastlingChecker
   include Converter
@@ -14,17 +16,15 @@ class CastlingChecker
   end
 
   def meet_castling_condition?(array = start_ary, i = 0)
-    row, column = array
-    return false unless array.all? { |n| n.between?(0, 7) }
-    return false if i < 3 && board.checked?(king, array_to_position(array))
+    return false unless meet_prerequisites?(array, i)
 
-    piece = board.grid[row][column + modifier]
+    row, column = array
+    piece = next_piece(row, column)
     if piece.is_a?(Rook)
       piece.move_count == 0 ? true : false
     else
-      return false unless piece.nil? 
-      
-      meet_castling_condition?([row, column + modifier], i += 1)
+      next_ary = [row, column + modifier]
+      piece.nil? ? meet_castling_condition?(next_ary, i += 1) : false
     end
   end
 
@@ -33,5 +33,19 @@ class CastlingChecker
   def modifier
     direction = (start_ary[1] - target_ary[1]).positive? ? 'Long' : 'Short'
     direction.eql?('Long') ? -1 : 1
+  end
+
+  def meet_prerequisites?(array, count)
+    return false unless MoveExaminer.new.within_limits?(array)
+    return true if count > 2
+    
+    position = array_to_position(array)
+    board.move_piece_to_target(position, king)
+    game_status_checker = GameStatusChecker.new(king.color, board)
+    game_status_checker.own_king_in_check? ? false : true
+  end
+
+  def next_piece(row, column)
+    board.grid[row][column + modifier]
   end
 end
