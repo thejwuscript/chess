@@ -51,6 +51,7 @@ class Piece
     all_squares.each do |square|
       examiner = MoveExaminer.new(board, self, square, game)
       array << square if examiner.validate_move 
+    
     end
     array
   end

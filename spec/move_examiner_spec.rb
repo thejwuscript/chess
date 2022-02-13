@@ -5,6 +5,7 @@ require_relative '../lib/board'
 require_relative '../lib/game'
 require_relative '../lib/en_passant_checker'
 require_relative '../lib/king'
+require_relative '../lib/pawn'
 
 RSpec.describe MoveExaminer do
   let(:board) { instance_double(Board) }
@@ -284,6 +285,18 @@ RSpec.describe MoveExaminer do
       allow(board).to receive(:find_own_king_in_check).with('W').and_return(piece)
       result = exposed_king_examiner.own_king_exposed?
       expect(result).to be true
+    end
+  end
+
+  describe '#search_target' do
+    let(:board) { instance_double(Board) }
+    let(:game) { instance_double(Game) }
+    let(:piece) { instance_double(Pawn) }
+    subject(:search_examiner) { described_class.new(board, piece, 'E4', game) }
+    
+    context 'when piece is a Pawn' do
+      it 'calls #pawn_attack_search' do 
+      end
     end
   end
 end

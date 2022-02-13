@@ -31,8 +31,9 @@ module SaveAndLoad
     assign_saved_values(saved_info)
     puts 'Game loaded.'
     board.show_board
-    move_piece
-    promote_pawn
+    king_in_check_alert
+    move_piece(select_piece)
+    #promote_pawn
   end
 
   def assign_saved_values(hash)

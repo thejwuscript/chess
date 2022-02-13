@@ -4,10 +4,12 @@ require_relative 'move_examiner'
 require_relative '../lib/game_message'
 require_relative '../lib/save_and_load'
 require 'yaml'
+require_relative 'converter'
 
 class Game
   include GameMessage
   include SaveAndLoad
+  include Converter
 
   attr_accessor :board, :turn_count, :current_player, :player_white, :player_black, :winner
   
@@ -28,7 +30,7 @@ class Game
   def the_game
     load_saved_file ? load_from_yaml : pregame
     round
-    game_end
+    conclusion
   end
   
   def player_names
@@ -104,9 +106,10 @@ class Game
       update_turn_count
       change_player
       return if game_over?
-  
-      move_piece
-      promote_pawn
+
+      king_in_check_alert
+      move_piece(select_piece)
+      #promote_pawn
     end
   end
 
@@ -118,24 +121,30 @@ class Game
    self.current_player = turn_count.odd? ? player_white : player_black
   end
 
-  def move_piece
-    checked_king = board.find_checked_king
-    king_checked_message(checked_king) if checked_king
-
-    player = current_player
-    chosen_position = player.is_a?(Computer) ? ai_input : verify_input_one
-    chosen_piece = board.piece_at(chosen_position)
-    verified_move = player.is_a?(Computer) ? ai_target(chosen_piece) : choose_target(chosen_piece)
-    finalize_move(chosen_piece, verified_move)
+  def king_in_check_alert
+    king_in_check = board.find_own_king_in_check(current_player.color)
+    king_checked_message(king) if king_in_check
   end
 
-  def choose_target(chosen_piece)
+  def select_piece
+    player = current_player
+    position = player.is_a?(Computer) ? ai_selection : human_selection
+    board.piece_at(position)
+  end
+
+  def move_piece(piece)
+    player = current_player
+    verified_move = player.is_a?(Computer) ? ai_target(piece) : human_target(piece)
+    finalize_move(piece, verified_move)
+  end
+
+  def human_target(chosen_piece)
     choose_move_message(chosen_piece)
     loop do
       target = player_input
       next invalid_input_message if board.same_color_at?(target, chosen_piece)
       
-      verified_move = board.validate_move(chosen_piece, target, self)
+      verified_move = MoveExaminer.new(board, chosen_piece, target, self).validate_move
       return verified_move if verified_move
 
       invalid_input_message
@@ -153,13 +162,12 @@ class Game
   end
 
   def king_follow_through(king, target)
-    board.move_castle(target) if board.castling?(king, target)
+    #board.move_castle(target) if board.castling?(king, target)
   end
 
   def pawn_follow_through(pawn, target)
-    board.remove_pawn_captured_en_passant(pawn, target, self)
-    target_ary = board.position_to_array(target)
-    pawn.store_turn_count(@turn_count) if board.pawn_double_step?(pawn, target_ary)
+    #board.remove_pawn_captured_en_passant(pawn, target, self)
+    pawn.store_turn_count(@turn_count) if MoveExaminer.new(board, pawn, target, self).double_step?
   end
 
 
@@ -175,14 +183,15 @@ class Game
     end
   end
 
-  def verify_input_one
+  def human_selection
     choose_piece_message
     loop do
       input = player_input
       piece = board.piece_at(input)
-      current_color = current_player.color
+      color = current_player.color
       next invalid_input_message if piece.nil?
-      return input if piece.color == current_color && moves_available?(piece)
+      
+      return input if piece.color == color && piece.moves_available?(board, self)
 
       invalid_input_message
     end
@@ -193,10 +202,10 @@ class Game
     if checker.stalemate?
       true
     elsif checker.checkmate?
-      players = [player_white, player_black]
-      self.winner = players.find { |player| player != current_player }
+      self.winner = current_player.color == 'W' ? player_black : player_white
       true
-    else false
+    else 
+      false
     end
   end
 
@@ -224,7 +233,7 @@ class Game
     winner ? declare_winner : declare_draw
   end
 
-  def ai_input
+  def ai_selection
     color = current_player.color
     valid_pieces = board.all_allies(color).keep_if { |piece| moves_available?(piece) }.shuffle
     valid_pieces.each do |ally|

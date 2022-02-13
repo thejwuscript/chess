@@ -63,16 +63,17 @@ class Board
 
   #def remove_pawn_captured_en_passant(piece, target, game)
   #  return unless piece.is_a?(Pawn) && target.match?(/3|6/)
-  #  
-  #  a, b = position_to_array(target)
-  #  w_en_passant(a, b, game) ? grid[a+1][b] = nil : nil
-  #  b_en_passant(a, b, game) ? grid[a-1][b] = nil : nil
+
   #end
 
   def move_piece_to_target(target, piece)
     set_piece_at(target, piece)
     delete_piece_at(piece.position)
-    piece.position = target
+  end
+
+  def return_to_previous_positions(position, piece1, piece2)
+    set_piece_at(position, piece1)
+    set_piece_at(piece2.position, piece2)
   end
 
   def move_castle(target)

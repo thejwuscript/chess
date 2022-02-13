@@ -27,15 +27,25 @@ class MoveExaminer
     own_king_exposed? ? nil : target
   end
 
+  def own_king_exposed?
+    removed_piece = board.piece_at(target)
+    board.move_piece_to_target(target, piece)
+    #board.remove_pawn_captured_en_passant(piece, target, game) if en_passant
+    result = GameStatusChecker.new(piece.color, board).own_king_in_check?
+    board.return_to_previous_positions(target, removed_piece, piece)
+    result
+  end
+
   def within_limits?(array)
     array.all? { |num| num.between?(0, 7) }
   end
 
   def depth_search
     manners = piece.move_manner
-    for i in manners.size - 1 do
+    for i in 0..manners.size - 1 do
       return target if recursive_search(start_ary, manners[i], target_ary)
     end
+    nil
   end
 
   def recursive_search(start, manner, goal)
@@ -53,6 +63,7 @@ class MoveExaminer
       next unless within_limits?(next_ary)
       return target_ary if next_ary == target_ary
     end
+    nil
   end
 
   def pawn_move_search
@@ -61,17 +72,14 @@ class MoveExaminer
     one_step = [row + modifier, column]
     return if board.occupied?(one_step) || board.occupied?(target_ary)
     
-    target_ary if double_step? || one_step.eql?(target_ary)
+    return target_ary if double_step? || one_step.eql?(target_ary)
   end
 
   def double_step?
     return if piece.move_count > 0
 
     a, b = start_ary
-    if piece.color == 'W' && [a-2, b] == target_ary || piece.color == 'B' && [a+2, b] == target_ary
-      piece.store_turn_count(game.turn_count)
-      true
-    end
+    true if piece.color == 'W' && [a-2, b] == target_ary || piece.color == 'B' && [a+2, b] == target_ary
   end
 
   def pawn_attack_search
@@ -85,7 +93,10 @@ class MoveExaminer
   def check_en_passant
     checker = EnPassantChecker.new(board, piece, target_ary, game)
     if checker.validate_capture_condition == true
-      self.en_passant = true; target_ary
+      self.en_passant = true
+      target_ary
+    else
+      nil
     end
   end
 
@@ -101,16 +112,9 @@ class MoveExaminer
     end
   end
 
-  def own_king_exposed?
-    board.move_piece_to_target(target, piece)
-    board.remove_pawn_captured_en_passant(piece, target, game) if en_passant
-    
-    board.find_own_king_in_check(piece.color) ? true : false
-  end
-
   def search_target
     case piece
-    when Rook || Bishop || Queen
+    when Rook, Bishop, Queen
       depth_search
     when Knight
       breadth_search

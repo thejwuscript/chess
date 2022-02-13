@@ -23,11 +23,11 @@ module BoardDisplay
   end
 
   def white_square(piece)
-    piece.nil? ? "\e[48;5;245m   \e[0m" : "\e[48;5;245m #{piece.symbol} \e[0m"
+    piece.nil? ? "\e[48;5;248m   \e[0m" : "\e[48;5;248m #{piece.symbol} \e[0m"
   end
 
   def black_square(piece)
-    piece.nil? ? "\e[48;5;237m   \e[0m" : "\e[48;5;237m #{piece.symbol} \e[0m"
+    piece.nil? ? "\e[48;5;240m   \e[0m" : "\e[48;5;240m #{piece.symbol} \e[0m"
   end
 
   def letter_coordinates
