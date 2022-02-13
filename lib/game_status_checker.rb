@@ -5,7 +5,7 @@ require_relative '../lib/move_examiner'
 class GameStatusChecker
   attr_reader :color, :board, :game
 
-  def initialize(color, board, game = nil) #game object is optional.
+  def initialize(color, board, game = nil)
     @color = color
     @board = board
     @game = game

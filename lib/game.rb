@@ -189,12 +189,14 @@ class Game
   end
 
   def game_over?
-    king = board.grid.flatten.find { |piece| piece.is_a?(King) && piece.color == current_player.color}
-    return true if stalemate?(king, self)
-
-    if checkmate?(king, self)
-      self.winner = king.color == 'W' ? player_black : player_white
+    checker = GameStatusChecker.new(current_player.color, board, self)
+    if checker.stalemate?
       true
+    elsif checker.checkmate?
+      players = [player_white, player_black]
+      self.winner = players.find { |player| player != current_player }
+      true
+    else false
     end
   end
 
@@ -218,7 +220,7 @@ class Game
     end
   end
 
-  def game_end
+  def conclusion
     winner ? declare_winner : declare_draw
   end
 
@@ -241,28 +243,5 @@ class Game
     end
     validated = array.keep_if { |position| board.validate_move(piece, position, self) }
     validated.find { |position| board.piece_at(position) } || validated.sample
-  end
-
-  def checkmate?(king, game)
-    no_legal_moves?(king.color, game) && checked?(king, king.position) && no_counterattack?(king, king.color)
-  end
-
-  def stalemate?(king, game)
-    no_legal_moves?(king.color, game) && !(checked?(king, king.position)) && no_counterattack?(king, king.color)
-  end
-
-  def no_counterattack?(king, color)
-    target = enemies_checking(king, king.position).position
-    all_allies(color).none? { |ally| validate_move(ally, target) }
-  end
-
-  
-
-  def moves_available?
-    array = []
-    ('A'..'H').to_a.each do |letter|
-      ('1'..'8').to_a.each { |number| array << letter + number }
-    end
-    array.any? { |move| validate_move }
   end
 end
