@@ -109,7 +109,7 @@ class Game
 
       king_in_check_alert
       move_piece(select_piece)
-      #promote_pawn
+      check_pawn_promotion
     end
   end
 
@@ -211,7 +211,7 @@ class Game
     end
   end
 
-  def promote_pawn
+  def check_pawn_promotion
     pawn = board.promotion_candidate
     return if pawn.nil?
 

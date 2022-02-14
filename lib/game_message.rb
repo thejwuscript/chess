@@ -46,7 +46,7 @@ module GameMessage
   end
 
   def declare_draw
-    puts "It's a draw!"
+    puts "STALEMATE! It's a draw!"
   end
 
   def promotion_message
