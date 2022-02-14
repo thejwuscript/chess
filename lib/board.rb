@@ -57,7 +57,7 @@ class Board
   def enemies_giving_check(own_color, target = nil)
     target ||= find_own_king(own_color).position
     all_enemies(own_color).keep_if do |enemy|
-      MoveExaminer.new(self, enemy, target).validate_move
+      MoveExaminer.new(self, enemy, target).search_target
     end
   end
 
