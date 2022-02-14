@@ -7,7 +7,7 @@ require_relative 'game_status_checker'
 
 class MoveExaminer
   include Converter
-  attr_reader :board, :piece, :target, :color, :start_ary, :target_ary, :game
+  attr_accessor :board, :piece, :target, :color, :start_ary, :target_ary, :game
   attr_accessor :en_passant, :castling
   
   def initialize(board = nil, piece = nil, target = nil, game = nil)
@@ -28,12 +28,13 @@ class MoveExaminer
   end
 
   def own_king_exposed?
-    removed_piece = board.piece_at(target)
-    board.move_piece_to_target(target, piece)
+    board.all_enemies(piece.color).any? do |enemy|
+      self.piece = enemy
+      self.start_ary = position_to_array(enemy.position)
+      search_target
+    end
     #board.remove_pawn_captured_en_passant(piece, target, game) if en_passant
-    result = GameStatusChecker.new(piece.color, board).own_king_in_check?
-    board.return_to_previous_positions(target, removed_piece, piece)
-    result
+  
   end
 
   def within_limits?(array)
@@ -72,7 +73,12 @@ class MoveExaminer
     one_step = [row + modifier, column]
     return if board.occupied?(one_step) || board.occupied?(target_ary)
     
-    return target_ary if double_step? || one_step.eql?(target_ary)
+    if double_step? || one_step.eql?(target_ary)
+      p piece
+      p target
+      puts 'pawn success'
+      target_ary
+    end
   end
 
   def double_step?
