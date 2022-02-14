@@ -1,8 +1,8 @@
 module GameMessage
 
-  def choose_piece_message
+  def choose_piece_message(name)
     puts ''
-    puts "#{current_player.name}, enter a coordinate to choose a piece. (Example: g5)"
+    puts "#{name}, enter a coordinate to choose a piece. (Example: g5)"
     puts "You may enter 'S' to save the game."
   end
 

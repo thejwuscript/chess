@@ -108,7 +108,8 @@ class Game
       return if game_over?
 
       king_in_check_alert
-      move_piece(select_piece)
+      selected = current_player.select_piece
+      current_player.move_piece(selected)
       check_pawn_promotion
     end
   end
@@ -124,79 +125,6 @@ class Game
   def king_in_check_alert
     king_in_check = board.find_own_king_in_check(current_player.color)
     king_checked_message(king_in_check) if king_in_check
-  end
-
-  def select_piece
-    player = current_player
-    position = player.is_a?(ComputerPlayer) ? ai_selection : human_selection
-    board.piece_at(position)
-  end
-
-  def move_piece(piece)
-    player = current_player
-    examiner = player.is_a?(ComputerPlayer) ? ai_target(piece) : human_target(piece)
-    finalize_move(piece, examiner)
-  end
-
-  def human_target(chosen_piece)
-    choose_move_message(chosen_piece)
-    loop do
-      target = player_input
-      next invalid_input_message if board.same_color_at?(target, chosen_piece)
-      
-      examiner = MoveExaminer.new(board, chosen_piece, target, self)
-      move_validated = examiner.validate_move
-      return examiner if move_validated
-
-      invalid_input_message
-    end
-  end
-
-  def finalize_move(piece, examiner)
-    king_follow_through(piece, examiner) if piece.is_a?(King)
-    pawn_follow_through(piece, examiner) if piece.is_a?(Pawn)
-
-    target = examiner.target
-    board.move_piece_to_target(target, piece)
-    piece.position = target
-    piece.move_count += 1
-  end
-
-  def king_follow_through(king, examiner)
-    target = examiner.target
-    board.move_castle(target) if examiner.castling_verified
-  end
-
-  def pawn_follow_through(pawn, examiner)
-    board.remove_pawn_captured_en_passant(pawn, examiner.target) if examiner.en_passant_verified
-    pawn.store_turn_count(turn_count) if examiner.double_step_verified
-  end
-
-
-  def player_input
-    loop do
-      input = gets.chomp.upcase
-      next save_game if input == 'S'
-      return input if input.match?(/^[A-H][1-8]$/)
-
-      invalid_input_message
-      rescue ArgumentError
-        invalid_input_message
-    end
-  end
-
-  def human_selection
-    choose_piece_message
-    loop do
-      input = player_input
-      piece = board.piece_at(input)
-      color = current_player.color
-      next invalid_input_message if piece.nil?
-      
-      return input if piece.color == color && piece.moves_available?(board, self)
-
-      invalid_input_message
-    end
   end
 
   def game_over?
@@ -233,29 +161,5 @@ class Game
 
   def conclusion
     winner ? declare_winner : declare_draw
-  end
-
-  def ai_selection
-    color = current_player.color
-    valid_pieces = board.all_allies(color).keep_if { |piece| piece.moves_available?(board, self) }.shuffle
-    valid_pieces.each do |ally|
-      board.grid.flatten.compact.shuffle.each do |piece|
-        return ally.position if MoveExaminer.new(board, ally, piece.position, self).validate_move
-  
-      end
-    end
-    valid_pieces.sample.position
-  end
-
-  def ai_target(piece)
-    array = []
-    ('A'..'H').to_a.each do |letter|
-      ('1'..'8').to_a.each { |number| array << letter + number }
-    end
-    validated = array.map do |position|
-      examiner = MoveExaminer.new(board, piece, position, self)
-      examiner.validate_move ? examiner : nil
-    end
-    validated.compact.find { |obj| board.piece_at(obj.target) } || validated.compact.sample
   end
 end
