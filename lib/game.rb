@@ -256,7 +256,6 @@ class Game
       examiner = MoveExaminer.new(board, piece, position, self)
       examiner.validate_move ? examiner : nil
     end
-    #validated.each {|exam| p exam }
-    validated.compact.sample
+    validated.compact.find { |obj| board.piece_at(obj.target) } || validated.compact.sample
   end
 end
