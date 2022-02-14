@@ -43,8 +43,8 @@ class Game
 
   def assign_players
     names = player_names.shuffle
-    self.player_white = Player.new(names.first, 'W')
-    self.player_black = Player.new(names.last, 'B')
+    self.player_white = HumanPlayer.new(names.first, 'W', board, self)
+    self.player_black = HumanPlayer.new(names.last, 'B', board, self)
   end
 
   def prep_board
@@ -84,7 +84,7 @@ class Game
   def assign_ai_player
     get_name_message { 'one' }
     player_one_name = gets.chomp
-    players = [Player.new(player_one_name), Computer.new].shuffle
+    players = [HumanPlayer.new(player_one_name, nil, board, self), ComputerPlayer.new('Computer', nil, board, self)].shuffle
     self.player_black, self.player_white = players
     player_black.color = 'B'
     player_white.color = 'W'
@@ -128,13 +128,13 @@ class Game
 
   def select_piece
     player = current_player
-    position = player.is_a?(Computer) ? ai_selection : human_selection
+    position = player.is_a?(ComputerPlayer) ? ai_selection : human_selection
     board.piece_at(position)
   end
 
   def move_piece(piece)
     player = current_player
-    examiner = player.is_a?(Computer) ? ai_target(piece) : human_target(piece)
+    examiner = player.is_a?(ComputerPlayer) ? ai_target(piece) : human_target(piece)
     finalize_move(piece, examiner)
   end
 

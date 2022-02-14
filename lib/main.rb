@@ -11,12 +11,14 @@ require_relative 'queen'
 require_relative 'king'
 require_relative 'game_message'
 require_relative 'player'
-require_relative 'computer'
 require_relative 'board_display'
 require_relative 'castling_checker'
 require_relative 'converter'
 require_relative 'en_passant_checker'
 require_relative 'game_status_checker'
 require_relative 'move_examiner'
+require_relative 'computer_player'
+require_relative 'human_player'
+
 
 Game.new.play
