@@ -22,13 +22,7 @@ board: !ruby/object:Board
       turn_count: 0
       move_count: 0
       type: bishop
-    - !ruby/object:Queen
-      color: B
-      position: D8
-      symbol: "♛"
-      turn_count: 0
-      move_count: 0
-      type: queen
+    -
     - !ruby/object:King
       color: B
       position: E8
@@ -149,7 +143,15 @@ board: !ruby/object:Board
     -
     -
     -
-    -
+    - !ruby/object:Pawn
+      color: W
+      position: E4
+      symbol: "♙"
+      turn_count: 0
+      move_count: 1
+      type: pawn
+      start_position: E2
+      double_step_turn: 3
     -
     - !ruby/object:Pawn
       color: W
@@ -160,21 +162,19 @@ board: !ruby/object:Board
       type: pawn
       start_position: G2
       double_step_turn: 1
-    -
+    - !ruby/object:Queen
+      color: B
+      position: H4
+      symbol: "♛"
+      turn_count: 0
+      move_count: 1
+      type: queen
   - -
     -
     -
     -
     -
-    - !ruby/object:Pawn
-      color: W
-      position: F3
-      symbol: "♙"
-      turn_count: 0
-      move_count: 1
-      type: pawn
-      start_position: F2
-      double_step_turn: 0
+    -
     -
     -
   - - !ruby/object:Pawn
@@ -213,16 +213,16 @@ board: !ruby/object:Board
       type: pawn
       start_position: D2
       double_step_turn: 0
+    -
     - !ruby/object:Pawn
       color: W
-      position: E2
+      position: F2
       symbol: "♙"
       turn_count: 0
       move_count: 0
       type: pawn
-      start_position: E2
+      start_position: F2
       double_step_turn: 0
-    -
     -
     - !ruby/object:Pawn
       color: W
@@ -289,12 +289,12 @@ board: !ruby/object:Board
       turn_count: 0
       move_count: 0
       type: rook
-turn_count: 4
-player_white: !ruby/object:Player
-  name: l;lajdf
+turn_count: 5
+player_white: &1 !ruby/object:Player
+  name: adfadf
   color: W
-player_black: &1 !ruby/object:Player
-  name: a;kdlf
+player_black: !ruby/object:Player
+  name: adfadf
   color: B
 current_player: *1
 winner:

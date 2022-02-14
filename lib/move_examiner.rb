@@ -27,12 +27,23 @@ class MoveExaminer
     own_king_exposed? ? nil : target
   end
 
-  def own_king_exposed?
-    board.all_enemies(piece.color).any? do |enemy|
+  def own_king_exposed? #different condition of self piece is a king.
+    color = piece.color
+    original_piece = piece
+    original_target = target
+    original_piece_at_target = board.piece_at(target)
+    board.move_piece_to_target(target, piece)
+    self.target = board.find_own_king(color).position
+    self.target_ary = position_to_array(target)
+    answer = board.all_enemies(piece.color).any? do |enemy| 
       self.piece = enemy
       self.start_ary = position_to_array(enemy.position)
       search_target
     end
+    self.target = original_target
+    board.set_piece_at(target, original_piece_at_target)
+    board.set_piece_at(original_piece.position, original_piece)
+    answer
     #board.remove_pawn_captured_en_passant(piece, target, game) if en_passant
   
   end
@@ -74,9 +85,6 @@ class MoveExaminer
     return if board.occupied?(one_step) || board.occupied?(target_ary)
     
     if double_step? || one_step.eql?(target_ary)
-      p piece
-      p target
-      puts 'pawn success'
       target_ary
     end
   end

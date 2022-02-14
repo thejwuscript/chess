@@ -199,9 +199,9 @@ class Game
 
   def game_over?
     checker = GameStatusChecker.new(current_player.color, board, self)
-    if checker.stalemate?
-      true
-    elsif checker.checkmate?
+    #if checker.stalemate?
+      #true
+    if checker.checkmate?
       self.winner = current_player.color == 'W' ? player_black : player_white
       true
     else 
