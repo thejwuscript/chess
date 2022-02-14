@@ -60,8 +60,10 @@ class Piece
     #available_moves(board, game).any?
     all_squares.any? do |square|
       examiner = MoveExaminer.new(board, self, square, game)
-      return true if examiner.validate_move 
-    
+      if examiner.validate_move
+        p square
+        return true
+      end
     end
     false
   end

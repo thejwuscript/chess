@@ -23,11 +23,15 @@ class MoveExaminer
 
   def validate_move
     return if board.same_color_at?(target, piece) || !(search_target)
-    
-    own_king_exposed? ? nil : target
+
+    if piece.is_a?(King)
+      self_king_exposed? ? nil : target
+    else
+      ally_king_exposed? ? nil : target
+    end
   end
 
-  def own_king_exposed? #different condition of self piece is a king.
+  def ally_king_exposed? #different condition of self piece is a king.
     color = piece.color
     original_piece = piece
     original_target = target
@@ -45,7 +49,20 @@ class MoveExaminer
     board.set_piece_at(original_piece.position, original_piece)
     answer
     #board.remove_pawn_captured_en_passant(piece, target, game) if en_passant
-  
+  end
+
+  def self_king_exposed?
+    king = piece
+    removed_piece = board.piece_at(target)
+    board.move_piece_to_target(target, king)
+    answer = board.all_enemies(piece.color).any? do |enemy|
+      self.piece = enemy
+      self.start_ary = position_to_array(enemy.position)
+      search_target
+    end
+    board.set_piece_at(target, removed_piece)
+    board.set_piece_at(king.position, king)
+    answer
   end
 
   def within_limits?(array)
