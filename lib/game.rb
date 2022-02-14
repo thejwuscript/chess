@@ -157,8 +157,7 @@ class Game
     pawn_follow_through(piece, examiner) if piece.is_a?(Pawn)
 
     target = examiner.target
-    board.set_piece_at(target, piece)
-    board.delete_piece_at(piece.position)
+    board.move_piece_to_target(target, piece)
     piece.position = target
     piece.move_count += 1
   end
