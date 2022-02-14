@@ -61,10 +61,11 @@ class Board
     end
   end
 
-  #def remove_pawn_captured_en_passant(piece, target, game)
-  #  return unless piece.is_a?(Pawn) && target.match?(/3|6/)
-
-  #end
+  def remove_pawn_captured_en_passant(piece, target)
+    row, column = position_to_array(target)
+    modifier = piece.color == 'W' ? 1 : -1
+    grid[row + modifier][column] = nil
+  end
 
   def move_piece_to_target(target, piece)
     set_piece_at(target, piece)

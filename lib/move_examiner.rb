@@ -8,7 +8,7 @@ require_relative 'game_status_checker'
 class MoveExaminer
   include Converter
   attr_accessor :board, :piece, :target, :color, :start_ary, :target_ary, :game
-  attr_accessor :en_passant, :castling, :double_step_verified
+  attr_accessor :en_passant_verified, :castling, :double_step_verified
   
   def initialize(board = nil, piece = nil, target = nil, game = nil)
     @board = board
@@ -17,7 +17,7 @@ class MoveExaminer
     @game = game
     @start_ary = position_to_array(piece.position) unless piece.nil?
     @target_ary = position_to_array(target) unless target.nil?
-    @en_passant = false
+    @en_passant_verified = false
     @castling = false
     @double_step_verified = false
   end
@@ -125,7 +125,7 @@ class MoveExaminer
   def check_en_passant
     checker = EnPassantChecker.new(board, piece, target_ary, game)
     if checker.validate_capture_condition == true
-      self.en_passant = true
+      self.en_passant_verified = true
       target_ary
     else
       nil
