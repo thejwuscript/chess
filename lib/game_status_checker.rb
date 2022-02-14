@@ -15,8 +15,8 @@ class GameStatusChecker
     board.all_allies(color).none? { |piece| piece.moves_available?(board, game) }
   end
 
-  def own_king_in_check?
-    board.enemies_giving_check(color).any?
+  def own_king_in_check?(king_moving_position = nil)
+    board.enemies_giving_check(color, king_moving_position).any?
   end
 
   def no_counterattack?

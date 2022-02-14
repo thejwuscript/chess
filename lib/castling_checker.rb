@@ -40,9 +40,15 @@ class CastlingChecker
     return true if count > 2
     
     position = array_to_position(array)
-    board.move_piece_to_target(position, king)
+    original_piece = board.piece_at(position)
+    board.move_piece_to_target(position, king) unless count == 0
+    
     game_status_checker = GameStatusChecker.new(king.color, board)
-    game_status_checker.own_king_in_check? ? false : true
+    result = game_status_checker.own_king_in_check?(position) ? false : true
+    board.set_piece_at(position, original_piece) unless count == 0
+    
+    board.set_piece_at(king.position, king)
+    result
   end
 
   def next_piece(row, column)

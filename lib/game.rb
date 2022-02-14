@@ -163,7 +163,8 @@ class Game
   end
 
   def king_follow_through(king, examiner)
-    #board.move_castle(target) if board.castling?(king, target)
+    target = examiner.target
+    board.move_castle(target) if examiner.castling_verified
   end
 
   def pawn_follow_through(pawn, examiner)
@@ -200,8 +201,8 @@ class Game
 
   def game_over?
     checker = GameStatusChecker.new(current_player.color, board, self)
-    #if checker.stalemate?
-      #true
+    if checker.stalemate?
+      true
     if checker.checkmate?
       self.winner = current_player.color == 'W' ? player_black : player_white
       true
