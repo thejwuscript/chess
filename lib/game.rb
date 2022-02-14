@@ -237,10 +237,10 @@ class Game
 
   def ai_selection
     color = current_player.color
-    valid_pieces = board.all_allies(color).keep_if { |piece| moves_available?(piece) }.shuffle
+    valid_pieces = board.all_allies(color).keep_if { |piece| piece.moves_available?(board, self) }.shuffle
     valid_pieces.each do |ally|
       board.grid.flatten.compact.shuffle.each do |piece|
-        return ally.position if board.validate_move(ally, piece.position, self)
+        return ally.position if MoveExaminer.new(board, ally, piece.position, self).validate_move
   
       end
     end
@@ -252,7 +252,11 @@ class Game
     ('A'..'H').to_a.each do |letter|
       ('1'..'8').to_a.each { |number| array << letter + number }
     end
-    validated = array.keep_if { |position| board.validate_move(piece, position, self) }
-    validated.find { |position| board.piece_at(position) } || validated.sample
+    validated = array.map do |position|
+      examiner = MoveExaminer.new(board, piece, position, self)
+      examiner.validate_move ? examiner : nil
+    end
+    #validated.each {|exam| p exam }
+    validated.compact.sample
   end
 end
