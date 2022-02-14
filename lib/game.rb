@@ -134,8 +134,8 @@ class Game
 
   def move_piece(piece)
     player = current_player
-    verified_move = player.is_a?(Computer) ? ai_target(piece) : human_target(piece)
-    finalize_move(piece, verified_move)
+    examiner = player.is_a?(Computer) ? ai_target(piece) : human_target(piece)
+    finalize_move(piece, examiner)
   end
 
   def human_target(chosen_piece)
@@ -144,30 +144,32 @@ class Game
       target = player_input
       next invalid_input_message if board.same_color_at?(target, chosen_piece)
       
-      verified_move = MoveExaminer.new(board, chosen_piece, target, self).validate_move
-      return verified_move if verified_move
+      examiner = MoveExaminer.new(board, chosen_piece, target, self)
+      move_validated = examiner.validate_move
+      return examiner if move_validated
 
       invalid_input_message
     end
   end
 
-  def finalize_move(piece, target)
-    king_follow_through(piece, target) if piece.is_a?(King)
-    pawn_follow_through(piece, target) if piece.is_a?(Pawn)
-    
+  def finalize_move(piece, examiner)
+    king_follow_through(piece, examiner) if piece.is_a?(King)
+    pawn_follow_through(piece, examiner) if piece.is_a?(Pawn)
+
+    target = examiner.target
     board.set_piece_at(target, piece)
     board.delete_piece_at(piece.position)
     piece.position = target
     piece.move_count += 1
   end
 
-  def king_follow_through(king, target)
+  def king_follow_through(king, examiner)
     #board.move_castle(target) if board.castling?(king, target)
   end
 
-  def pawn_follow_through(pawn, target)
+  def pawn_follow_through(pawn, examiner)
     #board.remove_pawn_captured_en_passant(pawn, target, self)
-    pawn.store_turn_count(@turn_count) if MoveExaminer.new(board, pawn, target, self).double_step?
+    pawn.store_turn_count(turn_count) if examiner.double_step_verified
   end
 
 

@@ -8,7 +8,7 @@ require_relative 'game_status_checker'
 class MoveExaminer
   include Converter
   attr_accessor :board, :piece, :target, :color, :start_ary, :target_ary, :game
-  attr_accessor :en_passant, :castling
+  attr_accessor :en_passant, :castling, :double_step_verified
   
   def initialize(board = nil, piece = nil, target = nil, game = nil)
     @board = board
@@ -19,6 +19,7 @@ class MoveExaminer
     @target_ary = position_to_array(target) unless target.nil?
     @en_passant = false
     @castling = false
+    @double_step_verified = false
   end
 
   def validate_move
@@ -110,7 +111,7 @@ class MoveExaminer
     return if piece.move_count > 0
 
     a, b = start_ary
-    true if piece.color == 'W' && [a-2, b] == target_ary || piece.color == 'B' && [a+2, b] == target_ary
+    self.double_step_verified = true if piece.color == 'W' && [a-2, b] == target_ary || piece.color == 'B' && [a+2, b] == target_ary
   end
 
   def pawn_attack_search
