@@ -35,6 +35,9 @@ module SaveAndLoad
     selected = current_player.select_piece
     current_player.move_piece(selected)
     pawn_promotion
+  rescue SystemCallError
+    no_saved_game_message
+    pregame
   end
 
   def assign_saved_values(hash)
@@ -44,5 +47,11 @@ module SaveAndLoad
     self.player_black = hash['player_black']
     self.current_player = hash['current_player']
     self.winner = hash['winner']
+  end
+
+  def no_saved_game_message
+    puts ''
+    puts 'No saved game found. A new game will begin.'
+    puts ''
   end
 end
