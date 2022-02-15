@@ -147,6 +147,8 @@ class Game
     piece = [Queen, Rook, Bishop, Knight][number - 1].new(pawn.color, pawn.position)
     piece.assign_symbol
     board.set_piece_at(piece.position, piece)
+    board.show_board
+    ai_promote_message(piece) if current_player.is_a?(ComputerPlayer)
   end
 
   def conclusion
