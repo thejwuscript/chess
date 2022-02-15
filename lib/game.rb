@@ -82,7 +82,7 @@ class Game
   end
 
   def assign_ai_player
-    get_name_message { 'one' }
+    get_name_message { 'Player One' }
     player_one_name = gets.chomp
     players = [HumanPlayer.new(player_one_name, nil, board, self), ComputerPlayer.new('Computer', nil, board, self)].shuffle
     self.player_black, self.player_white = players

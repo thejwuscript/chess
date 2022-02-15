@@ -24,4 +24,3 @@ require_relative 'human_player'
 Game.new.play
 
 #AI cannot play en_passant
-#Raise error if no save state?
