@@ -17,12 +17,12 @@ module SaveAndLoad
 
   def save_to_yaml
     YAML.dump(
-      'board' => @board,
-      'turn_count' => @turn_count,
-      'player_white' => @player_white,
-      'player_black' => @player_black,
-      'current_player' => @current_player,
-      'winner' => @winner
+      'board' => game.board,
+      'turn_count' => game.turn_count,
+      'player_white' => game.player_white,
+      'player_black' => game.player_black,
+      'current_player' => game.current_player,
+      'winner' => game.winner
     )
   end
 
@@ -32,8 +32,9 @@ module SaveAndLoad
     puts 'Game loaded.'
     board.show_board
     king_in_check_alert
-    move_piece(select_piece)
-    #promote_pawn
+    selected = current_player.select_piece
+    current_player.move_piece(selected)
+    check_pawn_promotion
   end
 
   def assign_saved_values(hash)

@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require_relative 'save_and_load'
+
 class HumanPlayer < Player
   include GameMessage
   include SaveAndLoad

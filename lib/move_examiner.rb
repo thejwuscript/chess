@@ -32,12 +32,14 @@ class MoveExaminer
     end
   end
 
-  def ally_king_exposed? #different condition of self piece is a king.
+  def ally_king_exposed?
     color = piece.color
     original_piece = piece
     original_target = target
     original_piece_at_target = board.piece_at(target)
     board.move_piece_to_target(target, piece)
+    pawn = board.remove_pawn_captured_en_passant(piece, target) if en_passant_verified
+    
     self.target = board.find_own_king(color).position
     self.target_ary = position_to_array(target)
     answer = board.all_enemies(piece.color).any? do |enemy| 
@@ -48,8 +50,9 @@ class MoveExaminer
     self.target = original_target
     board.set_piece_at(target, original_piece_at_target)
     board.set_piece_at(original_piece.position, original_piece)
+    board.set_piece_at(pawn.position, pawn) if en_passant_verified
+    
     answer
-    #board.remove_pawn_captured_en_passant(piece, target, game) if en_passant
   end
 
   def self_king_exposed?

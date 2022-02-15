@@ -2,14 +2,14 @@
 
 require_relative 'move_examiner'
 require_relative '../lib/game_message'
-require_relative '../lib/save_and_load'
+require_relative 'save_and_load'
 require 'yaml'
 require_relative 'converter'
 
 class Game
   include GameMessage
-  include SaveAndLoad
   include Converter
+  include SaveAndLoad
 
   attr_accessor :board, :turn_count, :current_player, :player_white, :player_black, :winner
   
