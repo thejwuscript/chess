@@ -22,3 +22,8 @@ require_relative 'human_player'
 
 
 Game.new.play
+
+#AI cannot en_passant
+#AI cannot select own promotion
+#Universal methods
+#Raise error if no save state?

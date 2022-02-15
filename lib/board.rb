@@ -48,6 +48,10 @@ class Board
     grid[row][column] ? true : false
   end
 
+  def within_limits?(array)
+    array.all? { |num| num.between?(0, 7) }
+  end
+
   def same_color_at?(position, piece)
     if other_piece = piece_at(position)
       piece.color == other_piece.color ? true : false

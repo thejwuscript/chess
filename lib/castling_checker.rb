@@ -36,7 +36,7 @@ class CastlingChecker
   end
 
   def meet_prerequisites?(array, count)
-    return false unless MoveExaminer.new.within_limits?(array)
+    return false unless board.within_limits?(array)
     return true if count > 2
     
     position = array_to_position(array)
