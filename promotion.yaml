@@ -1,5 +1,5 @@
 ---
-board: !ruby/object:Board
+board: &1 !ruby/object:Board
   grid:
   - - !ruby/object:Rook
       color: B
@@ -8,7 +8,13 @@ board: !ruby/object:Board
       turn_count: 0
       move_count: 0
       type: rook
-    -
+    - !ruby/object:Knight
+      color: B
+      position: B8
+      symbol: "♞"
+      turn_count: 0
+      move_count: 0
+      type: knight
     - !ruby/object:Bishop
       color: B
       position: C8
@@ -60,17 +66,25 @@ board: !ruby/object:Board
       type: pawn
       start_position: A7
       double_step_turn: 0
+    -
     - !ruby/object:Pawn
-      color: W
-      position: B7
-      symbol: "♙"
+      color: B
+      position: C7
+      symbol: "♟"
       turn_count: 0
-      move_count: 4
+      move_count: 0
       type: pawn
-      start_position: E2
-      double_step_turn: 1
-    -
-    -
+      start_position: C7
+      double_step_turn: 0
+    - !ruby/object:Pawn
+      color: B
+      position: D7
+      symbol: "♟"
+      turn_count: 0
+      move_count: 0
+      type: pawn
+      start_position: D7
+      double_step_turn: 0
     - !ruby/object:Pawn
       color: B
       position: E7
@@ -90,55 +104,49 @@ board: !ruby/object:Board
       start_position: F7
       double_step_turn: 0
     - !ruby/object:Pawn
-      color: B
+      color: W
       position: G7
-      symbol: "♟"
+      symbol: "♙"
       turn_count: 0
-      move_count: 0
+      move_count: 4
       type: pawn
-      start_position: G7
-      double_step_turn: 0
+      start_position: G2
+      double_step_turn: 1
+    -
+  - -
+    -
+    -
+    -
+    -
+    -
+    -
+    -
+  - -
+    -
+    -
+    -
+    -
+    -
+    -
+    -
+  - -
+    -
+    -
+    -
+    -
+    -
+    -
+    -
+  - -
     - !ruby/object:Pawn
       color: B
-      position: H7
+      position: B3
       symbol: "♟"
       turn_count: 0
-      move_count: 0
+      move_count: 3
       type: pawn
-      start_position: H7
-      double_step_turn: 0
-  - - !ruby/object:Knight
-      color: B
-      position: A6
-      symbol: "♞"
-      turn_count: 0
-      move_count: 1
-      type: knight
-    -
-    -
-    -
-    -
-    -
-    -
-    -
-  - -
-    -
-    -
-    -
-    -
-    -
-    -
-    -
-  - -
-    -
-    -
-    -
-    -
-    -
-    -
-    -
-  - -
-    -
+      start_position: B7
+      double_step_turn: 2
     -
     -
     -
@@ -181,7 +189,15 @@ board: !ruby/object:Board
       type: pawn
       start_position: D2
       double_step_turn: 0
-    -
+    - !ruby/object:Pawn
+      color: W
+      position: E2
+      symbol: "♙"
+      turn_count: 0
+      move_count: 0
+      type: pawn
+      start_position: E2
+      double_step_turn: 0
     - !ruby/object:Pawn
       color: W
       position: F2
@@ -191,15 +207,7 @@ board: !ruby/object:Board
       type: pawn
       start_position: F2
       double_step_turn: 0
-    - !ruby/object:Pawn
-      color: W
-      position: G2
-      symbol: "♙"
-      turn_count: 0
-      move_count: 0
-      type: pawn
-      start_position: G2
-      double_step_turn: 0
+    -
     - !ruby/object:Pawn
       color: W
       position: H2
@@ -265,12 +273,26 @@ board: !ruby/object:Board
       turn_count: 0
       move_count: 0
       type: rook
-turn_count: 8
-player_white: !ruby/object:Player
-  name: ";;LKJ;KL"
+turn_count: 9
+player_white: &2 !ruby/object:HumanPlayer
+  name: '23'
   color: W
-player_black: &1 !ruby/object:Player
-  name: '134134'
-  color: B
-current_player: *1
+  board: *1
+  game: &3 !ruby/object:Game
+    board: *1
+    turn_count: 9
+    player_white: *2
+    player_black: &4 !ruby/object:HumanPlayer
+      name: dfdf
+      color: B
+      board: *1
+      game: *3
+      piece_selected:
+      examiner_with_target:
+    current_player: *2
+    winner:
+  piece_selected:
+  examiner_with_target:
+player_black: *4
+current_player: *2
 winner:

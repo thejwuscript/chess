@@ -34,7 +34,7 @@ module SaveAndLoad
     king_in_check_alert
     selected = current_player.select_piece
     current_player.move_piece(selected)
-    check_pawn_promotion
+    pawn_promotion
   end
 
   def assign_saved_values(hash)

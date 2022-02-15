@@ -110,7 +110,7 @@ class Game
       king_in_check_alert
       selected = current_player.select_piece
       current_player.move_piece(selected)
-      check_pawn_promotion
+      pawn_promotion
     end
   end
 
@@ -139,24 +139,14 @@ class Game
     end
   end
 
-  def check_pawn_promotion
+  def pawn_promotion
     pawn = board.promotion_candidate
     return if pawn.nil?
 
-    number = promotion_choice
+    number = current_player.promotion_choice
     piece = [Queen, Rook, Bishop, Knight][number - 1].new(pawn.color, pawn.position)
     piece.assign_symbol
     board.set_piece_at(piece.position, piece)
-  end
-
-  def promotion_choice
-    promotion_message
-    loop do
-      input = gets.chomp
-      return input.to_i if input.match?(/^[1-4]$/)
-  
-      invalid_input_message
-    end
   end
 
   def conclusion

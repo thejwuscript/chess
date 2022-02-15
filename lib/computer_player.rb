@@ -28,4 +28,13 @@ class ComputerPlayer < Player
     end
     validated.compact.find { |obj| board.piece_at(obj.target) } || validated.compact.sample
   end
+
+  def promotion_choice
+    case rand(1..100)
+      when 1..97 then 1
+      when 98 then 2
+      when 99 then 3
+      when 100 then 4
+    end
+  end
 end

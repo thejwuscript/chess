@@ -50,7 +50,7 @@ module GameMessage
   end
 
   def promotion_message
-    puts "#{current_player.name}, your pawn can be promoted!"
+    puts "#{name}, your pawn can be promoted!"
     puts 'Choose the following options by entering a number from 1 to 4:'
     puts '    [1] --> Queen'
     puts '    [2] --> Rook'

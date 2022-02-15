@@ -48,4 +48,14 @@ class HumanPlayer < Player
       invalid_input_message
     end
   end
+
+  def promotion_choice
+    promotion_message
+    loop do
+      input = gets.chomp
+      return input.to_i if input.match?(/^[1-4]$/)
+  
+      invalid_input_message
+    end
+  end
 end
