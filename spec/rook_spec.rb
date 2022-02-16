@@ -19,8 +19,15 @@ RSpec.describe Rook do
   describe '#generate_coordinates' do
     subject(:rook) { described_class.new('B', 'D3') }
 
-    include_examples 'shared #generate_coordinates', [[6, 3], [7, 3], [4, 3], [3, 3], [2, 3], [1, 3], [0, 3], [5, 4], [5, 5], [5, 6], [5, 7], [5, 2], [5, 1], [5, 0]]
-    
+    include_examples 'shared #generate_coordinates', [[6, 3], [7, 3], [4, 3], [3, 3],
+      [2, 3], [1, 3], [0, 3], [5, 4], [5, 5], [5, 6], [5, 7], [5, 2], [5, 1], [5, 0]]
+  end
+
+  describe '#possible_targets' do
+    subject(:rook) { described_class.new('B', 'C4') }
+
+    include_examples 'shared #possible_targets', ["C3", "C2", "C1", "C5",
+      "C6", "C7", "C8", "D4", "E4", "F4", "G4", "H4", "B4", "A4"]
   end
   
   describe '#assign_initial_position' do
