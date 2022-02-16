@@ -7,7 +7,7 @@ module Converter
     letter + number.to_s
   end
 
-  def position_to_array(position)
+  def position_to_array(position = self.position)
     row = (1..8).to_a.reverse.index(position[1].to_i)
     column = ('A'..'Z').to_a.index(position[0])
     [row, column]

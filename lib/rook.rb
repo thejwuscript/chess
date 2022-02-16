@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative '../lib/piece'
+require_relative 'piece'
 
 class Rook < Piece
   
@@ -28,4 +28,5 @@ class Rook < Piece
   def move_manner
     [[1, 0],[-1, 0], [0, 1], [0,-1]]
   end
+
 end
