@@ -20,7 +20,7 @@ RSpec.shared_examples 'shared #generate_coordinates' do |param|
 end
 
 RSpec.shared_examples 'shared #possible_targets' do |param|
-  it 'returns all possible target positions for a piece' do
+  it 'returns all possible target positions for the piece' do
     result = subject.possible_targets
     expect(result).to eq(param)
   end

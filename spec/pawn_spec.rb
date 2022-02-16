@@ -3,9 +3,17 @@
 require_relative '../lib/pawn'
 require_relative '../spec/shared_example_spec'
 require_relative '../lib/game'
+require_relative '../lib/king'
+require_relative '../lib/piece'
+require_relative '../lib/rook'
+require_relative '../lib/bishop'
+require_relative '../lib/queen'
+require_relative '../lib/knight'
 
 RSpec.describe Pawn do
-  include_examples 'parent class Piece methods'
+  describe '#position_to_array' do
+    include_examples 'shared #position_to_array'
+  end
 
   describe '#assign_initial_position' do
     Pawn.assignment_count = 0
@@ -29,45 +37,21 @@ RSpec.describe Pawn do
     end
   end
 
-  describe '#en_passant_position?' do
-    context 'when a black pawn is in position' do
-      subject(:risky_pawn) { described_class.new('B', 'G5') }
-      
-      it 'returns true' do
-        expect(risky_pawn).to be_en_passant_position
-      end
+  describe '#generate_coordinates' do
+    context 'when it is a black pawn' do
+      subject(:pawn) { described_class.new('B', 'E6') }
+    
+      include_examples 'shared #generate_coordinates', 
+                       [[3, 4], [4, 4], [3, 5], [3, 3]]
+      include_examples 'shared #possible_targets', ["E5", "E4", "F5", "D5"]
     end
 
-    context 'when a white pawn is in position' do
-      subject(:risk_taking_pawn) { described_class.new('W', 'A4') }
-
-      it 'returns true' do
-        expect(risk_taking_pawn).to be_en_passant_position
-      end
-    end
-  end
-
-  describe '#en_passantable_turn?' do
-    context 'when pawn took a double-step on turn 2 and it is now turn 4' do
-      subject(:safe_pawn) { described_class.new }
+    context 'when it is a white pawn' do
+      subject(:pawn) { described_class.new('W', 'E6') }
       
-      it 'returns false' do
-        safe_pawn.turn_count = 4
-        safe_pawn.double_step_turn = 2
-        result = safe_pawn.en_passantable_turn?
-        expect(result).to be false
-      end
-    end
-
-    context 'when pawn took a double-step on turn 4 and it is now turn 5' do
-      subject(:danger_pawn) { described_class.new }
-      
-      it 'returns true' do
-        danger_pawn.turn_count = 5
-        danger_pawn.double_step_turn = 4
-        result = danger_pawn.en_passantable_turn?
-        expect(result).to be true
-      end
+      include_examples 'shared #generate_coordinates',
+                       [[1, 4], [0, 4], [1, 5], [1, 3]]
+      include_examples 'shared #possible_targets', ["E7", "E8", "F7", "D7"]
     end
   end
 end
