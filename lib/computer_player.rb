@@ -48,5 +48,14 @@ class ComputerPlayer < Player
     end
   end
 
+  def validated_examiners
+    all_possible_targets.each_with_object([]) do | (piece, targets), array |
+      targets.each do |target|
+        examiner = MoveExaminer.new(board, piece, target, game)
+        array << examiner if examiner.validate_move
+      end
+    end
+  end
+
   
 end
