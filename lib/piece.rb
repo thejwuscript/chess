@@ -58,7 +58,6 @@ class Piece
       move_manner.filter_map do |manner| 
         combined = start_ary.zip(manner).map { |a, b| a + b }
         combined if within_limits?(combined)
-        
       end
     end
   end

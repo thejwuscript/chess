@@ -64,4 +64,17 @@ module GameMessage
     puts "The computer promoted a pawn to a #{piece.type} at #{piece.position}!"
     puts ''
   end
+
+  def en_passant_message(game)
+    puts ''
+    puts "#{self.name}: HA! I'm taking your pawn en-passant!"
+    sleep 4
+    opponent = self.color == 'W' ? game.player_black : game.player_white
+    puts ''
+    puts "#{opponent.name}: ..."
+    sleep 3
+    puts "#{opponent.name}: Hold my croissant."
+    sleep 3
+    puts ''
+  end
 end
