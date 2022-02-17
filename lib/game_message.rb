@@ -84,4 +84,11 @@ module GameMessage
     sleep 3
     puts ''
   end
+
+  def computer_move_message(examiner)
+    piece = examiner.piece.type
+    target_position = examiner.target
+    puts ''
+    puts "Computer moves #{piece} to #{target_position}."
+  end
 end

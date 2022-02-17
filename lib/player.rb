@@ -7,8 +7,6 @@ class Player
     @color = color
     @board = board
     @game = game
-    @piece_selected = nil
-    @examiner_with_target = nil
   end
 
   def player_move

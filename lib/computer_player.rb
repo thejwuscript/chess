@@ -41,6 +41,7 @@ class ComputerPlayer < Player
 
   def computer_move
     examiner = choose_examiner
+    computer_move_message(examiner)
     finalize_move(examiner.piece, examiner)
   end
 

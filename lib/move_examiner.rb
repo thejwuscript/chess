@@ -68,6 +68,7 @@ class MoveExaminer
     end
     board.set_piece_at(target, removed_piece)
     board.set_piece_at(king.position, king)
+    self.piece = king
     answer
   end
 
