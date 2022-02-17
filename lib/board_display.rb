@@ -1,25 +1,40 @@
 module BoardDisplay
+
+  #def show_board
+    #puts ''
+    #grid.each_with_index do |row, row_index|
+    #  numbers_column(row_index)
+    #  row_index.even? ? white_black_row(row) : black_white_row(row)
+    #end
+    #letter_coordinates
+  #end
+
   def show_board
     puts ''
-    grid.each_with_index do |row, row_index|
-      numbers_column(row_index)
-      row_index.even? ? white_black_row(row) : black_white_row(row)
+    default_colors.each_with_index do |row, index|
+      numbers_column(index)
+      row.each { |square| print square }
+      print "\n"
     end
     letter_coordinates
   end
 
-  def white_black_row(row)
-    row.each_with_index do |piece, column|
-      print column.even? ? white_square(piece) : black_square(piece)
+  def default_colors
+    @display = grid.map.with_index do |row, row_index|
+      row_index.even? ? white_black_row(row) : black_white_row(row)
     end
-    print "\n"
+  end
+
+  def white_black_row(row)
+    row.map.with_index do |piece, column|
+      column.even? ? white_square(piece) : black_square(piece)
+    end
   end
   
   def black_white_row(row)
-    row.each_with_index do |piece, column|
-      print column.even? ? black_square(piece) : white_square(piece)
+    row.map.with_index do |piece, column|
+      column.even? ? black_square(piece) : white_square(piece)
     end
-    print "\n"
   end
 
   def white_square(piece)
