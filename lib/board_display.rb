@@ -38,6 +38,13 @@ module BoardDisplay
     end
   end
 
+  def show_changed_board_color_indication(piece)
+    grid.flatten.compact.each { |sq| sq.selected = false }
+    piece.selected = true
+    self.origin_ary = piece.position_to_array
+    show_board
+  end
+
   def green_square(piece)
     piece.nil? ? "\e[48;5;100m   \e[0m" : "\e[48;5;100m #{piece.symbol} \e[0m"
   end

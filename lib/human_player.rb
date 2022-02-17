@@ -12,10 +12,7 @@ class HumanPlayer < Player
 
   def human_move
     piece = select_piece
-    board.grid.flatten.compact.each { |sq| sq.selected = false }
-    piece.selected = true
-    board.origin_ary = piece.position_to_array
-    board.show_board
+    board.show_changed_board_color_indication(piece)
     move_piece(piece)
   end
 
