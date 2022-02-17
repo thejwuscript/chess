@@ -18,6 +18,8 @@ class Player
     pawn_follow_through(piece, examiner) if piece.is_a?(Pawn)
 
     target = examiner.target
+    board.attacking_arrays = []
+    board.show_board
     sleep 1
     board.move_piece_to_target(target, piece)
     piece.position = target

@@ -25,6 +25,8 @@ module BoardDisplay
       default_color(piece, row, column)
     elsif piece.selected
       green_square(piece)
+    elsif piece && attacking_arrays.include?([row, column])
+      red_square(piece)
     else
       default_color(piece, row, column)
     end
@@ -32,21 +34,36 @@ module BoardDisplay
 
   def default_color(piece, row, column)
     if row.even? && column.even? || row.odd? && column.odd?
-      white_square(piece)
+      attacking_arrays.include?([row, column]) ? dot_white_square : white_square(piece)
     else
-      black_square(piece)
+      attacking_arrays.include?([row, column]) ? dot_black_square : black_square(piece)
     end
   end
 
-  def show_changed_board_color_indication(piece)
+  def show_changed_board_color_indication(piece, game)
     grid.flatten.compact.each { |sq| sq.selected = false }
     piece.update_selected_value(true)
     self.origin_ary = piece.position_to_array
+    self.attacking_arrays = piece.verified_target_arrays(self, game)
     show_board
   end
 
   def green_square(piece)
     piece.nil? ? "\e[48;5;100m   \e[0m" : "\e[48;5;100m #{piece.symbol} \e[0m"
+  end
+
+  def red_square(piece)
+    piece.nil? ? "\e[48;5;196m   \e[0m" : "\e[48;5;196m #{piece.symbol} \e[0m"
+  end
+
+  def dot_white_square
+    symbol = '🟢'
+    "\e[48;5;248m #{symbol} \e[0m"
+  end
+
+  def dot_black_square
+    symbol = '🟢'
+    "\e[48;5;240m #{symbol} \e[0m"
   end
 
   def white_black_row(row)

@@ -9,11 +9,13 @@ class Board
   include BoardDisplay
   
   attr_reader :grid
-  attr_accessor :origin_ary
+  attr_accessor :origin_ary, :attacking_arrays
+  
   
   def initialize
     @grid = Array.new(8) { Array.new(8) }
     @origin_ary = nil
+    @attacking_arrays = []
   end
 
   def piece_at(position)

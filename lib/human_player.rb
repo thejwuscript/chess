@@ -12,7 +12,7 @@ class HumanPlayer < Player
 
   def human_move
     piece = select_piece
-    board.show_changed_board_color_indication(piece)
+    board.show_changed_board_color_indication(piece, game)
     move_piece(piece)
   end
 

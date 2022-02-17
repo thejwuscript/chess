@@ -69,5 +69,12 @@ class Piece
   def possible_targets
     generate_coordinates.map { |coord| array_to_position(coord) }
   end
+
+  def verified_target_arrays(board, game)
+    possible_targets.filter_map do |target| 
+      examiner = MoveExaminer.new(board, self, target, game)
+      position_to_array(target) if examiner.validate_move
+    end
+  end
 end
 
