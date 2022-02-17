@@ -57,12 +57,12 @@ module BoardDisplay
   end
 
   def dot_white_square
-    symbol = '🟢'
+    symbol = "\e[32m\u2B24"
     "\e[48;5;248m #{symbol} \e[0m"
   end
 
   def dot_black_square
-    symbol = '🟢'
+    symbol = "\e[32m\u2B24"
     "\e[48;5;240m #{symbol} \e[0m"
   end
 
