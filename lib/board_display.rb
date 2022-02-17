@@ -19,7 +19,9 @@ module BoardDisplay
   end
 
   def colorize_square(piece, row, column)
-    if piece.nil?
+    if piece.nil? && origin_ary == [row, column]
+      green_square(piece)
+    elsif piece.nil?
       default_color(piece, row, column)
     elsif piece.selected
       green_square(piece)
@@ -37,7 +39,7 @@ module BoardDisplay
   end
 
   def green_square(piece)
-    "\e[48;5;70m #{piece.symbol} \e[0m"
+    piece.nil? ? "\e[48;5;100m   \e[0m" : "\e[48;5;100m #{piece.symbol} \e[0m"
   end
 
   def white_black_row(row)

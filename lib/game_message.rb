@@ -13,6 +13,7 @@ module GameMessage
   end
 
   def choose_move_message(piece)
+    puts ''
     puts "Enter a coordinate to move your #{piece.type} to."
   end
 
