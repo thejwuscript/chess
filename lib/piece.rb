@@ -18,6 +18,10 @@ class Piece
     @selected = false
   end
 
+  def update_selected_value(value)
+    self.selected = value
+  end
+
   def all_squares(array = [])
     ('A'..'H').to_a.each do |letter|
       ('1'..'8').to_a.each { |number| array << letter + number }

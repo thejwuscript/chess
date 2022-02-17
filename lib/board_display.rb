@@ -40,7 +40,7 @@ module BoardDisplay
 
   def show_changed_board_color_indication(piece)
     grid.flatten.compact.each { |sq| sq.selected = false }
-    piece.selected = true
+    piece.update_selected_value(true)
     self.origin_ary = piece.position_to_array
     show_board
   end
