@@ -20,10 +20,8 @@ require_relative 'move_examiner'
 require_relative 'computer_player'
 require_relative 'human_player'
 
-
 include SaveAndLoad
 include GameMessage
 
 puts 'Welcome to CHESS.'
-Game.new.new_game unless saved_game_exists?
-load_or_new_game ? load_game : Game.new.new_game
+load_or_new_game

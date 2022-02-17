@@ -2,7 +2,6 @@
 
 require_relative 'player'
 require_relative 'game_message'
-require 'pry-byebug'
 
 class ComputerPlayer < Player
   include GameMessage

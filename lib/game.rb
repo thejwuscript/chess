@@ -5,7 +5,6 @@ require_relative '../lib/game_message'
 require_relative 'save_and_load'
 require 'yaml'
 require_relative 'converter'
-require 'pry-byebug'
 
 class Game
   include GameMessage
@@ -30,6 +29,7 @@ class Game
   end
 
   def resume_game
+    game_loaded_message
     board.show_board
     king_in_check_alert
     current_player.player_move

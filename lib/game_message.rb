@@ -1,5 +1,11 @@
 module GameMessage
 
+  def game_loaded_message
+    puts ''
+    puts 'Game loaded.'
+    puts ''
+  end
+
   def choose_piece_message(name)
     puts ''
     puts "#{name}, enter a coordinate to choose a piece. (Example: g5)"
