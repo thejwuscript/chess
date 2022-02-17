@@ -8,13 +8,14 @@ class Piece
   include Converter
   include Limiter
   
-  attr_accessor :position, :color, :symbol, :type, :turn_count, :move_count
+  attr_accessor :position, :color, :symbol, :type, :move_count, :selected
 
   def initialize(color, position)
     @color = color
     @position = position
     @symbol = assign_symbol
     @move_count = 0
+    @selected = false
   end
 
   def all_squares(array = [])

@@ -30,6 +30,7 @@ class Game
 
   def resume_game
     game_loaded_message
+    #board.colorize_board
     board.show_board
     king_in_check_alert
     current_player.player_move
@@ -107,6 +108,7 @@ class Game
 
   def round
     loop do
+      #board.colorize_board
       board.show_board
       update_turn_count
       change_player
@@ -151,6 +153,7 @@ class Game
     piece = [Queen, Rook, Bishop, Knight][number - 1].new(pawn.color, pawn.position)
     piece.assign_symbol
     board.set_piece_at(piece.position, piece)
+    #board.colorize_board
     board.show_board
     ai_promote_message(piece) if current_player.is_a?(ComputerPlayer)
   end

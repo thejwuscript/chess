@@ -13,6 +13,7 @@ class Board
   
   def initialize
     @grid = Array.new(8) { Array.new(8) }
+    @display = nil
   end
 
   def piece_at(position) # UPPERCASE

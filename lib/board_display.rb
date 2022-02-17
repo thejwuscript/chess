@@ -1,17 +1,8 @@
 module BoardDisplay
 
-  #def show_board
-    #puts ''
-    #grid.each_with_index do |row, row_index|
-    #  numbers_column(row_index)
-    #  row_index.even? ? white_black_row(row) : black_white_row(row)
-    #end
-    #letter_coordinates
-  #end
-
   def show_board
     puts ''
-    default_colors.each_with_index do |row, index|
+    colorize_board.each_with_index do |row, index|
       numbers_column(index)
       row.each { |square| print square }
       print "\n"
@@ -19,10 +10,34 @@ module BoardDisplay
     letter_coordinates
   end
 
-  def default_colors
-    @display = grid.map.with_index do |row, row_index|
-      row_index.even? ? white_black_row(row) : black_white_row(row)
+  def colorize_board
+    grid.map.with_index do |row, row_ind|
+      row.map.with_index do |piece, col_ind|
+        colorize_square(piece, row_ind, col_ind)
+      end
     end
+  end
+
+  def colorize_square(piece, row, column)
+    if piece.nil?
+      default_color(piece, row, column)
+    elsif piece.selected
+      green_square(piece)
+    else
+      default_color(piece, row, column)
+    end
+  end
+
+  def default_color(piece, row, column)
+    if row.even? && column.even? || row.odd? && column.odd?
+      white_square(piece)
+    else
+      black_square(piece)
+    end
+  end
+
+  def green_square(piece)
+    "\e[48;5;70m #{piece.symbol} \e[0m"
   end
 
   def white_black_row(row)
