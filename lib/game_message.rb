@@ -17,6 +17,7 @@ module GameMessage
   end
 
   def choose_game_message
+    puts ''
     puts "Enter '1' to vs Computer."
     puts "Enter '2' to vs another player."
     puts ''

@@ -7,7 +7,7 @@ module SaveAndLoad
     puts '    [1] -> Yes'
     puts '    [2] -> No'
     puts ''
-    gets.chomp == '1' ? true : false
+    choice = gets.chomp == '1' ? true : false
   end
 
   def load_or_new_game

@@ -23,5 +23,5 @@ require_relative 'human_player'
 include SaveAndLoad
 include GameMessage
 
-puts 'Welcome to CHESS.'
+puts "Welcome to CHESS."
 load_or_new_game
