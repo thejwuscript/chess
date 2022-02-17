@@ -10,6 +10,21 @@ class HumanPlayer < Player
     super
   end
 
+  def human_move
+    piece = select_piece
+    move_piece(piece)
+  end
+
+  def select_piece
+    position = player_selection
+    board.piece_at(position)
+  end
+
+  def move_piece(piece)
+    examiner = player_target(piece)
+    finalize_move(piece, examiner)
+  end
+
   def player_selection
     choose_piece_message(self.name)
     loop do

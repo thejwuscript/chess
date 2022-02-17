@@ -11,14 +11,8 @@ class Player
     @examiner_with_target = nil
   end
 
-  def select_piece
-    position = player_selection
-    board.piece_at(position)
-  end
-
-  def move_piece(piece)
-    examiner = player_target(piece)
-    finalize_move(piece, examiner)
+  def player_move
+    self.is_a?(ComputerPlayer) ? computer_move : human_move
   end
 
   def finalize_move(piece, examiner)

@@ -21,6 +21,9 @@ require_relative 'computer_player'
 require_relative 'human_player'
 
 
-Game.new.play
+include SaveAndLoad
+include GameMessage
 
-#AI cannot play en_passant
+puts 'Welcome to CHESS.'
+Game.new.new_game unless saved_game_exists?
+load_or_new_game ? load_game : Game.new.new_game

@@ -5,6 +5,7 @@ require_relative '../lib/game_message'
 require_relative 'save_and_load'
 require 'yaml'
 require_relative 'converter'
+require 'pry-byebug'
 
 class Game
   include GameMessage
@@ -22,13 +23,17 @@ class Game
     @winner = nil
   end
 
-  def play
-    puts "Welcome to CHESS."
-    the_game
+  def new_game
+    pregame
+    round
+    conclusion
   end
 
-  def the_game
-    load_saved_file ? load_from_yaml : pregame
+  def resume_game
+    board.show_board
+    king_in_check_alert
+    current_player.player_move
+    pawn_promotion
     round
     conclusion
   end
@@ -108,8 +113,7 @@ class Game
       return if game_over?
 
       king_in_check_alert
-      selected = current_player.select_piece
-      current_player.move_piece(selected)
+      current_player.player_move
       pawn_promotion
     end
   end

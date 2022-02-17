@@ -24,11 +24,11 @@ class MoveExaminer
 
   def validate_move
     return if board.same_color_at?(target, piece) || !(search_target)
-
+    
     if piece.is_a?(King)
       self_king_exposed? ? nil : target
     else
-      ally_king_exposed? ? nil : target
+      ally_king_exposed? ? nil : target 
     end
   end
 
@@ -51,7 +51,9 @@ class MoveExaminer
     board.set_piece_at(target, original_piece_at_target)
     board.set_piece_at(original_piece.position, original_piece)
     board.set_piece_at(pawn.position, pawn) if en_passant_verified
-    
+
+    self.piece = original_piece
+    self.target = original_target
     answer
   end
 

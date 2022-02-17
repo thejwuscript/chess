@@ -14,7 +14,6 @@ class Piece
     @color = color
     @position = position
     @symbol = assign_symbol
-    @turn_count = 0
     @move_count = 0
   end
 
