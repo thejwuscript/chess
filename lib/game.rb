@@ -109,9 +109,9 @@ class Game
     loop do
       update_turn_count
       change_player
-      board.show_board
       return if game_over?
 
+      board.show_board
       king_in_check_alert
       current_player.player_move
       pawn_promotion
