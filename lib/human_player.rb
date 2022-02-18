@@ -32,7 +32,7 @@ class HumanPlayer < Player
     loop do
       input = player_input
       next save_game if input == 'S'
-      next invalid_input_message if input == 'U'
+      next invalid_input_message if input == 'B'
       game.exit_game if input == 'Q'
       
       piece = board.piece_at(input)
@@ -58,7 +58,7 @@ class HumanPlayer < Player
   def player_input
     loop do
       input = gets.chomp.upcase
-      return input if input.match?(/^[A-H][1-8]$|^U$|^S$|^Q$/)
+      return input if input.match?(/^[A-H][1-8]$|^B$|^S$|^Q$/)
 
       invalid_input_message
       rescue ArgumentError
@@ -70,7 +70,7 @@ class HumanPlayer < Player
     choose_move_message(piece)
     loop do
       target = player_input
-      return undo_selection(piece) if target == 'U'
+      return undo_selection(piece) if target == 'B'
       game.exit_game if target == 'Q'
       
       next invalid_input_message if target == 'S' || board.same_color_at?(target, piece)
