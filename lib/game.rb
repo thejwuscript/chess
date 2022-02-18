@@ -159,4 +159,9 @@ class Game
   def conclusion
     winner ? declare_winner : declare_draw
   end
+
+  def exit_game
+    puts "\nThanks for playing."
+    exit
+  end
 end

@@ -62,13 +62,13 @@ module BoardDisplay
 
   def dot_white_square
     selected = grid.flatten.compact.find { |piece| piece.selected }
-    symbol = selected.color == 'W' ? "\e[38;5;15m\u2B24" : "\e[38;5;0m\u2B24"
+    symbol = selected.color == 'W' ? "\e[38;5;15m\u25CF" : "\e[38;5;0m\u25CF"
     "\e[48;5;248m #{symbol} \e[0m"
   end
 
   def dot_black_square
     selected = grid.flatten.compact.find { |piece| piece.selected }
-    symbol = selected.color == 'W' ? "\e[38;5;15m\u2B24" : "\e[38;5;0m\u2B24"
+    symbol = selected.color == 'W' ? "\e[38;5;15m\u25CF" : "\e[38;5;0m\u25CF"
     "\e[48;5;240m #{symbol} \e[0m"
   end
 
