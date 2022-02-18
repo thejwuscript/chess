@@ -48,7 +48,7 @@ module BoardDisplay
     grid.flatten.compact.each { |sq| sq.selected = false }
     piece.update_selected_value(true)
     self.origin_ary = piece.position_to_array
-    self.attacking_arrays = piece.verified_target_arrays(self, game)
+    self.attacking_arrays = piece.verified_target_arrays(self, game) if game.current_player.is_a?(HumanPlayer)
     show_board
   end
 

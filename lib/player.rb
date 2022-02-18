@@ -1,4 +1,10 @@
+# frozen_string_literal: true
+
+require_relative 'converter'
+
 class Player
+  include Converter
+  
   attr_accessor :name, :color, :piece_selected, :examiner_with_target
   attr_reader :board, :game
 
@@ -14,10 +20,15 @@ class Player
   end
 
   def finalize_move(piece, examiner)
-    board.attacking_arrays = []
+    target = examiner.target
+    target_ary = position_to_array(target)
+    if board.occupied?(target_ary)
+      board.attacking_arrays = [target_ary]
+    else
+      board.attacking_arrays = []
+    end
     board.show_board
     sleep 1
-    target = examiner.target
     board.move_piece_to_target(target, piece)
     piece.position = target
     piece.move_count += 1

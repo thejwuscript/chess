@@ -71,6 +71,7 @@ module GameMessage
   def ai_promote_message(piece)
     puts ''
     puts "The computer promoted a pawn to a #{piece.type} at #{piece.position}!"
+    sleep 5
     puts ''
   end
 
