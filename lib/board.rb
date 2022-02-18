@@ -7,9 +7,10 @@ require_relative 'game_status_checker'
 class Board
   include Converter
   include BoardDisplay
+  include SaveAndLoad
   
-  attr_reader :grid, :game
-  attr_accessor :origin_ary, :attacking_arrays
+  attr_reader :game
+  attr_accessor :origin_ary, :attacking_arrays, :grid
   
   
   def initialize(game)
@@ -109,4 +110,7 @@ class Board
   def all_allies(color)
     grid.flatten.compact.keep_if { |piece| piece.color == color }
   end
+
+  
+
 end

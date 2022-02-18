@@ -11,11 +11,14 @@ module GameMessage
     puts ''
     puts "#{name}, enter a coordinate to choose a piece. (Example: g5)"
     puts "You may enter 'S' to save the game."
+    puts ''
   end
 
   def choose_move_message(piece)
     puts ''
-    puts "Enter a coordinate to move your #{piece.type} to."
+    puts "Enter a coordinate to move your #{piece.type} to,"
+    puts "or enter 'U' to choose another piece."
+    puts ''
   end
 
   def choose_game_message

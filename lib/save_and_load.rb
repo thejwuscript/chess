@@ -30,6 +30,7 @@ module SaveAndLoad
   def save_game
     File.open("save_state.yaml", 'w') { |file| file.write save_to_yaml }
     puts "Game saved."
+    choose_piece_message(self.name)
   end
 
   def save_to_yaml
@@ -44,5 +45,20 @@ module SaveAndLoad
     puts ''
     puts 'No saved game found. A new game will begin.'
     puts ''
+  end
+
+  def save_board_info 
+    previous = board.grid.flatten.compact.find { |piece| piece.selected }
+    File.open("prev_board_info.yaml", 'w') do |file| 
+      file.write YAML.dump({
+        'grid' => board.grid,
+        'origin_ary' => board.origin_ary,
+        'attacking_arrays' => board.attacking_arrays
+        })
+    end
+  end
+
+  def load_board_info 
+    YAML.load_file('prev_board_info.yaml')
   end
 end
