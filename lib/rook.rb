@@ -28,5 +28,4 @@ class Rook < Piece
   def move_manner
     [[1, 0],[-1, 0], [0, 1], [0,-1]]
   end
-
 end

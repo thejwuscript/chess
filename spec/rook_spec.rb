@@ -67,6 +67,4 @@ RSpec.describe Rook do
       end
     end
   end
-
-  
 end

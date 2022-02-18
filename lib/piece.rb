@@ -77,4 +77,3 @@ class Piece
     end
   end
 end
-

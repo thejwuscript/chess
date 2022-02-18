@@ -184,8 +184,6 @@ RSpec.describe Board do
     end
   end
 
-  
-
   describe '#same_color_at?' do
     context 'when the origin piece and the piece on said position have the same color' do
       let(:black_piece) { double(color: 'B') }
@@ -219,10 +217,6 @@ RSpec.describe Board do
       end
     end
   end
-
-  
-
-  
 
   describe '#white_pawn_search' do
     context 'when a white pawn is moving from G2 to G3' do
