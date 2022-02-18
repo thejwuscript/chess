@@ -28,7 +28,7 @@ class HumanPlayer < Player
   end
 
   def player_selection
-    choose_piece_message(self.name)
+    choose_piece_message(self)
     loop do
       input = player_input
       next save_game if input == 'S'
