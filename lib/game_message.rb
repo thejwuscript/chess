@@ -10,15 +10,13 @@ module GameMessage
   def choose_piece_message(player)
     color = player.color
     puts "\n#{player.name}(#{color}), enter a coordinate to choose a piece. (Example: g5)"
-    puts "Enter 'S' to save and continue the game."
-    puts "Enter 'Q' to quit the game."
+    puts "You may enter 'S' to save and continue, or 'Q' to quit the game."
     puts ''
   end
 
   def choose_move_message(piece)
     puts "\nEnter a coordinate to move your #{piece.type} to."
-    puts "Enter 'U' to choose another piece."
-    puts "Enter 'Q' to quit the game."
+    puts "You may enter 'U' to go back or 'Q' to quit the game."
     puts ''
   end
 

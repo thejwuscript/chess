@@ -162,6 +162,7 @@ class Game
 
   def exit_game
     board.attacking_arrays = []
+    board.origin_ary = nil
     board.grid.flatten.compact.each { |sq| sq.selected = false }
     board.show_board
     puts "\nThanks for playing."
