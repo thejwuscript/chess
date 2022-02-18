@@ -184,18 +184,6 @@ RSpec.describe Board do
     end
   end
 
-  describe '#within_limits?' do
-    context 'when elements greater than 7 is out of bounds' do
-      array = [8, 0]
-      it { is_expected.not_to be_within_limits(array) }
-    end
-
-    context 'when elements 7 or less is within limits' do
-      array = [7, 7]
-      it { is_expected.to be_within_limits(array) }
-    end
-  end
-
   describe '#same_color_at?' do
     context 'when the origin piece and the piece on said position have the same color' do
       let(:black_piece) { double(color: 'B') }
@@ -226,77 +214,6 @@ RSpec.describe Board do
         board.grid[4][2] = Knight.new('W')
         result = board.same_color_at?(position, black_piece)
         expect(result).to be false
-      end
-    end
-  end
-
-  describe '#recursive_search' do
-    context 'when a rook is moving from A8 to F8 unhindered' do
-      origin_ary = [0, 0]
-      target_ary = [0, 5]
-      manner = [0, 1]
-
-      it 'returns [0, 5]' do
-        result = board.recursive_search(origin_ary, manner, target_ary)
-        expect(result).to eql([0, 5])
-      end
-    end
-
-    context 'when a rook is trying to move from B2 to B6 with a piece in between' do
-      origin_ary = [6, 1]
-      target_ary = [2, 1]
-      manner = [-1, 0]
-
-      it 'returns nil' do
-        board.grid[3][1] = Queen.new
-        result = board.recursive_search(origin_ary, manner, target_ary)
-        expect(result).to be_nil
-      end
-    end
-  end
-
-  describe '#breadth_search' do
-    context 'when a knight is making a move from G2 to E3 unhindered' do
-      origin_ary = [6, 6]
-      target_ary = [5, 4]
-      manners = Knight.new.move_manner
-      
-      it 'returns [5, 4]' do
-        result = board.breadth_search(origin_ary, manners, target_ary)
-        expect(result).to eql([5, 4])
-      end
-    end
-
-    context 'when a knight cannot make a legal move' do
-      origin_ary = [5, 5]
-      target_ary = [1, 1]
-      manners = Knight.new.move_manner
-
-      it 'returns nil' do
-        result = board.breadth_search(origin_ary, manners, target_ary)
-        expect(result).to be_nil
-      end
-    end
-
-    context 'when a king is moving from D4 to E5 unhindered' do
-      origin_ary = [4, 3]
-      target_ary = [3, 4]
-      manners = King.new.move_manner
-
-      it 'returns [3, 4]' do
-        result = board.breadth_search(origin_ary, manners, target_ary)
-        expect(result).to eql([3, 4])
-      end
-    end
-
-    context 'when a king makes a move out of his capacity' do
-      origin_ary = [3, 7]
-      target_ary = [2, 2]
-      manners = King.new.move_manner
-
-      it 'returns nil' do
-        result = board.breadth_search(origin_ary, manners, target_ary)
-        expect(result).to be_nil
       end
     end
   end

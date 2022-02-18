@@ -117,11 +117,77 @@ RSpec.describe Game do
       white_pawn = Pawn.new('W', 'C8')
       
       it 'is replaced by a Queen' do
-        allow(game.board).to receive(:promote_candidate).and_return(white_pawn)
+        allow(game.board).to receive(:promotion_candidate).and_return(white_pawn)
         allow(game).to receive(:promotion_choice).and_return(1)
         game.promote_pawn
         result = game.board.grid[0][2]
         expect(result).to be_kind_of(Queen)
+      end
+    end
+  end
+
+  describe '#game_over?' do
+    let(:player) { instance_double(Player, color: 'W') }
+    let(:opponent) { instance_double(Player, color: 'B') }
+    let(:board) { instance_double(Board) }
+    let(:checker) { instance_double(GameStatusChecker) }
+    subject(:game) { described_class.new }
+
+    before do
+      game.instance_variable_set(:@board, board)
+      game.instance_variable_set(:@current_player, player)
+      game.instance_variable_set(:@player_white, player)
+      game.instance_variable_set(:@player_black, opponent)
+      allow(GameStatusChecker).to receive(:new) { checker }
+      allow(checker).to receive(:stalemate?)
+      allow(checker).to receive(:checkmate?)
+    end
+    
+    it 'sends a command message to GameStatusChecker' do
+      expect(GameStatusChecker).to receive(:new).with('W', board, game)
+      game.game_over?
+    end
+
+    context 'when the current player is stalemated' do
+      before do
+        allow(checker).to receive(:stalemate?) { true }
+      end
+    
+      it 'does not update @winner' do
+        expect {game.game_over?}.not_to change { game.winner }
+      end
+      
+      it 'returns true' do
+        expect(game.game_over?).to be true
+      end
+    end
+
+    context 'when the current player is mated' do
+      before do
+        allow(checker).to receive(:checkmate?) { true }
+      end
+    
+      it 'updates @winner to the opponent' do
+        expect {game.game_over?}.to change { game.winner }.to(opponent)
+      end
+    
+      it 'returns true' do
+        expect(game.game_over?).to be true
+      end
+    end
+
+    context 'when the current player is neither stalemated nor mated' do
+      before do
+        allow(checker).to receive(:stalemate?) { false }
+        allow(checker).to receive(:checkmate?) { false }
+      end
+    
+      it 'does not update @winner' do
+        expect {game.game_over?}.not_to change { game.winner }
+      end
+    
+      it 'returns false' do
+        expect(game.game_over?).to be false
       end
     end
   end

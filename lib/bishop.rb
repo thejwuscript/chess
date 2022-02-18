@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative '../lib/piece'
+require_relative 'piece'
 
 class Bishop < Piece
   @assignment_count = 0
@@ -20,12 +20,11 @@ class Bishop < Piece
   end
   
   def assign_symbol
-    self.symbol = "\e[46m♝" if @color == 'W'
-    self.symbol = "\e[30m♝" if @color == 'B'
+    self.symbol = "♗" if @color == 'W'
+    self.symbol = "♝" if @color == 'B'
   end
 
   def move_manner
     [[1, 1], [-1, -1], [-1, 1], [1, -1]]
   end
-
 end

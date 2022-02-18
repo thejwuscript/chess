@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative '../lib/piece'
+require_relative 'piece'
 
 class Rook < Piece
   
@@ -21,15 +21,11 @@ class Rook < Piece
   end
   
   def assign_symbol
-    self.symbol = "\e[46m♜" if @color == 'W'
-    self.symbol = "\e[30m♜" if @color == 'B'
+    self.symbol = "♖" if @color == 'W'
+    self.symbol = "♜" if @color == 'B'
   end
 
   def move_manner
     [[1, 0],[-1, 0], [0, 1], [0,-1]]
-  end
-
-  def move_by(array) #necessary?
-    position_to_array.zip(array).map { |a, b| a + b }
   end
 end

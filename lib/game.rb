@@ -1,17 +1,20 @@
 # frozen_string_literal: true
 
+require_relative 'move_examiner'
 require_relative '../lib/game_message'
-require_relative '../lib/save_and_load'
+require_relative 'save_and_load'
 require 'yaml'
+require_relative 'converter'
 
 class Game
   include GameMessage
+  include Converter
   include SaveAndLoad
 
   attr_accessor :board, :turn_count, :current_player, :player_white, :player_black, :winner
   
   def initialize
-    @board = Board.new
+    @board = Board.new(self)
     @turn_count = 0
     @player_white = nil
     @player_black = nil
@@ -19,15 +22,20 @@ class Game
     @winner = nil
   end
 
-  def play
-    puts "Welcome to CHESS."
-    the_game
+  def new_game
+    pregame
+    round
+    conclusion
   end
 
-  def the_game
-    load_saved_file ? load_from_yaml : pregame
+  def resume_game
+    game_loaded_message
+    board.show_board
+    king_in_check_alert
+    current_player.player_move
+    pawn_promotion
     round
-    game_end
+    conclusion
   end
   
   def player_names
@@ -40,8 +48,8 @@ class Game
 
   def assign_players
     names = player_names.shuffle
-    self.player_white = Player.new(names.first, 'W')
-    self.player_black = Player.new(names.last, 'B')
+    self.player_white = HumanPlayer.new(names.first, 'W', board, self)
+    self.player_black = HumanPlayer.new(names.last, 'B', board, self)
   end
 
   def prep_board
@@ -79,9 +87,9 @@ class Game
   end
 
   def assign_ai_player
-    get_name_message { 'one' }
+    get_name_message { 'Player One' }
     player_one_name = gets.chomp
-    players = [Player.new(player_one_name), Computer.new].shuffle
+    players = [HumanPlayer.new(player_one_name, nil, board, self), ComputerPlayer.new('Computer', nil, board, self)].shuffle
     self.player_black, self.player_white = players
     player_black.color = 'B'
     player_white.color = 'W'
@@ -99,13 +107,14 @@ class Game
 
   def round
     loop do
-      board.show_board
       update_turn_count
       change_player
       return if game_over?
-  
-      move_piece
-      promote_pawn
+
+      board.show_board
+      king_in_check_alert
+      current_player.player_move
+      pawn_promotion
     end
   end
 
@@ -117,140 +126,46 @@ class Game
    self.current_player = turn_count.odd? ? player_white : player_black
   end
 
-  def move_piece
-    checked_king = board.find_checked_king
-    king_checked_message(checked_king) if checked_king
-
-    player = current_player
-    chosen_position = player.is_a?(Computer) ? ai_input : verify_input_one
-    chosen_piece = board.piece_at(chosen_position)
-    verified_move = player.is_a?(Computer) ? ai_target(chosen_piece) : choose_target(chosen_piece)
-    finalize_move(chosen_piece, verified_move)
-  end
-
-  def choose_target(chosen_piece)
-    choose_move_message(chosen_piece)
-    loop do
-      target = player_input
-      next invalid_input_message if board.same_color_at?(target, chosen_piece)
-      
-      verified_move = board.validate_move(chosen_piece, target, self)
-      return verified_move if verified_move
-
-      invalid_input_message
-    end
-  end
-
-  def finalize_move(piece, target)
-    king_follow_through(piece, target) if piece.is_a?(King)
-    pawn_follow_through(piece, target) if piece.is_a?(Pawn)
-    
-    board.set_piece_at(target, piece)
-    board.delete_piece_at(piece.position)
-    piece.position = target
-    piece.move_count += 1
-  end
-
-  def king_follow_through(king, target)
-    board.move_castle(target) if board.castling?(king, target)
-  end
-
-  def pawn_follow_through(pawn, target)
-    board.remove_pawn_captured_en_passant(pawn, target, self)
-    target_ary = board.position_to_array(target)
-    pawn.store_turn_count(@turn_count) if board.pawn_double_step?(pawn, target_ary)
-  end
-
-
-  def player_input
-    loop do
-      input = gets.chomp.upcase
-      next save_game if input == 'S'
-      return input if input.match?(/^[A-H][1-8]$/)
-
-      invalid_input_message
-      rescue ArgumentError
-        invalid_input_message
-    end
-  end
-
-  def verify_input_one
-    choose_piece_message
-    loop do
-      input = player_input
-      piece = board.piece_at(input)
-      current_color = current_player.color
-      next invalid_input_message if piece.nil?
-      return input if piece.color == current_color && moves_available?(piece)
-
-      invalid_input_message
-    end
-  end
-
-  def moves_available?(piece)
-    array = []
-    ('A'..'H').to_a.each do |letter|
-      ('1'..'8').to_a.each { |number| array << letter + number }
-    end
-    array.any? { |move| board.validate_move(piece, move, self) }
+  def king_in_check_alert
+    king_in_check = board.find_own_king_in_check(current_player.color)
+    king_checked_message(king_in_check) if king_in_check
   end
 
   def game_over?
-    king = board.grid.flatten.find { |piece| piece.is_a?(King) && piece.color == current_player.color}
-    return true if board.stalemate?(king, self)
-
-    if board.checkmate?(king, self)
-      self.winner = king.color == 'W' ? player_black : player_white
+    checker = GameStatusChecker.new(current_player.color, board, self)
+    if checker.stalemate?
       true
+    elsif checker.checkmate?
+      self.winner = current_player.color == 'W' ? player_black : player_white
+      true
+    else 
+      false
     end
   end
 
-  def promote_pawn
-    pawn = board.promote_candidate
+  def pawn_promotion
+    pawn = board.promotion_candidate
     return if pawn.nil?
 
-    number = promotion_choice
+    number = current_player.promotion_choice
     piece = [Queen, Rook, Bishop, Knight][number - 1].new(pawn.color, pawn.position)
     piece.assign_symbol
+    piece.update_selected_value(true)
     board.set_piece_at(piece.position, piece)
+    board.show_board
+    ai_promote_message(piece) if current_player.is_a?(ComputerPlayer)
   end
 
-  def promotion_choice
-    promotion_message
-    loop do
-      input = gets.chomp
-      return input.to_i if input.match?(/^[1-4]$/)
-  
-      invalid_input_message
-    end
-  end
-
-  def game_end
+  def conclusion
     winner ? declare_winner : declare_draw
-    # play_again?
   end
 
-  # def play_again?
-  # end
-
-  def ai_input
-    color = current_player.color
-    valid_pieces = board.all_allies(color).keep_if { |piece| moves_available?(piece) }.shuffle
-    valid_pieces.each do |ally|
-      board.grid.flatten.compact.shuffle.each do |piece|
-        return ally.position if board.validate_move(ally, piece.position, self)
-  
-      end
-    end
-    valid_pieces.sample.position
-  end
-
-  def ai_target(piece)
-    array = []
-    ('A'..'H').to_a.each do |letter|
-      ('1'..'8').to_a.each { |number| array << letter + number }
-    end
-    validated = array.keep_if { |position| board.validate_move(piece, position, self) }
-    validated.find { |position| board.piece_at(position) } || validated.sample
+  def exit_game
+    board.attacking_arrays = []
+    board.origin_ary = nil
+    board.grid.flatten.compact.each { |sq| sq.selected = false }
+    board.show_board
+    puts "\nThanks for playing."
+    exit
   end
 end

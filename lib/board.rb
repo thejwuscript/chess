@@ -1,17 +1,26 @@
 # frozen_string_literal: true
 
-require_relative '../lib/movement'
+require_relative 'converter'
+require_relative 'board_display'
+require_relative 'game_status_checker'
 
 class Board
-  include Movement
+  include Converter
+  include BoardDisplay
+  include SaveAndLoad
   
-  attr_reader :grid
+  attr_reader :game
+  attr_accessor :origin_ary, :attacking_arrays, :grid
   
-  def initialize
+  
+  def initialize(game)
     @grid = Array.new(8) { Array.new(8) }
+    @origin_ary = nil
+    @attacking_arrays = []
+    @game = game
   end
 
-  def piece_at(position) # UPPERCASE
+  def piece_at(position)
     row, column = position_to_array(position)
     grid[row][column]
   end
@@ -21,73 +30,84 @@ class Board
     grid[row][column] = piece
   end
 
-  def show_board
-    puts ''
-    grid.each_with_index do |row, row_index|
-      numbers_column(row_index)
-      row_index.even? ? white_black_row(row) : black_white_row(row)
-    end
-    letter_coordinates
-  end
-
   def delete_piece_at(position)
     row, column = position_to_array(position)
     grid[row][column] = nil
   end
 
-  def find_checked_king
-    kings = grid.flatten.keep_if { |piece| piece.is_a? King }
-    kings.each { |king| return king if checked?(king, king.position) }
-    nil
+  def find_own_king(color)
+    grid.flatten.find { |piece| piece.is_a?(King) && piece.color == color }
   end
 
-  def promote_candidate
+  def find_own_king_in_check(color)
+    king = find_own_king(color)
+    GameStatusChecker.new(color, self).own_king_in_check? ? king : nil
+  end
+
+  def promotion_candidate
     array = grid[0] + grid[7]
     array.detect { |piece| piece.is_a? Pawn }
   end
 
-  def array_to_position(array)
-    letter = ('A'..'Z').to_a[array.last]
-    number = (1..8).to_a.reverse[array.first]
-    letter + number.to_s
+  def occupied?(array)
+    row, column = array
+    grid[row][column] ? true : false
   end
 
-  def position_to_array(position)
-    row = (1..8).to_a.reverse.index(position[1].to_i)
-    column = ('A'..'Z').to_a.index(position[0])
-    [row, column]
+  def within_limits?(array)
+    array.all? { |num| num.between?(0, 7) }
   end
 
-  private
-  
-  def white_black_row(row)
-    row.each_with_index do |piece, column|
-      print column.even? ? white_square(piece) : black_square(piece)
+  def same_color_at?(position, piece)
+    if other_piece = piece_at(position)
+      piece.color == other_piece.color ? true : false
     end
-    print "\n"
   end
-  
-  def black_white_row(row)
-    row.each_with_index do |piece, column|
-      print column.even? ? black_square(piece) : white_square(piece)
+
+  def enemies_giving_check(own_color, target = nil)
+    target ||= find_own_king(own_color).position
+    all_enemies(own_color).keep_if do |enemy|
+      MoveExaminer.new(self, enemy, target).search_target
     end
-    print "\n"
   end
 
-  def white_square(piece)
-    piece.nil? ? "\e[48;5;245m   \e[0m" : "\e[48;5;245m #{piece.symbol} \e[0m"
+  def remove_pawn_captured_en_passant(piece, target)
+    row, column = position_to_array(target)
+    modifier = piece.color == 'W' ? 1 : -1
+    grid[row + modifier].insert(column + 1, nil)
+    grid[row + modifier].delete_at(column)
   end
 
-  def black_square(piece)
-    piece.nil? ? "\e[48;5;237m   \e[0m" : "\e[48;5;237m #{piece.symbol} \e[0m"
+  def move_piece_to_target(target, piece)
+    set_piece_at(target, piece)
+    delete_piece_at(piece.position)
   end
 
-  def letter_coordinates
-    puts "     #{('a'..'h').to_a.join('  ')}"
+  def return_to_previous_positions(position, piece1, piece2)
+    set_piece_at(position, piece1)
+    set_piece_at(piece2.position, piece2)
   end
 
-  def numbers_column(index)
-    numbers = (1..8).to_a.reverse
-    print "  #{numbers[index]} "
+  def move_castle(target)
+    row = target[1]
+    if target[0] == 'C'
+      rook = piece_at("A#{row}")
+      set_piece_at("D#{row}", rook)
+      delete_piece_at(rook.position)
+      rook.position = "D#{row}"
+    elsif target[0] == 'G'
+      rook = piece_at("H#{row}")
+      set_piece_at("F#{row}", rook)
+      delete_piece_at(rook.position)
+      rook.position = "F#{row}"
+    end
+  end
+
+  def all_enemies(own_color)
+    grid.flatten.reject { |piece| piece.nil? || piece.color == own_color }
+  end
+
+  def all_allies(color)
+    grid.flatten.compact.keep_if { |piece| piece.color == color }
   end
 end

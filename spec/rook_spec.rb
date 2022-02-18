@@ -1,10 +1,34 @@
 # frozen_string_literal: true
 
+require_relative '../lib/piece'
 require_relative '../lib/rook'
+require_relative '../lib/bishop'
+require_relative '../lib/queen'
+require_relative '../lib/knight'
+require_relative '../lib/king'
+require_relative '../lib/pawn'
 require_relative '../spec/shared_example_spec'
 
 RSpec.describe Rook do
-  include_examples 'parent class Piece methods'
+  describe '#position_to_array' do
+    subject(:rook) { described_class.new('B', 'F7') }
+    
+    include_examples 'shared #position_to_array'
+  end
+
+  describe '#generate_coordinates' do
+    subject(:rook) { described_class.new('B', 'D3') }
+
+    include_examples 'shared #generate_coordinates', [[6, 3], [7, 3], [4, 3], [3, 3],
+      [2, 3], [1, 3], [0, 3], [5, 4], [5, 5], [5, 6], [5, 7], [5, 2], [5, 1], [5, 0]]
+  end
+
+  describe '#possible_targets' do
+    subject(:rook) { described_class.new('B', 'C4') }
+
+    include_examples 'shared #possible_targets', ["C3", "C2", "C1", "C5",
+      "C6", "C7", "C8", "D4", "E4", "F4", "G4", "H4", "B4", "A4"]
+  end
   
   describe '#assign_initial_position' do
     Rook.assignment_count = 0
@@ -25,17 +49,6 @@ RSpec.describe Rook do
     it 'assigns H1 to third rook' do
       third.assign_initial_position
       expect(third.position).to eql('H1')
-    end
-  end
-
-  describe '#move_by' do
-    subject(:move_rook) { described_class.new }
-    
-    it 'returns a two-element array by combining values of two arrays' do
-      move_rook.position = 'A1'
-      move_array = [-1, 0]
-      result = move_rook.move_by(move_array)
-      expect(result).to eql([6, 0])
     end
   end
 
