@@ -14,7 +14,7 @@ class Game
   attr_accessor :board, :turn_count, :current_player, :player_white, :player_black, :winner
   
   def initialize
-    @board = Board.new
+    @board = Board.new(self)
     @turn_count = 0
     @player_white = nil
     @player_black = nil
@@ -30,7 +30,6 @@ class Game
 
   def resume_game
     game_loaded_message
-    #board.colorize_board
     board.show_board
     king_in_check_alert
     current_player.player_move
@@ -108,10 +107,9 @@ class Game
 
   def round
     loop do
-      #board.colorize_board
-      board.show_board
       update_turn_count
       change_player
+      board.show_board
       return if game_over?
 
       king_in_check_alert

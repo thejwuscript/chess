@@ -8,14 +8,15 @@ class Board
   include Converter
   include BoardDisplay
   
-  attr_reader :grid
+  attr_reader :grid, :game
   attr_accessor :origin_ary, :attacking_arrays
   
   
-  def initialize
+  def initialize(game)
     @grid = Array.new(8) { Array.new(8) }
     @origin_ary = nil
     @attacking_arrays = []
+    @game = game
   end
 
   def piece_at(position)

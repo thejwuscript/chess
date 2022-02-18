@@ -4,6 +4,7 @@ module GameMessage
     puts ''
     puts 'Game loaded.'
     puts ''
+    sleep 1
   end
 
   def choose_piece_message(name)
@@ -75,7 +76,7 @@ module GameMessage
 
   def en_passant_message(game)
     puts ''
-    puts "#{self.name}: HA! I'm taking your pawn en-passant!"
+    puts "#{self.name}: HA! I'm taking your pawn \e[3men-passant\e[0m!"
     sleep 4
     opponent = self.color == 'W' ? game.player_black : game.player_white
     puts ''

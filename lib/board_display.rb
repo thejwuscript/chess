@@ -1,6 +1,8 @@
 module BoardDisplay
 
   def show_board
+    system('clear')
+    puts "             \e[1m\e[4mCHESS\e[0m"
     puts ''
     colorize_board.each_with_index do |row, index|
       numbers_column(index)
@@ -8,6 +10,8 @@ module BoardDisplay
       print "\n"
     end
     letter_coordinates
+    puts ''
+    puts "Computer's turn..." if game.current_player.is_a?(ComputerPlayer)
   end
 
   def colorize_board

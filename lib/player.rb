@@ -14,16 +14,16 @@ class Player
   end
 
   def finalize_move(piece, examiner)
-    king_follow_through(piece, examiner) if piece.is_a?(King)
-    pawn_follow_through(piece, examiner) if piece.is_a?(Pawn)
-
-    target = examiner.target
     board.attacking_arrays = []
     board.show_board
     sleep 1
+    target = examiner.target
     board.move_piece_to_target(target, piece)
     piece.position = target
     piece.move_count += 1
+    king_follow_through(piece, examiner) if piece.is_a?(King)
+    pawn_follow_through(piece, examiner) if piece.is_a?(Pawn)
+    
     board.show_board
     sleep 1
   end
