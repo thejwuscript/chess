@@ -30,7 +30,6 @@ module SaveAndLoad
   def save_game
     File.open("save_state.yaml", 'w') { |file| file.write save_to_yaml }
     puts "Game saved."
-    choose_piece_message(self)
   end
 
   def save_to_yaml
