@@ -49,20 +49,22 @@ module BoardDisplay
   end
 
   def green_square(piece)
-    piece.nil? ? "\e[48;5;100m   \e[0m" : "\e[48;5;100m #{piece.symbol} \e[0m"
+    piece.nil? ? "\e[48;5;143m   \e[0m" : "\e[48;5;143m #{piece.symbol} \e[0m"
   end
 
   def red_square(piece)
-    piece.nil? ? "\e[48;5;196m   \e[0m" : "\e[48;5;196m #{piece.symbol} \e[0m"
+    piece.nil? ? "\e[48;5;174m   \e[0m" : "\e[48;5;174m #{piece.symbol} \e[0m"
   end
 
   def dot_white_square
-    symbol = "\e[32m\u2B24"
+    selected = grid.flatten.compact.find { |piece| piece.selected }
+    symbol = selected.color == 'W' ? "\e[38;5;15m\u2B24" : "\e[38;5;0m\u2B24"
     "\e[48;5;248m #{symbol} \e[0m"
   end
 
   def dot_black_square
-    symbol = "\e[32m\u2B24"
+    selected = grid.flatten.compact.find { |piece| piece.selected }
+    symbol = selected.color == 'W' ? "\e[38;5;15m\u2B24" : "\e[38;5;0m\u2B24"
     "\e[48;5;240m #{symbol} \e[0m"
   end
 
@@ -79,11 +81,11 @@ module BoardDisplay
   end
 
   def white_square(piece)
-    piece.nil? ? "\e[48;5;248m   \e[0m" : "\e[48;5;248m #{piece.symbol} \e[0m"
+    piece.nil? ? "\e[48;5;249m   \e[0m" : "\e[48;5;249m #{piece.symbol} \e[0m"
   end
 
   def black_square(piece)
-    piece.nil? ? "\e[48;5;240m   \e[0m" : "\e[48;5;240m #{piece.symbol} \e[0m"
+    piece.nil? ? "\e[48;5;242m   \e[0m" : "\e[48;5;242m #{piece.symbol} \e[0m"
   end
 
   def letter_coordinates
