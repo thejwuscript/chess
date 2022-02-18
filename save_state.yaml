@@ -1,192 +1,68 @@
 --- &1 !ruby/object:Game
 board: &2 !ruby/object:Board
   grid:
-  - - !ruby/object:Rook
-      color: B
-      position: A8
-      symbol: "♜"
-      move_count: 0
-      selected: false
-      type: rook
-    - !ruby/object:Knight
-      color: B
-      position: B8
-      symbol: "♞"
-      move_count: 0
-      selected: false
-      type: knight
-    - !ruby/object:Bishop
-      color: B
-      position: C8
-      symbol: "♝"
-      move_count: 0
-      selected: false
-      type: bishop
-    - !ruby/object:Queen
-      color: B
-      position: D8
-      symbol: "♛"
-      move_count: 0
-      selected: false
-      type: queen
+  - -
+    -
+    -
+    -
+    -
+    -
+    -
+    -
+  - -
+    -
+    -
+    -
+    -
+    -
+    -
+    -
+  - -
+    -
+    -
+    -
+    -
+    -
+    -
+    -
+  - -
+    -
+    -
+    -
+    -
+    -
+    -
+    -
+  - -
+    -
+    -
+    -
+    -
+    -
+    -
+    -
+  - -
+    -
+    -
+    -
     - !ruby/object:King
       color: B
-      position: E8
+      position: E3
       symbol: "♚"
-      move_count: 0
+      move_count: 10
       selected: false
       type: king
-    - !ruby/object:Bishop
-      color: B
-      position: F8
-      symbol: "♝"
-      move_count: 0
-      selected: false
-      type: bishop
-    - !ruby/object:Knight
-      color: B
-      position: G8
-      symbol: "♞"
-      move_count: 0
-      selected: false
-      type: knight
-    - !ruby/object:Rook
-      color: B
-      position: H8
-      symbol: "♜"
-      move_count: 0
-      selected: false
-      type: rook
-  - - !ruby/object:Pawn
-      color: B
-      position: A7
-      symbol: "♟"
-      move_count: 0
-      selected: false
-      type: pawn
-      start_position: A7
-      double_step_turn: 0
-    - !ruby/object:Pawn
-      color: B
-      position: B7
-      symbol: "♟"
-      move_count: 0
-      selected: false
-      type: pawn
-      start_position: B7
-      double_step_turn: 0
-    - !ruby/object:Pawn
-      color: B
-      position: C7
-      symbol: "♟"
-      move_count: 0
-      selected: false
-      type: pawn
-      start_position: C7
-      double_step_turn: 0
-    - !ruby/object:Pawn
-      color: B
-      position: D7
-      symbol: "♟"
-      move_count: 0
-      selected: false
-      type: pawn
-      start_position: D7
-      double_step_turn: 0
-    - !ruby/object:Pawn
-      color: B
-      position: E7
-      symbol: "♟"
-      move_count: 0
-      selected: false
-      type: pawn
-      start_position: E7
-      double_step_turn: 0
-    - !ruby/object:Pawn
-      color: B
-      position: F7
-      symbol: "♟"
-      move_count: 0
-      selected: false
-      type: pawn
-      start_position: F7
-      double_step_turn: 0
-    - !ruby/object:Pawn
-      color: B
-      position: G7
-      symbol: "♟"
-      move_count: 0
-      selected: false
-      type: pawn
-      start_position: G7
-      double_step_turn: 0
-    - !ruby/object:Pawn
-      color: B
-      position: H7
-      symbol: "♟"
-      move_count: 0
-      selected: false
-      type: pawn
-      start_position: H7
-      double_step_turn: 0
-  - -
     -
     -
     -
-    -
-    -
-    -
-    -
-  - -
-    -
-    -
-    -
-    -
-    -
-    -
-    -
-  - -
-    -
-    -
-    -
-    - !ruby/object:Pawn
-      color: W
-      position: E4
-      symbol: "♙"
-      move_count: 1
-      selected: true
-      type: pawn
-      start_position: E2
-      double_step_turn: 1
-    -
-    -
-    -
-  - -
-    -
-    -
-    -
-    -
-    -
-    -
-    -
-  - - !ruby/object:Pawn
+  - - !ruby/object:Queen
       color: W
       position: A2
-      symbol: "♙"
-      move_count: 0
-      selected: false
-      type: pawn
-      start_position: A2
-      double_step_turn: 0
-    - !ruby/object:Pawn
-      color: W
-      position: B2
-      symbol: "♙"
-      move_count: 0
-      selected: false
-      type: pawn
-      start_position: B2
-      double_step_turn: 0
+      symbol: "♕"
+      move_count: 5
+      selected: true
+      type: queen
+    -
     - !ruby/object:Pawn
       color: W
       position: C2
@@ -196,71 +72,27 @@ board: &2 !ruby/object:Board
       type: pawn
       start_position: C2
       double_step_turn: 0
-    - !ruby/object:Pawn
-      color: W
-      position: D2
-      symbol: "♙"
-      move_count: 0
-      selected: false
-      type: pawn
-      start_position: D2
-      double_step_turn: 0
     -
-    - !ruby/object:Pawn
-      color: W
-      position: F2
-      symbol: "♙"
-      move_count: 0
-      selected: false
-      type: pawn
-      start_position: F2
-      double_step_turn: 0
-    - !ruby/object:Pawn
-      color: W
-      position: G2
-      symbol: "♙"
-      move_count: 0
-      selected: false
-      type: pawn
-      start_position: G2
-      double_step_turn: 0
-    - !ruby/object:Pawn
-      color: W
-      position: H2
-      symbol: "♙"
-      move_count: 0
-      selected: false
-      type: pawn
-      start_position: H2
-      double_step_turn: 0
-  - - !ruby/object:Rook
-      color: W
-      position: A1
-      symbol: "♖"
-      move_count: 0
-      selected: false
-      type: rook
     - !ruby/object:Knight
       color: W
-      position: B1
+      position: E2
       symbol: "♘"
-      move_count: 0
+      move_count: 1
       selected: false
       type: knight
-    - !ruby/object:Bishop
+    -
+    - !ruby/object:Rook
       color: W
-      position: C1
-      symbol: "♗"
-      move_count: 0
+      position: G2
+      symbol: "♖"
+      move_count: 8
       selected: false
-      type: bishop
-    - !ruby/object:Queen
-      color: W
-      position: D1
-      symbol: "♕"
-      move_count: 0
-      selected: false
-      type: queen
+      type: rook
+    -
+  - -
+    -
+    -
+    -
     - !ruby/object:King
       color: W
       position: E1
@@ -268,40 +100,24 @@ board: &2 !ruby/object:Board
       move_count: 0
       selected: false
       type: king
-    - !ruby/object:Bishop
-      color: W
-      position: F1
-      symbol: "♗"
-      move_count: 0
-      selected: false
-      type: bishop
-    - !ruby/object:Knight
-      color: W
-      position: G1
-      symbol: "♘"
-      move_count: 0
-      selected: false
-      type: knight
-    - !ruby/object:Rook
-      color: W
-      position: H1
-      symbol: "♖"
-      move_count: 0
-      selected: false
-      type: rook
+    -
+    -
+    -
   origin_ary:
-  - 6
-  - 4
-  attacking_arrays: []
+  - 3
+  - 3
+  attacking_arrays:
+  - - 6
+    - 0
   game: *1
-turn_count: 2
+turn_count: 76
 player_white: !ruby/object:HumanPlayer
-  name: adf
+  name: h
   color: W
   board: *2
   game: *1
 player_black: &3 !ruby/object:HumanPlayer
-  name: '2'
+  name: j
   color: B
   board: *2
   game: *1
