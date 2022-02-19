@@ -81,4 +81,7 @@ class Piece
       position_to_array(target) if examiner.validate_move
     end
   end
+
+  def update_moved_piece_attributes
+  end
 end

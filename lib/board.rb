@@ -110,4 +110,13 @@ class Board
   def all_allies(color)
     grid.flatten.compact.keep_if { |piece| piece.color == color }
   end
+
+  def update_attacking_arrays(array)
+    self.attacking_arrays = array
+  end
+
+  def update_origin_ary(array)
+    self.origin_ary = array
+  end
+
 end

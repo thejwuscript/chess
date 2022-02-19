@@ -24,6 +24,17 @@ module BoardDisplay
     sleep 1
   end
 
+  def show_board_on_quit
+    self.attacking_arrays = []
+    self.origin_ary = nil
+    clear_piece_selection
+    show_board
+  end
+
+  def clear_piece_selection
+    grid.flatten.compact.each { |sq| sq.selected = false }
+  end
+
   def colorize_board
     grid.map.with_index do |row, row_ind|
       row.map.with_index do |piece, col_ind|
