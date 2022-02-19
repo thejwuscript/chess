@@ -82,6 +82,8 @@ class Piece
     end
   end
 
-  def update_moved_piece_attributes
+  def update_attributes_after_move(target)
+    self.position = target
+    self.move_count += 1
   end
 end

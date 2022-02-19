@@ -23,13 +23,11 @@ class Player
     target = examiner.target
     board.show_board_with_targeted_piece(position_to_array(target))
     board.move_piece_to_target(target, piece)
-    piece.position = target
-    piece.move_count += 1
+    piece.update_attributes_after_move(target)
     king_follow_through(piece, examiner) if piece.is_a?(King)
     pawn_follow_through(piece, examiner) if piece.is_a?(Pawn)
     
-    board.show_board
-    sleep 1
+    board.show_board_with_delay
   end
 
   def king_follow_through(king, examiner)
