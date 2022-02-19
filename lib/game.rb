@@ -14,7 +14,7 @@ class Game
   attr_accessor :board, :turn_count, :current_player, :player_white, :player_black, :winner
   
   def initialize
-    @board = Board.new(self)
+    @board = Board.new
     @turn_count = 0
     @player_white = nil
     @player_black = nil

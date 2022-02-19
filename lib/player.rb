@@ -21,13 +21,13 @@ class Player
 
   def finalize_move(piece, examiner)
     target = examiner.target
-    board.show_board_with_targeted_piece(position_to_array(target))
+    board.show_board_with_targeted_piece(position_to_array(target), self)
     board.move_piece_to_target(target, piece)
     piece.update_attributes_after_move(target)
     king_follow_through(piece, examiner) if piece.is_a?(King)
     pawn_follow_through(piece, examiner) if piece.is_a?(Pawn)
     
-    board.show_board_with_delay
+    board.show_board_with_delay(self)
   end
 
   def king_follow_through(king, examiner)

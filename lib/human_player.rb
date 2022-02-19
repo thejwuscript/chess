@@ -13,7 +13,7 @@ class HumanPlayer < Player
   def human_move
     piece = select_piece
     save_board_info
-    board.show_color_guides_after_selection(piece, game)
+    board.show_color_guides_after_selection(piece, self, game)
     move_piece(piece)
   end
 
@@ -51,7 +51,7 @@ class HumanPlayer < Player
     board.attacking_arrays = hash['attacking_arrays']
     board.show_board
     piece = select_piece
-    board.show_changed_board_color_indication(piece, game)
+    board.show_color_guides_after_selection(piece, self, game)
     player_target(piece)
   end
 

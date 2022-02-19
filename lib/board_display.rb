@@ -11,16 +11,16 @@ module BoardDisplay
     end
     letter_coordinates
     puts ''
-    puts "Computer's turn..." if game.current_player.is_a?(ComputerPlayer)
   end
 
-  def show_board_with_targeted_piece(target_ary)
+  def show_board_with_targeted_piece(target_ary, player)
     self.attacking_arrays = occupied?(target_ary) ? [target_ary] : []
-    show_board_with_delay
+    show_board_with_delay(player)
   end
 
-  def show_board_with_delay
+  def show_board_with_delay(player)
     show_board
+    puts "Computer's turn..." if player.is_a?(ComputerPlayer)
     sleep 1
   end
 
@@ -65,15 +65,15 @@ module BoardDisplay
     end
   end
 
-  def show_color_guides_after_selection(piece, game)
+  def show_color_guides_after_selection(piece, player, game)
     clear_piece_selection
     piece.update_selected_value(true)
     self.origin_ary = piece.position_to_array
-    move_hints(piece) if game.current_player.is_a?(HumanPlayer)
+    move_hints(piece, game) if player.is_a?(HumanPlayer)
     show_board
   end
 
-  def move_hints(piece)
+  def move_hints(piece, game)
     self.attacking_arrays = piece.verified_target_arrays(self, game)
   end
 
