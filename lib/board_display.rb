@@ -65,12 +65,16 @@ module BoardDisplay
     end
   end
 
-  def show_changed_board_color_indication(piece, game)
-    grid.flatten.compact.each { |sq| sq.selected = false }
+  def show_color_guides_after_selection(piece, game)
+    clear_piece_selection
     piece.update_selected_value(true)
     self.origin_ary = piece.position_to_array
-    self.attacking_arrays = piece.verified_target_arrays(self, game) if game.current_player.is_a?(HumanPlayer)
+    move_hints(piece) if game.current_player.is_a?(HumanPlayer)
     show_board
+  end
+
+  def move_hints(piece)
+    self.attacking_arrays = piece.verified_target_arrays(self, game)
   end
 
   def green_square(piece)

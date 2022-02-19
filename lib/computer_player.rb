@@ -41,8 +41,7 @@ class ComputerPlayer < Player
 
   def computer_move
     examiner = choose_examiner
-    #computer_move_message(examiner)
-    board.show_changed_board_color_indication(examiner.piece, game)
+    board.show_color_guides_after_selection(examiner.piece, game)
     finalize_move(examiner.piece, examiner)
   end
 
