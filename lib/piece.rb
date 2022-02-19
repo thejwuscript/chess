@@ -18,6 +18,11 @@ class Piece
     @selected = false
   end
 
+  def initial_positions_and_symbol
+    assign_initial_position
+    assign_symbol
+  end
+
   def update_selected_value(value)
     self.selected = value
   end

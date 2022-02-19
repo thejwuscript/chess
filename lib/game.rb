@@ -38,32 +38,6 @@ class Game
     conclusion
   end
 
-  def prep_board
-    pieces_with_attributes = assign_attributes(all_pieces)
-    set_pieces_on_board(pieces_with_attributes)
-  end
-
-  def all_pieces(array = [])
-    16.times { array.push(Pawn.new) }
-    [Rook, Bishop, Knight].each { |klass| 4.times { array << klass.new } }
-    [Queen, King].each { |klass| 2.times { array << klass.new } }
-    array
-  end
-
-  def assign_attributes(array)
-    array.each_with_index do |piece, index|
-      index.even? ? piece.color = 'W' : piece.color = 'B'
-      piece.assign_symbol
-      piece.assign_initial_position
-    end
-  end
-
-  def set_pieces_on_board(array)
-    array.each do |piece|
-      board.set_piece_at(piece.position, piece)
-    end
-  end
-
   def setup
     assign_players
     show_player_assignment
@@ -92,6 +66,29 @@ class Game
 
       invalid_input_message
     end
+  end
+
+  def prep_board
+    pieces_with_attributes = assign_attributes(all_pieces)
+    set_pieces_on_board(pieces_with_attributes)
+  end
+
+  def all_pieces(array = [])
+    16.times { array.push(Pawn.new) }
+    [Rook, Bishop, Knight].each { |klass| 4.times { array << klass.new } }
+    [Queen, King].each { |klass| 2.times { array << klass.new } }
+    array
+  end
+
+  def assign_attributes(array)
+    array.each_with_index do |piece, index|
+      index.even? ? piece.color = 'W' : piece.color = 'B'
+      piece.initial_positions_and_symbol
+    end
+  end
+
+  def set_pieces_on_board(chess_pieces)
+    chess_pieces.each { |piece| board.set_piece_at(piece.position, piece) }
   end
 
   def round
