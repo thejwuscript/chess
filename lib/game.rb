@@ -23,7 +23,7 @@ class Game
   end
 
   def new_game
-    pregame
+    setup
     round
     conclusion
   end
@@ -37,28 +37,13 @@ class Game
     round
     conclusion
   end
-  
-  def player_names
-    get_name_message { 'Player One' }
-    player_one_name = gets.chomp
-    get_name_message { 'Player Two' }
-    player_two_name = gets.chomp
-    [player_one_name, player_two_name]
-  end
-
-  def assign_players
-    names = player_names.shuffle
-    self.player_white = HumanPlayer.new(names.first, 'W', board, self)
-    self.player_black = HumanPlayer.new(names.last, 'B', board, self)
-  end
 
   def prep_board
-    all_pieces = create_all_pieces
     pieces_with_attributes = assign_attributes(all_pieces)
     set_pieces_on_board(pieces_with_attributes)
   end
 
-  def create_all_pieces(array = [])
+  def all_pieces(array = [])
     16.times { array.push(Pawn.new) }
     [Rook, Bishop, Knight].each { |klass| 4.times { array << klass.new } }
     [Queen, King].each { |klass| 2.times { array << klass.new } }
@@ -79,27 +64,31 @@ class Game
     end
   end
 
-  def pregame
-    number = choose_game_format
-    number == 1 ? assign_ai_player : assign_players
+  def setup
+    assign_players
     show_player_assignment
     prep_board
   end
 
-  def assign_ai_player
-    get_name_message { 'Player One' }
-    player_one_name = gets.chomp
-    players = [HumanPlayer.new(player_one_name, nil, board, self), ComputerPlayer.new('Computer', nil, board, self)].shuffle
-    self.player_black, self.player_white = players
-    player_black.color = 'B'
-    player_white.color = 'W'
+  def assign_players
+    choice = choose_game_format
+    p1 = HumanPlayer.new(get_name {'Player One'}, nil, board, self)
+    p2 = choice == 1 ? ComputerPlayer.new('Computer', nil, board, self) :
+                       HumanPlayer.new(get_name {'Player Two'}, nil, board, self)
+    self.player_black, self.player_white = [p1, p2].shuffle
+    player_black.color, player_white.color = 'B', 'W'
+  end
+
+  def get_name
+    print "\n#{yield}, please enter your name: "
+    gets.chomp
   end
 
   def choose_game_format
     choose_game_message
     loop do
-      input = gets.chomp.to_i
-      return input if input.between?(1, 2)
+      input = gets.chomp
+      return input.to_i if input == '1' || input == '2'
 
       invalid_input_message
     end
