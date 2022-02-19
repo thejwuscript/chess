@@ -45,6 +45,11 @@ module GameMessage
     puts ''
   end
 
+  def king_in_check_alert
+    king_in_check = board.find_own_king_in_check(current_player.color)
+    king_checked_message(king_in_check) if king_in_check
+  end
+
   def king_checked_message(king)
     puts "#{current_player.name}, your king at #{king.position} is in check!"
   end

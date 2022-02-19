@@ -28,6 +28,11 @@ class Game
     conclusion
   end
 
+  def resume_game
+    game_loaded_message
+    player_turn
+  end
+
   def setup
     assign_players
     show_player_assignment
@@ -35,7 +40,8 @@ class Game
   end
 
   def assign_players
-    choice = choose_game_format
+    choose_game_message
+    choice = choice_one_or_two
     p1 = HumanPlayer.new(get_name {'Player One'}, nil, board, self)
     p2 = choice == 1 ? ComputerPlayer.new('Computer', nil, board, self) :
                        HumanPlayer.new(get_name {'Player Two'}, nil, board, self)
@@ -48,8 +54,7 @@ class Game
     gets.chomp
   end
 
-  def choose_game_format
-    choose_game_message
+  def choice_one_or_two
     loop do
       input = gets.chomp
       return input.to_i if input == '1' || input == '2'
@@ -104,11 +109,6 @@ class Game
 
   def change_player
    self.current_player = turn_count.odd? ? player_white : player_black
-  end
-
-  def king_in_check_alert
-    king_in_check = board.find_own_king_in_check(current_player.color)
-    king_checked_message(king_in_check) if king_in_check
   end
 
   def game_over?
