@@ -129,11 +129,15 @@ class Game
 
     number = current_player.promotion_choice
     piece = [Queen, Rook, Bishop, Knight][number - 1].new(pawn.color, pawn.position)
-    piece.assign_symbol
-    piece.update_selected_value(true)
-    board.set_piece_at(piece.position, piece)
+    set_new_promoted_piece(piece)
     board.show_board
     ai_promote_message(piece) if current_player.is_a?(ComputerPlayer)
+  end
+
+  def set_new_promoted_piece(new_piece)
+    new_piece.assign_symbol
+    new_piece.update_selected_value(true)
+    board.set_piece_at(new_piece.position, new_piece)
   end
 
   def conclusion
