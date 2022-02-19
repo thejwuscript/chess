@@ -14,6 +14,16 @@ module BoardDisplay
     puts "Computer's turn..." if game.current_player.is_a?(ComputerPlayer)
   end
 
+  def show_board_with_targeted_piece(target_ary)
+    self.attacking_arrays = occupied?(target_ary) ? [target_ary] : []
+    show_board_with_delay
+  end
+
+  def show_board_with_delay
+    show_board
+    sleep 1
+  end
+
   def colorize_board
     grid.map.with_index do |row, row_ind|
       row.map.with_index do |piece, col_ind|

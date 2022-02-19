@@ -21,14 +21,7 @@ class Player
 
   def finalize_move(piece, examiner)
     target = examiner.target
-    target_ary = position_to_array(target)
-    if board.occupied?(target_ary)
-      board.attacking_arrays = [target_ary]
-    else
-      board.attacking_arrays = []
-    end
-    board.show_board
-    sleep 1
+    board.show_board_with_targeted_piece(position_to_array(target))
     board.move_piece_to_target(target, piece)
     piece.position = target
     piece.move_count += 1
