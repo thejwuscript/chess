@@ -30,10 +30,7 @@ class Game
 
   def resume_game
     game_loaded_message
-    board.show_board
-    king_in_check_alert
-    current_player.player_move
-    pawn_promotion
+    player_turn
     round
     conclusion
   end
@@ -80,8 +77,8 @@ class Game
     array
   end
 
-  def assign_attributes(array)
-    array.each_with_index do |piece, index|
+  def assign_attributes(chess_pieces)
+    chess_pieces.each_with_index do |piece, index|
       index.even? ? piece.color = 'W' : piece.color = 'B'
       piece.initial_positions_and_symbol
     end
@@ -97,11 +94,15 @@ class Game
       change_player
       return if game_over?
 
-      board.show_board
-      king_in_check_alert
-      current_player.player_move
-      pawn_promotion
+      player_turn
     end
+  end
+
+  def player_turn
+    board.show_board
+    king_in_check_alert
+    current_player.player_move
+    pawn_promotion
   end
 
   def update_turn_count
