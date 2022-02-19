@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module SaveAndLoad
-  def choose_load_game
+  def load_game?
     puts ''
     puts 'Would you like to load a previous game?'
     puts '    [1] -> Yes'
@@ -10,21 +10,8 @@ module SaveAndLoad
     choice = gets.chomp == '1' ? true : false
   end
 
-  def load_or_new_game
-    return Game.new.new_game unless saved_game_exists?
-
-    choose_load_game ? load_game : Game.new.new_game
-  rescue SystemCallError
-    no_saved_game_message
-    Game.new.new_game
-  end
-
   def saved_game_exists?
     File.exist?('save_state.yaml')
-  end
-
-  def load_game
-    load_from_yaml.resume_game
   end
 
   def save_game

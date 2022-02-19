@@ -21,7 +21,15 @@ require_relative 'computer_player'
 require_relative 'human_player'
 
 include SaveAndLoad
-include GameMessage
+
+def load_or_new_game
+  return Game.new.play(1) unless saved_game_exists?
+
+  load_game? ? load_from_yaml.play(2) : Game.new.play(1)
+rescue SystemCallError
+  no_saved_game_message
+  Game.new.play(1)
+end
 
 puts "Welcome to CHESS."
 load_or_new_game

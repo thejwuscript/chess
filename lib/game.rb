@@ -22,15 +22,8 @@ class Game
     @winner = nil
   end
 
-  def new_game
-    setup
-    round
-    conclusion
-  end
-
-  def resume_game
-    game_loaded_message
-    player_turn
+  def play(num)
+    num == 1 ? setup : resume_game
     round
     conclusion
   end
