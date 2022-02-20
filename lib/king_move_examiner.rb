@@ -4,7 +4,7 @@ require_relative 'converter'
 require_relative 'game_status_checker'
 require_relative 'move_examiner'
 
-class CastlingChecker
+class KingMoveExaminer
   include Converter
   attr_reader :board, :king, :target_ary, :start_ary
 

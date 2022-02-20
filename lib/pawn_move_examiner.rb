@@ -1,4 +1,4 @@
-class EnPassantChecker
+class PawnMoveExaminer
   attr_accessor :finding
   attr_reader :board, :pawn, :target_ary, :game
   
@@ -7,7 +7,6 @@ class EnPassantChecker
     @pawn = pawn
     @target_ary = target_ary
     @game = game
-    @finding = nil
   end
 
   def enemy_color
@@ -26,9 +25,5 @@ class EnPassantChecker
     return if enemy_piece.nil?
     
     enemy_piece.en_passantable?(enemy_color, game)
-  end
-
-  def update_finding
-    self.finding = validate_capture_condition ? 'pass' : 'fail'
   end
 end
