@@ -37,7 +37,6 @@ class Player
 
   def pawn_follow_through(pawn, examiner)
     board.remove_pawn_captured_en_passant(pawn, examiner.target) if examiner.en_passant_verified
-    en_passant_message(game) if examiner.en_passant_verified
     pawn.store_turn_count(game.turn_count) if examiner.double_step_verified
   end
 end

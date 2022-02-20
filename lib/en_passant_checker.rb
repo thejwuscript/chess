@@ -16,7 +16,7 @@ class EnPassantChecker
     row, column = target_ary
     modifier = pawn.color == 'W' ? 1 : -1
     piece = board.grid[row + modifier][column]
-    enemy_piece if piece.is_a?(Pawn) && piece.color != pawn.color
+    piece if piece.is_a?(Pawn) && piece.color != pawn.color
   end
 
   def validate_capture_condition

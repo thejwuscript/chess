@@ -49,13 +49,13 @@ grid:
     move_count: 0
     selected: false
     type: knight
-  - !ruby/object:Bishop
-    color: W
+  - !ruby/object:Rook
+    color: B
     position: H8
-    symbol: "♗"
+    symbol: "♜"
     move_count: 0
-    selected: true
-    type: bishop
+    selected: false
+    type: rook
 - - !ruby/object:Pawn
     color: B
     position: A7
@@ -65,16 +65,16 @@ grid:
     type: pawn
     start_position: A7
     double_step_turn: 0
+  -
   - !ruby/object:Pawn
     color: B
-    position: B7
+    position: C7
     symbol: "♟"
     move_count: 0
     selected: false
     type: pawn
-    start_position: B7
+    start_position: C7
     double_step_turn: 0
-  -
   - !ruby/object:Pawn
     color: B
     position: D7
@@ -94,7 +94,15 @@ grid:
     start_position: E7
     double_step_turn: 0
   -
-  -
+  - !ruby/object:Pawn
+    color: B
+    position: G7
+    symbol: "♟"
+    move_count: 0
+    selected: false
+    type: pawn
+    start_position: G7
+    double_step_turn: 0
   - !ruby/object:Pawn
     color: B
     position: H7
@@ -113,32 +121,48 @@ grid:
   -
   -
 - -
-  -
-  -
-  -
-  -
-  -
-  -
-  -
-- -
-  -
-  -
-  -
-  -
-  -
-  -
-  -
-- -
-  -
   - !ruby/object:Pawn
     color: B
-    position: C3
+    position: B5
     symbol: "♟"
-    move_count: 3
+    move_count: 1
     selected: false
     type: pawn
-    start_position: C7
+    start_position: B7
     double_step_turn: 2
+  -
+  -
+  - !ruby/object:Pawn
+    color: W
+    position: E5
+    symbol: "♙"
+    move_count: 2
+    selected: false
+    type: pawn
+    start_position: E2
+    double_step_turn: 1
+  - !ruby/object:Pawn
+    color: B
+    position: F5
+    symbol: "♟"
+    move_count: 1
+    selected: true
+    type: pawn
+    start_position: F7
+    double_step_turn: 4
+  -
+  -
+- -
+  -
+  -
+  -
+  -
+  -
+  -
+  -
+- -
+  -
+  -
   -
   -
   -
@@ -266,7 +290,5 @@ grid:
     type: rook
 origin_ary:
 - 1
-- 6
-attacking_arrays:
-- - 0
-  - 7
+- 5
+attacking_arrays: []

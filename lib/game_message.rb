@@ -81,19 +81,6 @@ module GameMessage
     puts ''
   end
 
-  def en_passant_message(game)
-    puts ''
-    puts "#{self.name}: HA! I'm taking your pawn \e[3men-passant\e[0m!"
-    sleep 4
-    opponent = self.color == 'W' ? game.player_black : game.player_white
-    puts ''
-    puts "#{opponent.name}: ..."
-    sleep 3
-    puts "#{opponent.name}: Hold my croissant."
-    sleep 3
-    puts ''
-  end
-
   def computer_move_message(examiner)
     piece = examiner.piece.type
     target_position = examiner.target
