@@ -7,9 +7,8 @@ require_relative 'game_status_checker'
 
 class MoveExaminer
   include Converter
-  attr_accessor :board, :piece, :target, :start_ary, :target_ary, 
-                :en_passant_verified, :castling_verified, :double_step_verified
-  attr_reader :turn
+  attr_reader :board, :piece, :target, :start_ary, :target_ary, :turn,
+              :en_passant_verified, :castling_verified, :double_step_verified
   
   def initialize(board = nil, piece = nil, target = nil, turn = nil)
     @board = board
@@ -33,6 +32,21 @@ class MoveExaminer
       ally_king_exposed?(test_board) ? nil : target
     end
   end
+
+  def search_target
+    case piece
+    when Rook, Bishop, Queen
+      depth_search
+    when Knight
+      breadth_search
+    when King
+      king_search
+    when Pawn
+      pawn_attack_search || pawn_move_search
+    end
+  end
+
+  private
 
   def ally_king_exposed?(mock_board)
     mock_board.move_piece_to_target(target, piece)
@@ -91,7 +105,7 @@ class MoveExaminer
 
     a, b = start_ary
     modifier = piece.color.eql?('W') ? -1 : 1
-    self.double_step_verified = true if [a + (modifier * 2), b] == target_ary
+    @double_step_verified = true if [a + (modifier * 2), b] == target_ary
   end
 
   def pawn_attack_search
@@ -106,7 +120,7 @@ class MoveExaminer
     checker = EnPassantChecker.new(board, piece, target_ary, turn)
     return nil unless checker.valid_capture_condition?
     
-    self.en_passant_verified = true
+    @en_passant_verified = true
     target_ary
   end
 
@@ -119,20 +133,7 @@ class MoveExaminer
     checker = CastlingChecker.new(board, piece, target_ary)
     return nil unless checker.meet_castling_condition?
     
-    self.castling_verified = true
+    @castling_verified = true
     target_ary
-  end
-
-  def search_target
-    case piece
-    when Rook, Bishop, Queen
-      depth_search
-    when Knight
-      breadth_search
-    when King
-      king_search
-    when Pawn
-      pawn_attack_search || pawn_move_search
-    end
   end
 end
