@@ -83,35 +83,31 @@ class MoveExaminer
     one_step = [row + modifier, column]
     return if board.occupied?(one_step) || board.occupied?(target_ary)
     
-    if double_step? || one_step.eql?(target_ary)
-      target_ary
-    end
+    target_ary if double_step? || one_step.eql?(target_ary)
   end
 
   def double_step?
     return if piece.move_count > 0
 
     a, b = start_ary
-    self.double_step_verified = 
-      true if piece.color == 'W' && [a-2, b] == target_ary || piece.color == 'B' && [a+2, b] == target_ary
+    modifier = piece.color.eql?('W') ? -1 : 1
+    self.double_step_verified = true if [a + (modifier * 2), b] == target_ary
   end
 
   def pawn_attack_search
     modifier = piece.color.eql?('W') ? -1 : 1
-    return unless start_ary.zip(target_ary).map { |a, b| ( a - b ).abs }.eql?([1, 1])   
-    return unless (target_ary[0] - start_ary[0]) == modifier
+    return unless start_ary.zip(target_ary).map { |a, b| ( a - b ).abs }.eql?([1, 1]) &&
+                  (target_ary[0] - start_ary[0]) == modifier
     
     board.occupied?(target_ary) ?  target_ary : check_en_passant
   end
 
   def check_en_passant
     checker = EnPassantChecker.new(board, piece, target_ary, turn)
-    if checker.validate_capture_condition == true
-      self.en_passant_verified = true
-      target_ary
-    else
-      nil
-    end
+    return nil unless checker.valid_capture_condition?
+    
+    self.en_passant_verified = true
+    target_ary
   end
 
   def king_search
@@ -121,10 +117,10 @@ class MoveExaminer
 
   def validate_castling
     checker = CastlingChecker.new(board, piece, target_ary)
-    if checker.meet_castling_condition?
-      self.castling_verified = true
-      target_ary
-    end
+    return nil unless checker.meet_castling_condition?
+    
+    self.castling_verified = true
+    target_ary
   end
 
   def search_target

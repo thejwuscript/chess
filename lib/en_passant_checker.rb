@@ -19,7 +19,7 @@ class EnPassantChecker
     piece if piece.is_a?(Pawn) && piece.color != pawn.color
   end
 
-  def validate_capture_condition
+  def valid_capture_condition?
     enemy_piece = locate_enemy_pawn
     enemy_piece.en_passantable?(enemy_color, turn) if enemy_piece
   end
