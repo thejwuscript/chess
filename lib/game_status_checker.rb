@@ -3,16 +3,16 @@
 require_relative '../lib/move_examiner'
 
 class GameStatusChecker
-  attr_reader :color, :board, :game
+  attr_reader :color, :board, :turn
 
-  def initialize(color, board, game = nil)
+  def initialize(color, board, turn = nil)
     @color = color
     @board = board
-    @game = game
+    @turn = turn
   end
 
   def no_legal_moves?
-    board.all_allies(color).none? { |piece| piece.moves_available?(board, game) }
+    board.all_allies(color).none? { |piece| piece.moves_available?(board, turn) }
   end
 
   def own_king_in_check?(king_moving_position = nil)
@@ -23,7 +23,7 @@ class GameStatusChecker
     enemy_positions = board.enemies_giving_check(color).map { |enemy| enemy.position }
     board.all_allies(color).each do |ally|
       enemy_positions.each do |target| 
-        examiner = MoveExaminer.new(board, ally, target, game)
+        examiner = MoveExaminer.new(board, ally, target, turn)
         return false if examiner.validate_move
         
       end

@@ -6,14 +6,14 @@ class HumanPlayer < Player
   include GameMessage
   include SaveAndLoad
 
-  def initialize(name = nil, color = nil, board, game)
+  def initialize(name = nil, color = nil, board)
     super
   end
 
   def human_move
     piece = select_piece
     save_board_info
-    board.show_color_guides_after_selection(piece, self, game)
+    board.show_color_guides_after_selection(piece, self, turn)
     move_piece(piece)
   end
 
@@ -33,11 +33,11 @@ class HumanPlayer < Player
       input = player_input
       next save_game if input == 'S'
       next invalid_input_message if input == 'B'
-      game.exit_game if input == 'Q'
+      exit_game if input == 'Q'
       
       piece = board.piece_at(input)
       next invalid_input_message if piece.nil?      
-      return input if piece.color == color && piece.moves_available?(board, game)
+      return input if piece.color == color && piece.moves_available?(board, turn)
 
       invalid_input_message
     end
@@ -51,7 +51,7 @@ class HumanPlayer < Player
     board.attacking_arrays = hash['attacking_arrays']
     board.show_board
     piece = select_piece
-    board.show_color_guides_after_selection(piece, self, game)
+    board.show_color_guides_after_selection(piece, self, turn)
     player_target(piece)
   end
 
@@ -71,11 +71,11 @@ class HumanPlayer < Player
     loop do
       target = player_input
       return undo_selection(piece) if target == 'B'
-      game.exit_game if target == 'Q'
+      exit_game if target == 'Q'
       
       next invalid_input_message if target == 'S' || board.same_color_at?(target, piece)
       
-      examiner = MoveExaminer.new(board, piece, target, game)
+      examiner = MoveExaminer.new(board, piece, target, turn)
       move_validated = examiner.validate_move
       return examiner if move_validated
 
@@ -91,5 +91,11 @@ class HumanPlayer < Player
   
       invalid_input_message
     end
+  end
+
+  def exit_game
+    board.show_board_on_quit
+    puts "\nThanks for playing."
+    exit
   end
 end

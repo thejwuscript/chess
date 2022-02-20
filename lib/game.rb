@@ -44,9 +44,9 @@ class Game
   def assign_players
     choose_game_message
     choice = choice_one_or_two
-    p1 = HumanPlayer.new(get_name {'Player One'}, nil, board, self)
-    p2 = choice == 1 ? ComputerPlayer.new('Computer', nil, board, self) :
-                       HumanPlayer.new(get_name {'Player Two'}, nil, board, self)
+    p1 = HumanPlayer.new(get_name {'Player One'}, nil, board)
+    p2 = choice == 1 ? ComputerPlayer.new('Computer', nil, board) :
+                       HumanPlayer.new(get_name {'Player Two'}, nil, board)
     self.player_black, self.player_white = [p1, p2].shuffle
     player_black.color, player_white.color = 'B', 'W'
   end
@@ -100,7 +100,7 @@ class Game
 
   def player_turn
     king_in_check_alert
-    current_player.player_move
+    current_player.player_move(turn_count)
     pawn_promotion
   end
 
@@ -113,7 +113,7 @@ class Game
   end
 
   def game_over?
-    checker = GameStatusChecker.new(current_player.color, board, self)
+    checker = GameStatusChecker.new(current_player.color, board, turn_count)
     if checker.stalemate?
       true
     elsif checker.checkmate?
@@ -143,11 +143,5 @@ class Game
 
   def conclusion
     winner ? declare_winner : declare_draw
-  end
-
-  def exit_game
-    board.show_board_on_quit
-    puts "\nThanks for playing."
-    exit
   end
 end

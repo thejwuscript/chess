@@ -6,12 +6,12 @@ require_relative 'game_message'
 class ComputerPlayer < Player
   include GameMessage
 
-  def initialize(name, color = nil, board, game)
+  def initialize(name, color = nil, board)
     super
   end
 
   def valid_pieces
-     board.all_allies(color).keep_if { |piece| piece.moves_available?(board, game) }.shuffle
+     board.all_allies(color).keep_if { |piece| piece.moves_available?(board, turn) }.shuffle
   end
 
   def all_possible_targets
@@ -23,7 +23,7 @@ class ComputerPlayer < Player
   def validated_examiners
     all_possible_targets.each_with_object([]) do | (piece, targets), array |
       targets.each do |target|
-        examiner = MoveExaminer.new(board, piece, target, game)
+        examiner = MoveExaminer.new(board, piece, target, turn)
         array << examiner if examiner.validate_move
       end
     end
@@ -41,7 +41,7 @@ class ComputerPlayer < Player
 
   def computer_move
     examiner = choose_examiner
-    board.show_color_guides_after_selection(examiner.piece, self, game)
+    board.show_color_guides_after_selection(examiner.piece, self, turn)
     finalize_move(examiner.piece, examiner)
   end
 

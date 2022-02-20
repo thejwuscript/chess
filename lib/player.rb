@@ -6,16 +6,16 @@ class Player
   include Converter
   
   attr_accessor :name, :color, :piece_selected, :examiner_with_target
-  attr_reader :board, :game
+  attr_reader :board, :turn
 
-  def initialize(name, color, board, game)
+  def initialize(name, color, board)
     @name = name
     @color = color
     @board = board
-    @game = game
   end
 
-  def player_move
+  def player_move(turn)
+    @turn = turn
     self.is_a?(ComputerPlayer) ? computer_move : human_move
   end
 
@@ -37,6 +37,6 @@ class Player
 
   def pawn_follow_through(pawn, examiner)
     board.remove_pawn_captured_en_passant(pawn, examiner.target) if examiner.en_passant_verified
-    pawn.store_turn_count(game.turn_count) if examiner.double_step_verified
+    pawn.store_turn_count(turn) if examiner.double_step_verified
   end
 end

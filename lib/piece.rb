@@ -34,18 +34,9 @@ class Piece
     array
   end
 
-  def available_moves(board, game, array = [])
-    all_squares.each do |square|
-      examiner = MoveExaminer.new(board, self, square, game)
-      array << square if examiner.validate_move 
-    
-    end
-    array
-  end
-
-  def moves_available?(board, game)
+  def moves_available?(board, turn)
     all_squares.any? do |square|
-      examiner = MoveExaminer.new(board, self, square, game)
+      examiner = MoveExaminer.new(board, self, square, turn)
       examiner.validate_move
     end
   end
@@ -75,9 +66,9 @@ class Piece
     generate_coordinates.map { |coord| array_to_position(coord) }
   end
 
-  def verified_target_arrays(board, game)
+  def verified_target_arrays(board, turn)
     possible_targets.filter_map do |target| 
-      examiner = MoveExaminer.new(board, self, target, game)
+      examiner = MoveExaminer.new(board, self, target, turn)
       position_to_array(target) if examiner.validate_move
     end
   end

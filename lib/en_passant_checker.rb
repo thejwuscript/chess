@@ -1,11 +1,11 @@
 class EnPassantChecker
-  attr_reader :board, :pawn, :target_ary, :game
+  attr_reader :board, :pawn, :target_ary, :turn
   
-  def initialize(board, pawn, target_ary, game)
+  def initialize(board, pawn, target_ary, turn)
     @board = board
     @pawn = pawn
     @target_ary = target_ary
-    @game = game
+    @turn = turn
   end
 
   def enemy_color
@@ -21,6 +21,6 @@ class EnPassantChecker
 
   def validate_capture_condition
     enemy_piece = locate_enemy_pawn
-    enemy_piece.en_passantable?(enemy_color, game) if enemy_piece
+    enemy_piece.en_passantable?(enemy_color, turn) if enemy_piece
   end
 end
