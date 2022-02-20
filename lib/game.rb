@@ -38,7 +38,6 @@ class Game
     assign_players
     show_player_assignment
     prep_board
-    board.show_board
   end
 
   def assign_players

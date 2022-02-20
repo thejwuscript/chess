@@ -1,5 +1,5 @@
---- &2 !ruby/object:Game
-board: &1 !ruby/object:Board
+--- &1 !ruby/object:Game
+board: &2 !ruby/object:Board
   grid:
   - - !ruby/object:Rook
       color: B
@@ -8,8 +8,20 @@ board: &1 !ruby/object:Board
       move_count: 0
       selected: false
       type: rook
-    -
-    -
+    - !ruby/object:Knight
+      color: B
+      position: B8
+      symbol: "♞"
+      move_count: 0
+      selected: false
+      type: knight
+    - !ruby/object:Bishop
+      color: B
+      position: C8
+      symbol: "♝"
+      move_count: 0
+      selected: false
+      type: bishop
     - !ruby/object:Queen
       color: B
       position: D8
@@ -63,16 +75,16 @@ board: &1 !ruby/object:Board
       type: pawn
       start_position: B7
       double_step_turn: 0
+    -
     - !ruby/object:Pawn
       color: B
-      position: C7
+      position: D7
       symbol: "♟"
       move_count: 0
       selected: false
       type: pawn
-      start_position: C7
+      start_position: D7
       double_step_turn: 0
-    -
     - !ruby/object:Pawn
       color: B
       position: E7
@@ -82,24 +94,16 @@ board: &1 !ruby/object:Board
       type: pawn
       start_position: E7
       double_step_turn: 0
+    -
     - !ruby/object:Pawn
-      color: B
-      position: F7
-      symbol: "♟"
-      move_count: 0
-      selected: false
-      type: pawn
-      start_position: F7
-      double_step_turn: 0
-    - !ruby/object:Pawn
-      color: B
+      color: W
       position: G7
-      symbol: "♟"
-      move_count: 0
+      symbol: "♙"
+      move_count: 4
       selected: false
       type: pawn
-      start_position: G7
-      double_step_turn: 0
+      start_position: E2
+      double_step_turn: 1
     - !ruby/object:Pawn
       color: B
       position: H7
@@ -111,74 +115,42 @@ board: &1 !ruby/object:Board
       double_step_turn: 0
   - -
     -
-    - !ruby/object:Knight
-      color: B
-      position: C6
-      symbol: "♞"
-      move_count: 1
-      selected: false
-      type: knight
+    -
     -
     -
     -
     -
     -
   - -
-    - !ruby/object:Bishop
-      color: W
-      position: B5
-      symbol: "♗"
-      move_count: 1
-      selected: false
-      type: bishop
+    -
+    -
+    -
+    -
+    -
+    -
+    -
+  - -
+    -
+    -
+    -
+    -
+    -
+    -
+    -
+  - -
     -
     - !ruby/object:Pawn
       color: B
-      position: D5
+      position: C3
       symbol: "♟"
-      move_count: 1
-      selected: false
-      type: pawn
-      start_position: D7
-      double_step_turn: 4
-    -
-    -
-    -
-    -
-  - -
-    -
-    -
-    -
-    - !ruby/object:Pawn
-      color: W
-      position: E4
-      symbol: "♙"
-      move_count: 1
-      selected: false
-      type: pawn
-      start_position: E2
-      double_step_turn: 3
-    -
-    - !ruby/object:Bishop
-      color: B
-      position: G4
-      symbol: "♝"
-      move_count: 1
+      move_count: 3
       selected: true
-      type: bishop
-    -
-  - -
-    -
-    -
+      type: pawn
+      start_position: C7
+      double_step_turn: 2
     -
     -
-    - !ruby/object:Knight
-      color: W
-      position: F3
-      symbol: "♘"
-      move_count: 1
-      selected: false
-      type: knight
+    -
     -
     -
   - - !ruby/object:Pawn
@@ -280,8 +252,20 @@ board: &1 !ruby/object:Board
       move_count: 0
       selected: false
       type: king
-    -
-    -
+    - !ruby/object:Bishop
+      color: W
+      position: F1
+      symbol: "♗"
+      move_count: 0
+      selected: false
+      type: bishop
+    - !ruby/object:Knight
+      color: W
+      position: G1
+      symbol: "♘"
+      move_count: 0
+      selected: false
+      type: knight
     - !ruby/object:Rook
       color: W
       position: H1
@@ -290,19 +274,20 @@ board: &1 !ruby/object:Board
       selected: false
       type: rook
   origin_ary:
-  - 0
+  - 4
   - 2
   attacking_arrays: []
-turn_count: 7
+  game: *1
+turn_count: 9
 player_white: &3 !ruby/object:HumanPlayer
-  name: 3e14
+  name: '31546'
   color: W
-  board: *1
-  game: *2
+  board: *2
+  game: *1
 player_black: !ruby/object:HumanPlayer
-  name: adf
+  name: adfa
   color: B
-  board: *1
-  game: *2
+  board: *2
+  game: *1
 current_player: *3
 winner:

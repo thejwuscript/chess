@@ -1,8 +1,8 @@
 #frozen_string_literal: true
 
 require_relative 'converter'
-require_relative 'pawn_move_examiner'
-require_relative 'king_move_examiner'
+require_relative 'en_passant_checker'
+require_relative 'castling_checker'
 require_relative 'game_status_checker'
 
 class MoveExaminer
@@ -125,7 +125,7 @@ class MoveExaminer
   end
 
   def check_en_passant
-    checker = PawnMoveExaminer.new(board, piece, target_ary, game)
+    checker = EnPassantChecker.new(board, piece, target_ary, game)
     if checker.validate_capture_condition == true
       self.en_passant_verified = true
       target_ary
@@ -140,7 +140,7 @@ class MoveExaminer
   end
 
   def validate_castling
-    checker = KingMoveExaminer.new(board, piece, target_ary)
+    checker = CastlingChecker.new(board, piece, target_ary)
     if checker.meet_castling_condition?
       self.castling_verified = true
       target_ary

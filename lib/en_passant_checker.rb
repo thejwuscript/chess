@@ -1,5 +1,4 @@
-class PawnMoveExaminer
-  attr_accessor :finding
+class EnPassantChecker
   attr_reader :board, :pawn, :target_ary, :game
   
   def initialize(board, pawn, target_ary, game)
