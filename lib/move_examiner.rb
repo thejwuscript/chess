@@ -114,7 +114,8 @@ class MoveExaminer
     return if piece.move_count > 0
 
     a, b = start_ary
-    self.double_step_verified = true if piece.color == 'W' && [a-2, b] == target_ary || piece.color == 'B' && [a+2, b] == target_ary
+    self.double_step_verified = 
+      true if piece.color == 'W' && [a-2, b] == target_ary || piece.color == 'B' && [a+2, b] == target_ary
   end
 
   def pawn_attack_search
