@@ -42,8 +42,8 @@ class Game
   def assign_players
     choose_game_message
     choice = choice_one_or_two
-    p1 = HumanPlayer.new(get_name {'Player One'}, nil) #remove board * 3
-    p2 = choice == 1 ? ComputerPlayer.new('Computer', nil) :
+    p1 = HumanPlayer.new(get_name {'Player One'}, nil)
+    p2 = choice == 1 ? ComputerPlayer.new('Computer', nil, board) :
                        HumanPlayer.new(get_name {'Player Two'}, nil)
     self.player_black, self.player_white = [p1, p2].shuffle
     player_black.color, player_white.color = 'B', 'W'
@@ -94,9 +94,15 @@ class Game
   def player_turn
     board.show_board
     king_in_check_alert
-    examiner = player_move
+    examiner = current_player.is_a?(HumanPlayer) ? player_move : computer_move
     finalize_move(examiner.piece, examiner)
     pawn_promotion
+  end
+
+  def computer_move
+    examiner = current_player.choose_examiner(turn_count)
+    board.show_color_guides_after_selection(examiner.piece, current_player, turn_count)
+    examiner
   end
 
   def player_move
