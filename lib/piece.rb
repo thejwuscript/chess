@@ -8,7 +8,8 @@ class Piece
   include Converter
   include Limiter
   
-  attr_accessor :position, :color, :symbol, :type, :selected
+  attr_accessor :position, :color, :symbol, :selected
+  attr_reader :type
 
   def initialize(color, position)
     @color = color

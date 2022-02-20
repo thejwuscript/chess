@@ -10,8 +10,6 @@ class King < Piece
     attr_accessor :assignment_count
   end
 
-  
-  
   def initialize(color = nil, position = nil)
     super(color, position)
     @move_count = 0
