@@ -87,4 +87,9 @@ module GameMessage
     puts ''
     puts "Computer moves #{piece} to #{target_position}."
   end
+
+  def get_name
+    print "\n#{yield}, please enter your name: "
+    gets.chomp
+  end
 end

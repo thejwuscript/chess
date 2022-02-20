@@ -1,5 +1,5 @@
 --- !ruby/object:Game
-board: &1 !ruby/object:Board
+board: !ruby/object:Board
   grid:
   - - !ruby/object:Rook
       color: B
@@ -66,15 +66,7 @@ board: &1 !ruby/object:Board
       type: pawn
       start_position: A7
       double_step_turn: 0
-    - !ruby/object:Pawn
-      color: B
-      position: B7
-      symbol: "♟"
-      move_count: 0
-      selected: false
-      type: pawn
-      start_position: B7
-      double_step_turn: 0
+    -
     - !ruby/object:Pawn
       color: B
       position: C7
@@ -102,15 +94,7 @@ board: &1 !ruby/object:Board
       type: pawn
       start_position: E7
       double_step_turn: 0
-    - !ruby/object:Pawn
-      color: B
-      position: F7
-      symbol: "♟"
-      move_count: 0
-      selected: false
-      type: pawn
-      start_position: F7
-      double_step_turn: 0
+    -
     - !ruby/object:Pawn
       color: B
       position: G7
@@ -120,44 +104,52 @@ board: &1 !ruby/object:Board
       type: pawn
       start_position: G7
       double_step_turn: 0
-    -
-  - -
-    -
-    -
-    -
-    -
-    -
-    -
-    -
-  - -
-    -
-    -
-    -
-    -
-    -
-    -
     - !ruby/object:Pawn
       color: B
-      position: H5
+      position: H7
       symbol: "♟"
-      move_count: 1
-      selected: true
+      move_count: 0
+      selected: false
       type: pawn
       start_position: H7
-      double_step_turn: 2
+      double_step_turn: 0
   - -
+    -
     -
     -
     -
     - !ruby/object:Pawn
       color: W
-      position: E4
+      position: F6
       symbol: "♙"
-      move_count: 1
-      selected: false
+      move_count: 3
+      selected: true
       type: pawn
       start_position: E2
       double_step_turn: 1
+    -
+    -
+  - -
+    - !ruby/object:Pawn
+      color: B
+      position: B5
+      symbol: "♟"
+      move_count: 1
+      selected: false
+      type: pawn
+      start_position: B7
+      double_step_turn: 2
+    -
+    -
+    -
+    -
+    -
+    -
+  - -
+    -
+    -
+    -
+    -
     -
     -
     -
@@ -290,19 +282,15 @@ board: &1 !ruby/object:Board
       selected: false
       type: rook
   origin_ary:
-  - 1
-  - 7
+  - 3
+  - 4
   attacking_arrays: []
-turn_count: 3
-player_white: &2 !ruby/object:HumanPlayer
-  name: adfdaf
+turn_count: 6
+player_white: !ruby/object:HumanPlayer
+  name: 341q5
   color: W
-  board: *1
-  turn: 3
-player_black: !ruby/object:HumanPlayer
-  name: '3214312'
+player_black: &1 !ruby/object:HumanPlayer
+  name: daf
   color: B
-  board: *1
-  turn: 2
-current_player: *2
+current_player: *1
 winner:

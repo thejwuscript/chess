@@ -42,16 +42,11 @@ class Game
   def assign_players
     choose_game_message
     choice = choice_one_or_two
-    p1 = HumanPlayer.new(get_name {'Player One'}, nil, board)
-    p2 = choice == 1 ? ComputerPlayer.new('Computer', nil, board) :
-                       HumanPlayer.new(get_name {'Player Two'}, nil, board)
+    p1 = HumanPlayer.new(get_name {'Player One'}, nil) #remove board * 3
+    p2 = choice == 1 ? ComputerPlayer.new('Computer', nil) :
+                       HumanPlayer.new(get_name {'Player Two'}, nil)
     self.player_black, self.player_white = [p1, p2].shuffle
     player_black.color, player_white.color = 'B', 'W'
-  end
-
-  def get_name
-    print "\n#{yield}, please enter your name: "
-    gets.chomp
   end
 
   def choice_one_or_two
@@ -99,8 +94,85 @@ class Game
   def player_turn
     board.show_board
     king_in_check_alert
-    current_player.player_move(self)
+    examiner = player_move
+    finalize_move(examiner.piece, examiner)
     pawn_promotion
+  end
+
+  def player_move
+    piece = player_selection
+    save_board_info
+    board.show_color_guides_after_selection(piece, current_player, turn_count)
+    player_target(piece)
+  end
+
+  def player_selection
+    choose_piece_message(current_player)
+    loop do
+      input = current_player.input
+      next save_game if input == 'S'
+      next invalid_input_message if input == 'B'
+      exit_game if input == 'Q'
+      
+      piece = board.piece_at(input)
+      return piece if valid_selection?(piece)
+      
+      invalid_input_message
+    end
+  end
+
+  def valid_selection?(piece)
+    return false if piece.nil?
+
+    piece.color == current_player.color && piece.moves_available?(board, turn_count)
+  end
+
+  def player_target(piece)
+    choose_move_message(piece)
+    loop do
+      target = current_player.input
+      return undo_selection(piece) if target == 'B'
+      exit_game if target == 'Q'
+      
+      next invalid_input_message if target == 'S' || board.same_color_at?(target, piece)
+      
+      examiner = MoveExaminer.new(board, piece, target, turn_count)
+      move_validated = examiner.validate_move
+      return examiner if move_validated
+
+      invalid_input_message
+    end
+  end
+
+   def undo_selection(piece)
+    hash = load_board_info
+    piece.update_selected_value(false)
+    board.grid = hash["grid"]
+    board.origin_ary = hash["origin_ary"]
+    board.attacking_arrays = hash['attacking_arrays']
+    board.show_board
+    player_move
+  end
+
+  def finalize_move(piece, examiner)
+    target = examiner.target
+    board.show_board_with_targeted_piece(position_to_array(target), current_player)
+    board.move_piece_to_target(target, piece)
+    piece.update_attributes_after_move(target)
+    king_follow_through(piece, examiner) if piece.is_a?(King)
+    pawn_follow_through(piece, examiner) if piece.is_a?(Pawn)
+    
+    board.show_board_with_delay(current_player)
+  end
+
+  def king_follow_through(king, examiner)
+    target = examiner.target
+    board.move_castle(target) if examiner.castling_verified
+  end
+
+  def pawn_follow_through(pawn, examiner)
+    board.remove_pawn_captured_en_passant(pawn, examiner.target) if examiner.en_passant_verified
+    pawn.store_turn_count(turn_count) if examiner.double_step_verified
   end
 
   def update_turn_count
