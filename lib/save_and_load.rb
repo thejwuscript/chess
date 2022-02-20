@@ -20,7 +20,7 @@ module SaveAndLoad
   end
 
   def save_to_yaml
-    YAML.dump(self.game)
+    YAML.dump(self)
   end
 
   def load_from_yaml

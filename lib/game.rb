@@ -99,7 +99,7 @@ class Game
   def player_turn
     board.show_board
     king_in_check_alert
-    current_player.player_move(turn_count)
+    current_player.player_move(self)
     pawn_promotion
   end
 
@@ -142,5 +142,11 @@ class Game
 
   def conclusion
     winner ? declare_winner : declare_draw
+  end
+
+  def exit_game
+    board.show_board_on_quit
+    puts "\nThanks for playing."
+    exit
   end
 end

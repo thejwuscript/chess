@@ -14,9 +14,9 @@ class Player
     @board = board
   end
 
-  def player_move(turn)
-    @turn = turn
-    self.is_a?(ComputerPlayer) ? computer_move : human_move
+  def player_move(game)
+    @turn = game.turn_count
+    self.is_a?(ComputerPlayer) ? computer_move : human_move(game)
   end
 
   def finalize_move(piece, examiner)
