@@ -25,40 +25,22 @@ class MoveExaminer
 
   def validate_move
     return if board.same_color_at?(target, piece) || !(search_target)
-    
-    if piece.is_a?(King)
-      self_king_exposed? ? nil : target
-    else
-      ally_king_exposed? ? nil : target 
+
+    test_board = Marshal.load(Marshal.dump(board))
+    target unless piece.is_a?(King) && self_king_exposed?(test_board) || 
+                  ally_king_exposed?(test_board)
+  end
+
+  def ally_king_exposed?(mock_board)
+    mock_board.move_piece_to_target(target, piece)
+    mock_board.remove_pawn_captured_en_passant(piece, target) if en_passant_verified
+    king_pos = mock_board.find_own_king(piece.color).position
+    mock_board.all_enemies(piece.color).any? do |enemy| 
+      MoveExaminer.new(mock_board, enemy, king_pos).search_target
     end
   end
 
-  def ally_king_exposed?
-    color = piece.color
-    original_piece = piece
-    original_target = target
-    original_piece_at_target = board.piece_at(target)
-    board.move_piece_to_target(target, piece)
-    pawn = board.remove_pawn_captured_en_passant(piece, target) if en_passant_verified
-    
-    self.target = board.find_own_king(color).position
-    self.target_ary = position_to_array(target)
-    answer = board.all_enemies(piece.color).any? do |enemy| 
-      self.piece = enemy
-      self.start_ary = position_to_array(enemy.position)
-      search_target
-    end
-    self.target = original_target
-    board.set_piece_at(target, original_piece_at_target)
-    board.set_piece_at(original_piece.position, original_piece)
-    board.set_piece_at(pawn.position, pawn) if en_passant_verified
-
-    self.piece = original_piece
-    self.target = original_target
-    answer
-  end
-
-  def self_king_exposed?
+  def self_king_exposed?(mock_board)
     king = piece
     removed_piece = board.piece_at(target)
     board.move_piece_to_target(target, king)
