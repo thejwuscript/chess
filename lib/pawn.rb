@@ -16,6 +16,7 @@ class Pawn < Piece
     super(color, position)
     @type = 'pawn'
     @start_position = position || nil
+    @move_count = 0
     @double_step_turn = 0
   end
 

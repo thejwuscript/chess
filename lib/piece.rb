@@ -8,13 +8,12 @@ class Piece
   include Converter
   include Limiter
   
-  attr_accessor :position, :color, :symbol, :type, :move_count, :selected
+  attr_accessor :position, :color, :symbol, :type, :selected
 
   def initialize(color, position)
     @color = color
     @position = position
     @symbol = assign_symbol
-    @move_count = 0
     @selected = false
   end
 
@@ -75,6 +74,6 @@ class Piece
 
   def update_attributes_after_move(target)
     self.position = target
-    self.move_count += 1
+    self.move_count += 1 if [King, Rook, Pawn].include?(self.class)
   end
 end

@@ -137,7 +137,7 @@ class Game
     choose_move_message(piece)
     loop do
       target = current_player.input
-      return undo_selection(piece) if target == 'B'
+      return undo(piece) if target == 'B'
       exit_game if target == 'Q'
       
       next invalid_input_message if target == 'S' || board.same_color_at?(target, piece)
@@ -150,12 +150,10 @@ class Game
     end
   end
 
-   def undo_selection(piece)
+   def undo(piece)
     hash = load_board_info
     piece.update_selected_value(false)
-    board.grid = hash["grid"]
-    board.origin_ary = hash["origin_ary"]
-    board.attacking_arrays = hash['attacking_arrays']
+    board.return_state(hash)
     board.show_board
     player_move
   end

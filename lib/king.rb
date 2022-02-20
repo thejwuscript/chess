@@ -3,14 +3,18 @@
 require_relative '../lib/piece'
 
 class King < Piece
+  attr_accessor :move_count
   @assignment_count = 0
-
+  
   class << self
     attr_accessor :assignment_count
   end
+
+  
   
   def initialize(color = nil, position = nil)
     super(color, position)
+    @move_count = 0
     @type = 'king'
   end
 

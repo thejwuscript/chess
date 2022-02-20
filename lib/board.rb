@@ -7,10 +7,8 @@ require_relative 'game_status_checker'
 class Board
   include Converter
   include BoardDisplay
-  include SaveAndLoad
 
   attr_accessor :origin_ary, :attacking_arrays, :grid
-  
   
   def initialize
     @grid = Array.new(8) { Array.new(8) }
@@ -117,4 +115,9 @@ class Board
     self.origin_ary = array
   end
 
+  def return_state(hash)
+    self.grid = hash["grid"]
+    self.origin_ary = hash["origin_ary"]
+    self.attacking_arrays = hash['attacking_arrays']
+  end
 end

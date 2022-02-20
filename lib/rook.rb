@@ -3,7 +3,7 @@
 require_relative 'piece'
 
 class Rook < Piece
-  
+  attr_accessor :move_count
   @assignment_count = 0
 
   class << self
@@ -12,6 +12,7 @@ class Rook < Piece
   
   def initialize(color = nil, position = nil)
     super(color, position)
+    @move_count = 0
     @type = 'rook'
   end
 
