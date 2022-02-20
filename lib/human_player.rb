@@ -2,11 +2,14 @@
 
 require_relative 'game_message'
 
-class HumanPlayer < Player
+class HumanPlayer
   include GameMessage
+  attr_reader :name
+  attr_accessor :color
   
-  def initialize(name, color = nil)
-    super
+  def initialize(name)
+    @name = name
+    @color = nil
   end
 
   def input
