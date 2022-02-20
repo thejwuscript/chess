@@ -30,7 +30,6 @@ class Game
 
   def resume_game
     game_loaded_message
-    board.show_board
     player_turn
   end
 
@@ -38,7 +37,6 @@ class Game
     assign_players
     show_player_assignment
     prep_board
-    board.show_board
   end
 
   def assign_players
@@ -99,6 +97,7 @@ class Game
   end
 
   def player_turn
+    board.show_board
     king_in_check_alert
     current_player.player_move(turn_count)
     pawn_promotion
