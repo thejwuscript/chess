@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class EnPassantChecker
   attr_reader :board, :pawn, :target_ary, :turn
   

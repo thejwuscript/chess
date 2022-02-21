@@ -2,7 +2,6 @@
 
 require_relative 'converter'
 require_relative 'game_status_checker'
-require_relative 'move_examiner'
 
 class CastlingChecker
   include Converter

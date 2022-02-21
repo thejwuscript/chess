@@ -7,7 +7,7 @@ require_relative 'game_status_checker'
 
 class MoveExaminer
   include Converter
-  attr_reader :board, :piece, :target, :start_ary, :target_ary, :turn,
+  attr_reader :board, :piece, :target, :turn, :start_ary, :target_ary,
               :en_passant_verified, :castling_verified, :double_step_verified
   
   def initialize(board = nil, piece = nil, target = nil, turn = nil)

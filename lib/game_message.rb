@@ -30,11 +30,6 @@ module GameMessage
     puts 'Invalid entry. Please try again.'
   end
 
-  def get_name_message
-    puts ''
-    print "#{yield}, please enter your name: "
-  end
-
   def show_player_assignment
     puts ''
     puts "#{player_white.name} is white."
@@ -77,15 +72,8 @@ module GameMessage
   def ai_promote_message(piece)
     puts ''
     puts "The computer promoted a pawn to a #{piece.type} at #{piece.position}!"
-    sleep 5
+    sleep 4
     puts ''
-  end
-
-  def computer_move_message(examiner)
-    piece = examiner.piece.type
-    target_position = examiner.target
-    puts ''
-    puts "Computer moves #{piece} to #{target_position}."
   end
 
   def get_name

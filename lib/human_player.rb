@@ -18,8 +18,8 @@ class HumanPlayer
       return input if input.match?(/^[A-H][1-8]$|^B$|^S$|^Q$/)
 
       invalid_input_message
-      rescue ArgumentError
-        invalid_input_message
+    rescue ArgumentError
+      invalid_input_message
     end
   end
 

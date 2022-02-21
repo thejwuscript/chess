@@ -1,5 +1,4 @@
 module BoardDisplay
-
   def show_board
     system('clear')
     puts "             \e[1m\e[4mCHESS\e[0m"
@@ -35,6 +34,17 @@ module BoardDisplay
     grid.flatten.compact.each { |sq| sq.selected = false }
   end
 
+  def show_color_guides(player, piece, examiners = nil)
+    clear_piece_selection
+    piece.update_selected_value(true)
+    @origin_ary = piece.position_to_array
+    move_hints(examiners) if player.is_a?(HumanPlayer)
+    
+    show_board
+  end
+
+
+
   def colorize_board
     grid.map.with_index do |row, row_ind|
       row.map.with_index do |piece, col_ind|
@@ -63,15 +73,6 @@ module BoardDisplay
     else
       attacking_arrays.include?([row, column]) ? dot_black_square : black_square(piece)
     end
-  end
-
-  def show_color_guides(player, piece, examiners = nil)
-    clear_piece_selection
-    piece.update_selected_value(true)
-    @origin_ary = piece.position_to_array
-    move_hints(examiners) if player.is_a?(HumanPlayer)
-    
-    show_board
   end
 
   def move_hints(examiners)
