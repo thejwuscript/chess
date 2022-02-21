@@ -51,18 +51,13 @@ class MoveExaminer
   def ally_king_exposed?(mock_board)
     mock_board.move_piece_to_target(target, piece)
     mock_board.remove_pawn_captured_en_passant(piece, target) if en_passant_verified
-    
-    king_pos = mock_board.find_own_king(piece.color).position
-    mock_board.all_enemies(piece.color).any? do |enemy| 
-      MoveExaminer.new(mock_board, enemy, king_pos).search_target
-    end
+
+    mock_board.enemies_giving_check(piece.color).any? ? true : false
   end
 
   def king_exposed?(mock_board)
     mock_board.move_piece_to_target(target, piece)
-    mock_board.all_enemies(piece.color).any? do |enemy|
-      MoveExaminer.new(mock_board, enemy, target).search_target
-    end
+    mock_board.enemies_giving_check(piece.color, target).any? ? true : false
   end
 
   def depth_search

@@ -79,11 +79,6 @@ class Board
     delete_piece_at(piece.position)
   end
 
-  def return_to_previous_positions(position, piece1, piece2)
-    set_piece_at(position, piece1)
-    set_piece_at(piece2.position, piece2)
-  end
-
   def move_castle(target)
     row = target[1]
     if target[0] == 'C'
