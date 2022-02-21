@@ -21,14 +21,10 @@ class GameStatusChecker
 
   def no_counterattack?
     enemy_positions = board.enemies_giving_check(color).map { |enemy| enemy.position }
-    board.all_allies(color).each do |ally|
-      enemy_positions.each do |target| 
-        examiner = MoveExaminer.new(board, ally, target, turn)
-        return false if examiner.validate_move
-        
-      end
+    array = board.all_allies(color).flat_map do |ally|
+      enemy_positions.filter_map { |pos| MoveExaminer.new(board, ally, pos, turn).validate_move }
     end
-    true
+    array.empty?
   end
 
   def stalemate?
