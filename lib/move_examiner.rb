@@ -70,7 +70,7 @@ class MoveExaminer
 
   def recursive_search(start, manner, goal)
     next_ary = start.zip(manner).map { |a, b| a + b }
-    return unless board.within_limits?(next_ary)
+    return unless piece.within_limits?(next_ary)
     return goal if next_ary == goal
     
     board.occupied?(next_ary) ? nil : recursive_search(next_ary, manner, goal)
@@ -80,7 +80,7 @@ class MoveExaminer
     manners = piece.move_manner
     until manners.empty? do
       next_ary = start_ary.zip(manners.shift).map { |a, b| a + b }
-      next unless board.within_limits?(next_ary)
+      next unless piece.within_limits?(next_ary)
       return target_ary if next_ary == target_ary
     end
     nil

@@ -34,6 +34,10 @@ class Piece
     array
   end
 
+  def within_limits?(array)
+    array.all? { |num| num.between?(0, 7) }
+  end
+
   def moves_available?(board, turn)
     all_squares.any? do |square|
       examiner = MoveExaminer.new(board, self, square, turn)
