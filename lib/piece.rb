@@ -66,13 +66,21 @@ class Piece
     generate_coordinates.map { |coord| array_to_position(coord) }
   end
 
-  def verified_target_arrays(board, turn)
-    possible_targets.filter_map do |target| 
+  def approved_examiners(board, turn)
+    possible_targets.filter_map do |target|
       examiner = MoveExaminer.new(board, self, target, turn)
-      position_to_array(target) if examiner.validate_move
+      examiner if examiner.validate_move
     end
   end
 
+  def verified_targets(board, turn)
+    approved_examiners(board, turn).map { |examiner| examiner.target }
+  end
+
+  def verified_target_arrays(board, turn)
+    verified_targets(board, turn).map { |target| position_to_array(target) }
+  end
+  
   def update_attributes_after_move(target)
     self.position = target
     self.move_count += 1 if [King, Rook, Pawn].include?(self.class)
