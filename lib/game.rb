@@ -163,20 +163,11 @@ class Game
     board.show_board_with_targeted_piece(position_to_array(target), current_player)
     board.move_piece_to_target(target, piece)
     piece.update_attributes_after_move(target)
-    king_follow_through(piece, examiner) if piece.is_a?(King)
-    pawn_follow_through(piece, examiner) if piece.is_a?(Pawn)
+    board.move_castle(target) if examiner.castling_verified
+    board.remove_pawn_captured_en_passant(piece, target) if examiner.en_passant_verified
+    piece.store_turn_count(turn_count) if examiner.double_step_verified
     
     board.show_board_with_delay(current_player)
-  end
-
-  def king_follow_through(king, examiner)
-    target = examiner.target
-    board.move_castle(target) if examiner.castling_verified
-  end
-
-  def pawn_follow_through(pawn, examiner)
-    board.remove_pawn_captured_en_passant(pawn, examiner.target) if examiner.en_passant_verified
-    pawn.store_turn_count(turn_count) if examiner.double_step_verified
   end
 
   def update_turn_count

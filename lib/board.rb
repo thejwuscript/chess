@@ -80,18 +80,14 @@ class Board
   end
 
   def move_castle(target)
-    row = target[1]
-    if target[0] == 'C'
-      rook = piece_at("A#{row}")
-      set_piece_at("D#{row}", rook)
-      delete_piece_at(rook.position)
-      rook.position = "D#{row}"
-    elsif target[0] == 'G'
-      rook = piece_at("H#{row}")
-      set_piece_at("F#{row}", rook)
-      delete_piece_at(rook.position)
-      rook.position = "F#{row}"
-    end
+    where_rook_is, destination = case target
+                                 when 'C8' then ['A8', 'D8']
+                                 when 'G8' then ['H8', 'F8']
+                                 when 'C1' then ['A1', 'D1']
+                                 when 'G1' then ['H1', 'F1']
+                                 end
+    rook = piece_at(where_rook_is)
+    move_piece_to_target(destination, rook)
   end
 
   def all_enemies(own_color)
