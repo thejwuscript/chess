@@ -2,11 +2,9 @@
 
 require_relative 'move_examiner'
 require_relative 'converter'
-require_relative 'limiter'
 
 class Piece
   include Converter
-  include Limiter
   
   attr_accessor :position, :color, :symbol, :selected
   attr_reader :type
