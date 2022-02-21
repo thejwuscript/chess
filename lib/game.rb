@@ -107,28 +107,29 @@ class Game
   end
 
   def player_move
-    piece = player_selection
+    choose_piece_message(current_player)
+    piece = select_piece
     examiners = piece.approved_examiners(board, turn_count)
     board.show_color_guides(current_player, piece, examiners)
     player_target(examiners)
   end
 
-  def player_selection
-    choose_piece_message(current_player)
+  def select_piece
     loop do
-      input = current_player.input
-      next save_game if input == 'S'
-      next invalid_input_message if input == 'B'
-      exit_game if input == 'Q'
+      case input = current_player.input
+      when 'S' then next save_game
+      when 'Q' then exit_game
+      when 'B' then next invalid_input_message
+      else
+        return board.piece_at(input) if valid_selection?(input)
       
-      piece = board.piece_at(input)
-      return piece if valid_selection?(piece)
-      
-      invalid_input_message
+        invalid_input_message
+      end
     end
   end
 
-  def valid_selection?(piece)
+  def valid_selection?(input)
+    piece = board.piece_at(input)
     return false if piece.nil?
 
     piece.color == current_player.color && piece.moves_available?(board, turn_count)
