@@ -99,4 +99,8 @@ class Board
     @origin_ary = hash["origin_ary"]
     @attacking_arrays = hash['attacking_arrays']
   end
+
+  def deep_clone
+    Marshal.load(Marshal.dump(self))
+  end
 end

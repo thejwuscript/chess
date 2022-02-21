@@ -38,17 +38,12 @@ class CastlingChecker
   def meet_prerequisites?(array, count)
     return false unless king.within_limits?(array)
     return true if count > 2
-    
+
     position = array_to_position(array)
-    original_piece = board.piece_at(position)
-    board.move_piece_to_target(position, king) unless count == 0
+    test_board = board.deep_clone
+    test_board.move_piece_to_target(position, king) unless count == 0
     
-    game_status_checker = GameStatusChecker.new(king.color, board)
-    result = game_status_checker.own_king_in_check?(position) ? false : true
-    board.set_piece_at(position, original_piece) unless count == 0
-    
-    board.set_piece_at(king.position, king)
-    result
+    GameStatusChecker.new(king.color, test_board).own_king_in_check?(position) ? false : true
   end
 
   def next_piece(row, column)

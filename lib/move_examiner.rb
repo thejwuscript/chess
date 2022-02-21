@@ -25,7 +25,7 @@ class MoveExaminer
   def validate_move
     return if board.same_color_at?(target, piece) || !(search_target)
 
-    test_board = Marshal.load(Marshal.dump(board))
+    test_board = board.deep_clone
     if piece.is_a?(King)
       king_exposed?(test_board) ? nil : target
     else
