@@ -107,7 +107,6 @@ class Game
   end
 
   def player_move
-    choose_piece_message(current_player)
     piece = select_piece
     examiners = piece.approved_examiners(board, turn_count)
     board.show_color_guides(current_player, piece, examiners)
@@ -115,6 +114,7 @@ class Game
   end
 
   def select_piece
+    choose_piece_message(current_player)
     loop do
       case input = current_player.input
       when 'S' then next save_game
@@ -122,7 +122,7 @@ class Game
       when 'B' then next invalid_input_message
       else
         return board.piece_at(input) if valid_selection?(input)
-      
+
         invalid_input_message
       end
     end
@@ -142,9 +142,11 @@ class Game
       when 'B' then return undo(examiners[0].piece)
       when 'Q' then exit_game
       when 'S' then next invalid_input_message
-      else examiners.each { |examiner| return examiner if examiner.target == input }
-      end
-      invalid_input_message
+      else 
+        examiners.each { |examiner| return examiner if examiner.target == input }
+
+        invalid_input_message
+      end 
     end
   end
 
