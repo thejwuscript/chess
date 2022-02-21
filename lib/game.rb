@@ -94,6 +94,7 @@ class Game
   def player_turn
     board.show_board
     king_in_check_alert
+    save_board_info
     examiner = current_player.is_a?(HumanPlayer) ? player_move : computer_move
     finalize_move(examiner.piece, examiner)
     pawn_promotion
@@ -101,15 +102,15 @@ class Game
 
   def computer_move
     examiner = current_player.choose_examiner(turn_count)
-    board.show_color_guides_after_selection(examiner.piece, current_player, turn_count)
+    board.show_color_guides(current_player, examiner.piece)
     examiner
   end
 
   def player_move
     piece = player_selection
-    save_board_info
-    board.show_color_guides_after_selection(piece, current_player, turn_count)
-    player_target(piece)
+    examiners = piece.approved_examiners(board, turn_count)
+    board.show_color_guides(current_player, piece, examiners)
+    player_target(examiners)
   end
 
   def player_selection
@@ -133,24 +134,20 @@ class Game
     piece.color == current_player.color && piece.moves_available?(board, turn_count)
   end
 
-  def player_target(piece)
-    choose_move_message(piece)
+  def player_target(examiners)
+    choose_move_message(examiners[0].piece)
     loop do
-      target = current_player.input
-      return undo(piece) if target == 'B'
-      exit_game if target == 'Q'
-      
-      next invalid_input_message if target == 'S' || board.same_color_at?(target, piece)
-      
-      examiner = MoveExaminer.new(board, piece, target, turn_count)
-      move_validated = examiner.validate_move
-      return examiner if move_validated
-
+      case input = current_player.input
+      when 'B' then return undo(examiners[0].piece)
+      when 'Q' then exit_game
+      when 'S' then next invalid_input_message
+      else examiners.each { |examiner| return examiner if examiner.target == input }
+      end
       invalid_input_message
     end
   end
 
-   def undo(piece)
+  def undo(piece)
     hash = load_board_info
     piece.update_selected_value(false)
     board.return_state(hash)

@@ -65,16 +65,16 @@ module BoardDisplay
     end
   end
 
-  def show_color_guides_after_selection(piece, player, turn)
+  def show_color_guides(player, piece, examiners = nil)
     clear_piece_selection
     piece.update_selected_value(true)
     self.origin_ary = piece.position_to_array
-    move_hints(piece, turn) if player.is_a?(HumanPlayer)
+    move_hints(examiners) if player.is_a?(HumanPlayer)
     show_board
   end
 
-  def move_hints(piece, turn)
-    self.attacking_arrays = piece.verified_target_arrays(self, turn)
+  def move_hints(examiners)
+    self.attacking_arrays = examiners.map { |examiner| position_to_array(examiner.target) }
   end
 
   def green_square(piece)
