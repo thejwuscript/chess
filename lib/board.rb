@@ -79,6 +79,7 @@ class Board
                                  end
     rook = piece_at(where_rook_is)
     move_piece_to_target(destination, rook)
+    rook.position = destination
   end
 
   def all_enemies(own_color)
