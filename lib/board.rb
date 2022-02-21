@@ -26,13 +26,8 @@ class Board
     grid[row][column] = piece
   end
 
-  def delete_piece_at(position)
-    row, column = position_to_array(position)
-    grid[row][column] = nil
-  end
-
-  def find_own_king(color)
-    grid.flatten.find { |piece| piece.is_a?(King) && piece.color == color }
+  def deep_clone
+    Marshal.load(Marshal.dump(self))
   end
 
   def find_own_king_in_check(color)
@@ -100,7 +95,14 @@ class Board
     @attacking_arrays = hash['attacking_arrays']
   end
 
-  def deep_clone
-    Marshal.load(Marshal.dump(self))
+  private
+
+  def delete_piece_at(position)
+    row, column = position_to_array(position)
+    grid[row][column] = nil
+  end
+
+  def find_own_king(color)
+    grid.flatten.find { |piece| piece.is_a?(King) && piece.color == color }
   end
 end

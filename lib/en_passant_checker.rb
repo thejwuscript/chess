@@ -10,6 +10,13 @@ class EnPassantChecker
     @turn = turn
   end
 
+  def valid_capture_condition?
+    enemy_piece = locate_enemy_pawn
+    enemy_piece.en_passantable?(enemy_color, turn) if enemy_piece
+  end
+
+  private
+
   def enemy_color
     pawn.color == 'W' ? 'B' : 'W'
   end
@@ -19,10 +26,5 @@ class EnPassantChecker
     modifier = pawn.color == 'W' ? 1 : -1
     piece = board.grid[row + modifier][column]
     piece if piece.is_a?(Pawn) && piece.color != pawn.color
-  end
-
-  def valid_capture_condition?
-    enemy_piece = locate_enemy_pawn
-    enemy_piece.en_passantable?(enemy_color, turn) if enemy_piece
   end
 end

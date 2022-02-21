@@ -11,13 +11,19 @@ class GameStatusChecker
     @turn = turn
   end
 
-  def no_legal_moves?
-    board.all_allies(color).none? { |piece| piece.moves_available?(board, turn) }
+  def stalemate?
+    no_legal_moves? && no_counterattack? && !(own_king_in_check?)
+  end
+
+  def checkmate?
+    no_legal_moves? && no_counterattack? && own_king_in_check?
   end
 
   def own_king_in_check?(king_moving_position = nil)
     board.enemies_giving_check(color, king_moving_position).any?
   end
+
+  private
 
   def no_counterattack?
     enemy_positions = board.enemies_giving_check(color).map { |enemy| enemy.position }
@@ -27,11 +33,8 @@ class GameStatusChecker
     array.empty?
   end
 
-  def stalemate?
-    no_legal_moves? && no_counterattack? && !(own_king_in_check?)
-  end
-
-  def checkmate?
-    no_legal_moves? && no_counterattack? && own_king_in_check?
+  def no_legal_moves?
+    board.all_allies(color).none? { |piece| piece.moves_available?(board, turn) }
   end
 end
+  

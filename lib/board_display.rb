@@ -43,7 +43,7 @@ module BoardDisplay
     show_board
   end
 
-
+  private
 
   def colorize_board
     grid.map.with_index do |row, row_ind|
