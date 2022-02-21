@@ -27,5 +27,4 @@ class Knight < Piece
   def move_manner
   [2, 1, -1, -2].permutation(2).to_a.reject { |ary| (ary[0]).abs == (ary[1]).abs }
   end
-
 end

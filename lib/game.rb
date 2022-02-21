@@ -42,16 +42,11 @@ class Game
   def assign_players
     choose_game_message
     choice = choice_one_or_two
-    p1 = HumanPlayer.new(get_name {'Player One'}, nil, board)
-    p2 = choice == 1 ? ComputerPlayer.new('Computer', nil, board) :
-                       HumanPlayer.new(get_name {'Player Two'}, nil, board)
+    p1 = HumanPlayer.new(get_name {'Player One'})
+    p2 = choice == 1 ? ComputerPlayer.new('Computer', board) :
+                       HumanPlayer.new(get_name {'Player Two'})
     self.player_black, self.player_white = [p1, p2].shuffle
     player_black.color, player_white.color = 'B', 'W'
-  end
-
-  def get_name
-    print "\n#{yield}, please enter your name: "
-    gets.chomp
   end
 
   def choice_one_or_two
@@ -99,8 +94,80 @@ class Game
   def player_turn
     board.show_board
     king_in_check_alert
-    current_player.player_move(self)
+    save_board_info
+    examiner = current_player.is_a?(HumanPlayer) ? player_move : computer_move
+    finalize_move(examiner.piece, examiner)
     pawn_promotion
+  end
+
+  def computer_move
+    examiner = current_player.choose_examiner(turn_count)
+    board.show_color_guides(current_player, examiner.piece)
+    examiner
+  end
+
+  def player_move
+    piece = select_piece
+    examiners = piece.approved_examiners(board, turn_count)
+    board.show_color_guides(current_player, piece, examiners)
+    player_target(examiners)
+  end
+
+  def select_piece
+    choose_piece_message(current_player)
+    loop do
+      case input = current_player.input
+      when 'S' then next save_game
+      when 'Q' then exit_game
+      when 'B' then next invalid_input_message
+      else
+        return board.piece_at(input) if valid_selection?(input)
+
+        invalid_input_message
+      end
+    end
+  end
+
+  def valid_selection?(input)
+    piece = board.piece_at(input)
+    return false if piece.nil?
+
+    piece.color == current_player.color && piece.moves_available?(board, turn_count)
+  end
+
+  def player_target(examiners)
+    choose_move_message(examiners[0].piece)
+    loop do
+      case input = current_player.input
+      when 'B' then return undo(examiners[0].piece)
+      when 'Q' then exit_game
+      when 'S' then next invalid_input_message
+      else 
+        examiners.each { |examiner| return examiner if examiner.target == input }
+
+        invalid_input_message
+      end 
+    end
+  end
+
+  def undo(piece)
+    hash = load_board_info
+    piece.update_selected_value(false)
+    board.return_state(hash)
+    board.show_board
+    player_move
+  end
+
+  def finalize_move(piece, examiner)
+    target = examiner.target
+    board.show_board_with_targeted_piece(position_to_array(target), current_player)
+    board.move_piece_to_target(target, piece)
+    piece.update_attributes_after_move(target)
+    board.move_castle(target) if examiner.castling_verified
+    board.remove_pawn_captured_en_passant(piece, target) if examiner.en_passant_verified
+    piece.store_turn_count(turn_count) if examiner.double_step_verified
+    
+    board.show_board_with_delay(current_player)
   end
 
   def update_turn_count

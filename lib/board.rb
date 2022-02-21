@@ -7,10 +7,8 @@ require_relative 'game_status_checker'
 class Board
   include Converter
   include BoardDisplay
-  include SaveAndLoad
 
-  attr_accessor :origin_ary, :attacking_arrays, :grid
-  
+  attr_reader :grid, :origin_ary, :attacking_arrays
   
   def initialize
     @grid = Array.new(8) { Array.new(8) }
@@ -52,10 +50,6 @@ class Board
     grid[row][column] ? true : false
   end
 
-  def within_limits?(array)
-    array.all? { |num| num.between?(0, 7) }
-  end
-
   def same_color_at?(position, piece)
     if other_piece = piece_at(position)
       piece.color == other_piece.color ? true : false
@@ -81,24 +75,15 @@ class Board
     delete_piece_at(piece.position)
   end
 
-  def return_to_previous_positions(position, piece1, piece2)
-    set_piece_at(position, piece1)
-    set_piece_at(piece2.position, piece2)
-  end
-
   def move_castle(target)
-    row = target[1]
-    if target[0] == 'C'
-      rook = piece_at("A#{row}")
-      set_piece_at("D#{row}", rook)
-      delete_piece_at(rook.position)
-      rook.position = "D#{row}"
-    elsif target[0] == 'G'
-      rook = piece_at("H#{row}")
-      set_piece_at("F#{row}", rook)
-      delete_piece_at(rook.position)
-      rook.position = "F#{row}"
-    end
+    where_rook_is, destination = case target
+                                 when 'C8' then ['A8', 'D8']
+                                 when 'G8' then ['H8', 'F8']
+                                 when 'C1' then ['A1', 'D1']
+                                 when 'G1' then ['H1', 'F1']
+                                 end
+    rook = piece_at(where_rook_is)
+    move_piece_to_target(destination, rook)
   end
 
   def all_enemies(own_color)
@@ -109,12 +94,9 @@ class Board
     grid.flatten.compact.keep_if { |piece| piece.color == color }
   end
 
-  def update_attacking_arrays(array)
-    self.attacking_arrays = array
+  def return_state(hash)
+    @grid = hash["grid"]
+    @origin_ary = hash["origin_ary"]
+    @attacking_arrays = hash['attacking_arrays']
   end
-
-  def update_origin_ary(array)
-    self.origin_ary = array
-  end
-
 end

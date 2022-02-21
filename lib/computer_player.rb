@@ -1,13 +1,14 @@
 # frozen_string_literal: true
 
-require_relative 'player'
-require_relative 'game_message'
+class ComputerPlayer
+  
+  attr_reader :name, :board, :turn
+  attr_accessor :color
 
-class ComputerPlayer < Player
-  include GameMessage
-
-  def initialize(name, color = nil, board)
-    super
+  def initialize(name, board)
+    @name = name
+    @color = nil
+    @board = board
   end
 
   def valid_pieces
@@ -29,7 +30,8 @@ class ComputerPlayer < Player
     end
   end
 
-  def choose_examiner
+  def choose_examiner(current_turn)
+    @turn = current_turn
     examiners = validated_examiners
     examiners.each do |examiner|
       return examiner if examiner.en_passant_verified
@@ -37,12 +39,6 @@ class ComputerPlayer < Player
     end
     alternative = examiners.find { |examiner| board.piece_at(examiner.target) }
     alternative.nil? ? examiners.sample : alternative
-  end
-
-  def computer_move
-    examiner = choose_examiner
-    board.show_color_guides_after_selection(examiner.piece, self, turn)
-    finalize_move(examiner.piece, examiner)
   end
 
   def promotion_choice
