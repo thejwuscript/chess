@@ -14,7 +14,7 @@ module BoardDisplay
   end
 
   def show_board_with_targeted_piece(target_ary, player)
-    self.attacking_arrays = occupied?(target_ary) ? [target_ary] : []
+    @attacking_arrays = occupied?(target_ary) ? [target_ary] : []
     show_board_with_delay(player)
   end
 
@@ -25,8 +25,8 @@ module BoardDisplay
   end
 
   def show_board_on_quit
-    self.attacking_arrays = []
-    self.origin_ary = nil
+    @attacking_arrays = []
+    @origin_ary = nil
     clear_piece_selection
     show_board
   end
@@ -68,13 +68,14 @@ module BoardDisplay
   def show_color_guides(player, piece, examiners = nil)
     clear_piece_selection
     piece.update_selected_value(true)
-    self.origin_ary = piece.position_to_array
+    @origin_ary = piece.position_to_array
     move_hints(examiners) if player.is_a?(HumanPlayer)
+    
     show_board
   end
 
   def move_hints(examiners)
-    self.attacking_arrays = examiners.map { |examiner| position_to_array(examiner.target) }
+    @attacking_arrays = examiners.map { |examiner| position_to_array(examiner.target) }
   end
 
   def green_square(piece)

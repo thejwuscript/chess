@@ -8,7 +8,7 @@ class Board
   include Converter
   include BoardDisplay
 
-  attr_accessor :origin_ary, :attacking_arrays, :grid
+  attr_reader :grid, :origin_ary, :attacking_arrays
   
   def initialize
     @grid = Array.new(8) { Array.new(8) }
@@ -102,17 +102,9 @@ class Board
     grid.flatten.compact.keep_if { |piece| piece.color == color }
   end
 
-  def update_attacking_arrays(array)
-    self.attacking_arrays = array
-  end
-
-  def update_origin_ary(array)
-    self.origin_ary = array
-  end
-
   def return_state(hash)
-    self.grid = hash["grid"]
-    self.origin_ary = hash["origin_ary"]
-    self.attacking_arrays = hash['attacking_arrays']
+    @grid = hash["grid"]
+    @origin_ary = hash["origin_ary"]
+    @attacking_arrays = hash['attacking_arrays']
   end
 end
