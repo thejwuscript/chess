@@ -33,8 +33,6 @@ class ComputerPlayer
     end
   end
 
-  private
-
   def valid_pieces
      board.all_allies(color).keep_if { |piece| piece.moves_available?(board, turn) }.shuffle
   end

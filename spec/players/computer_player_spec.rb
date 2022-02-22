@@ -1,16 +1,16 @@
 # frozen_string_literal: true
 
-require_relative '../lib/computer_player'
-require_relative '../lib/board'
-require_relative '../lib/game'
-require_relative '../lib/rook'
-require_relative '../lib/pawn'
+require_relative '../../lib/players/computer_player'
+require_relative '../../lib/board'
+require_relative '../../lib/pieces/rook'
+require_relative '../../lib/pieces/pawn'
+require_relative '../../lib/game'
 
 RSpec.describe ComputerPlayer do
   describe '#all_possible_targets' do
     let(:board) { instance_double(Board) }
     let(:game) { instance_double(Game) }
-    subject(:ai_player) { described_class.new('AI', 'B', board, game) }
+    subject(:ai_player) { described_class.new('AI', board) }
     
     context 'when black has a rook and pawn that have moves available' do
       let(:rook) { instance_double(Rook, possible_targets: ['A2', 'B1']) }
@@ -33,7 +33,7 @@ RSpec.describe ComputerPlayer do
     let(:game) { instance_double(Game) }
     let(:rook) { instance_double(Rook) }
     let(:pawn) { instance_double(Pawn) }
-    subject(:ai) { described_class.new('AI', 'B', board, game) }
+    subject(:ai) { described_class.new('AI', board) }
 
     before do
       hash =  {
