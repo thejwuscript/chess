@@ -272,8 +272,39 @@ RSpec.describe MoveExaminer do
       subject(:queen_search) { described_class.new(board, queen, 'G5', game) }
       
       it 'calls #depth_search' do
-        expect(search).to receive(:depth_search)
+        expect(queen_search).to receive(:depth_search)
         queen_search.search_target
+      end
+    end
+  end
+
+  describe '#ally_king_exposed?' do
+    context 'when taking a pawn en-passant would expose a line of attack to the king' do
+      bking = King.new('B', 'E8')
+      brook = Rook.new('B', 'A5')
+      bpawn = Pawn.new('B', 'D5')
+      wpawn = Pawn.new('W', 'E5')
+      wking = King.new('W', 'H5')
+      cloned_board = Board.new
+      grid = [
+        [nil, nil, nil, nil, bking, nil, nil, nil],
+        [nil, nil, nil, nil, nil, nil, nil, nil],
+        [nil, nil, nil, nil, nil, nil, nil, nil],
+        [brook, nil, nil, bpawn, wpawn, nil, nil, wking],
+        [nil, nil, nil, nil, nil, nil, nil, nil],
+        [nil, nil, nil, nil, nil, nil, nil, nil],
+        [nil, nil, nil, nil, nil, nil, nil, nil],
+        [nil, nil, nil, nil, nil, nil, nil, nil]
+        ]
+      let(:game) { instance_double(Game) }
+      let(:board) { instance_double(Board, deep_clone: cloned_board) }
+      subject(:examiner) { described_class.new(board, wpawn, 'D6') }
+  
+      it 'returns true' do
+        cloned_board.instance_variable_set(:@grid, grid)
+        examiner.instance_variable_set(:@en_passant_verified, true)
+        result = examiner.ally_king_exposed?(cloned_board)
+        expect(result).to be true
       end
     end
   end
