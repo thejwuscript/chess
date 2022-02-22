@@ -6,6 +6,10 @@ require_relative '../../lib/game'
 require_relative '../../lib/move_examiners/en_passant_checker'
 require_relative '../../lib/pieces/king'
 require_relative '../../lib/pieces/pawn'
+require_relative '../../lib/pieces/rook'
+require_relative '../../lib/pieces/bishop'
+require_relative '../../lib/pieces/queen'
+require_relative '../../lib/pieces/knight'
 
 RSpec.describe MoveExaminer do
   let(:board) { instance_double(Board) }
@@ -242,11 +246,34 @@ RSpec.describe MoveExaminer do
   describe '#search_target' do
     let(:board) { instance_double(Board) }
     let(:game) { instance_double(Game) }
-    let(:piece) { instance_double(Pawn) }
-    subject(:search_examiner) { described_class.new(board, piece, 'E4', game) }
     
     context 'when piece is a Pawn' do
-      it 'calls #pawn_attack_search' do 
+      pawn = Pawn.new('B', 'A1')
+      subject(:search_examiner) { described_class.new(board, pawn, 'E4', game) }
+      
+      before do
+         allow(board).to receive (:occupied?)
+      end
+    
+      it 'calls #pawn_attack_search' do
+        expect(search_examiner).to receive(:pawn_attack_search)
+        search_examiner.search_target
+      end
+
+      it 'calls #pawn_move_search if its not an attacking move' do
+        allow(search_examiner).to receive(:pawn_attack_search)
+        expect(search_examiner).to receive(:pawn_move_search)
+        search_examiner.search_target
+      end
+    end
+
+    context 'when piece is a Queen' do
+      queen = Queen.new('W', 'G3')
+      subject(:queen_search) { described_class.new(board, queen, 'G5', game) }
+      
+      it 'calls #depth_search' do
+        expect(search).to receive(:depth_search)
+        queen_search.search_target
       end
     end
   end
