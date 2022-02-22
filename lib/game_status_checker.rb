@@ -23,8 +23,6 @@ class GameStatusChecker
     board.enemies_giving_check(color, king_moving_position).any?
   end
 
-  private
-
   def no_counterattack?
     enemy_positions = board.enemies_giving_check(color).map { |enemy| enemy.position }
     array = board.all_allies(color).flat_map do |ally|

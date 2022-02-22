@@ -3,9 +3,9 @@
 require_relative '../lib/game_status_checker'
 require_relative '../lib/board'
 require_relative '../lib/game'
-require_relative '../lib/bishop'
-require_relative '../lib/rook'
-require_relative '../lib/king'
+require_relative '../lib/pieces/bishop'
+require_relative '../lib/pieces/rook'
+require_relative '../lib/pieces/king'
 
 RSpec.describe GameStatusChecker do
   describe 'no_legal_moves?' do
@@ -57,18 +57,18 @@ RSpec.describe GameStatusChecker do
     subject(:king_checker) { described_class.new(color, board, game) }
 
     it 'sends a query message to board' do
-      expect(board).to receive(:enemies_giving_check).with('B') { [enemy1, enemy2] }
+      expect(board).to receive(:enemies_giving_check).with('B', nil) { [enemy1, enemy2] }
       king_checker.own_king_in_check?
     end
 
     it 'returns true if the message to board returns a non-empty array' do
-      allow(board).to receive(:enemies_giving_check).with('B') { [enemy1, enemy2] }
+      allow(board).to receive(:enemies_giving_check).with('B', nil) { [enemy1, enemy2] }
       result = king_checker.own_king_in_check?
       expect(result).to be true
     end
 
     it 'returns false if the message to board returns an empty array' do
-      allow(board).to receive(:enemies_giving_check).with('B') { [] }
+      allow(board).to receive(:enemies_giving_check).with('B', nil) { [] }
       result = king_checker.own_king_in_check?
       expect(result).to be false
     end
