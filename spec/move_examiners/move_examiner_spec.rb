@@ -307,5 +307,85 @@ RSpec.describe MoveExaminer do
         expect(result).to be true
       end
     end
+
+    context 'when taking a pawn en-passant does not expose the king' do
+      bking = King.new('B', 'E8')
+      brook = Rook.new('B', 'A5')
+      bpawn = Pawn.new('B', 'D5')
+      wpawn = Pawn.new('W', 'E5')
+      wking = King.new('W', 'H6')
+      cloned_board = Board.new
+      grid = [
+        [nil, nil, nil, nil, bking, nil, nil, nil],
+        [nil, nil, nil, nil, nil, nil, nil, nil],
+        [nil, nil, nil, nil, nil, nil, nil, wking],
+        [brook, nil, nil, bpawn, wpawn, nil, nil, nil],
+        [nil, nil, nil, nil, nil, nil, nil, nil],
+        [nil, nil, nil, nil, nil, nil, nil, nil],
+        [nil, nil, nil, nil, nil, nil, nil, nil],
+        [nil, nil, nil, nil, nil, nil, nil, nil]
+        ]
+      let(:game) { instance_double(Game) }
+      let(:board) { instance_double(Board, deep_clone: cloned_board) }
+      subject(:examiner) { described_class.new(board, wpawn, 'D6') }
+      it 'returns false' do
+        cloned_board.instance_variable_set(:@grid, grid)
+        examiner.instance_variable_set(:@en_passant_verified, true)
+        result = examiner.ally_king_exposed?(cloned_board)
+        expect(result).to be false
+      end
+    end
+  end
+
+  describe '#king_exposed?' do
+    context 'when a king tries to move to a square that would be attacked' do
+      bking = King.new('B', 'A8')
+      wbishop = Bishop.new('W', 'B8')
+      cloned_board = Board.new
+      grid = [
+        [bking, wbishop, nil, nil, nil, nil, nil, nil],
+        [nil, nil, nil, nil, nil, nil, nil, nil],
+        [nil, nil, nil, nil, nil, nil, nil, nil],
+        [nil, nil, nil, nil, nil, nil, nil, nil],
+        [nil, nil, nil, nil, nil, nil, nil, nil],
+        [nil, nil, nil, nil, nil, nil, nil, nil],
+        [nil, nil, nil, nil, nil, nil, nil, nil],
+        [nil, nil, nil, nil, nil, nil, nil, nil]
+      ]
+      let(:game) { instance_double(Game) }
+      let(:board) { instance_double(Board, deep_clone: cloned_board) }
+      subject(:examiner) { described_class.new(board, bking, 'A7') }
+      
+      it 'returns true' do
+        cloned_board.instance_variable_set(:@grid, grid)
+        result = examiner.king_exposed?(cloned_board)
+        expect(result).to be true
+      end
+    end
+
+    context 'when a king tries to move to a square that is safe' do
+      bking = King.new('B', 'A8')
+      wbishop = Bishop.new('W', 'B8')
+      cloned_board = Board.new
+      grid = [
+        [bking, wbishop, nil, nil, nil, nil, nil, nil],
+        [nil, nil, nil, nil, nil, nil, nil, nil],
+        [nil, nil, nil, nil, nil, nil, nil, nil],
+        [nil, nil, nil, nil, nil, nil, nil, nil],
+        [nil, nil, nil, nil, nil, nil, nil, nil],
+        [nil, nil, nil, nil, nil, nil, nil, nil],
+        [nil, nil, nil, nil, nil, nil, nil, nil],
+        [nil, nil, nil, nil, nil, nil, nil, nil]
+      ]
+      let(:game) { instance_double(Game) }
+      let(:board) { instance_double(Board, deep_clone: cloned_board) }
+      subject(:examiner) { described_class.new(board, bking, 'B7') }
+      
+      it 'returns false' do
+        cloned_board.instance_variable_set(:@grid, grid)
+        result = examiner.king_exposed?(cloned_board)
+        expect(result).to be false
+      end
+    end
   end
 end
