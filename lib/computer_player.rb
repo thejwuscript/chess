@@ -90,4 +90,21 @@ class ComputerPlayer
   def special_moves(examiners)
     examiners.select { |examiner| examiner.en_passant_verified || examiner.castling_verified }
   end
+
+  def remove_moves_exposing_queen(examiners_list)
+    examiners_list.reject { |examiner| danger_queen?(examiner) }
+  end
+
+  def removes_moves_exposing_self(examiners_list)
+    examiners_list.reject do |examiner| 
+      [Queen, Knight, Rook, Bishop].include?(examiner.piece.class) ? danger_self?(examiner) : next
+    end
+  end
+
+  def enemy_promotes_targeted(examiners_list)
+    examiners_list.find do |examiner|
+      target_class = board.piece_at(examiner.target).class
+      [Queen, Rook, Bishop, Knight].include?(target_class)
+    end
+  end
 end
