@@ -1,0 +1,109 @@
+--- !ruby/object:Game
+board: &1 !ruby/object:Board
+  grid:
+  - -
+    -
+    -
+    -
+    -
+    -
+    -
+    -
+  - -
+    -
+    -
+    -
+    -
+    -
+    -
+    -
+  - -
+    -
+    -
+    -
+    -
+    -
+    -
+    -
+  - -
+    - !ruby/object:Queen
+      color: B
+      position: B5
+      symbol: "♛"
+      selected: false
+      type: queen
+    -
+    -
+    - !ruby/object:King
+      color: B
+      position: E5
+      symbol: "♚"
+      selected: false
+      move_count: 3
+      type: king
+    -
+    -
+    -
+  - -
+    -
+    -
+    - !ruby/object:Knight
+      color: B
+      position: D4
+      symbol: "♞"
+      selected: false
+      type: knight
+    -
+    -
+    -
+    -
+  - -
+    -
+    -
+    -
+    -
+    -
+    -
+    -
+  - - !ruby/object:King
+      color: W
+      position: A2
+      symbol: "♔"
+      selected: true
+      move_count: 18
+      type: king
+    -
+    -
+    -
+    -
+    -
+    -
+    -
+  - -
+    -
+    -
+    - !ruby/object:Queen
+      color: B
+      position: D1
+      symbol: "♛"
+      selected: false
+      type: queen
+    -
+    -
+    -
+    -
+  origin_ary:
+  - 6
+  - 1
+  attacking_arrays: []
+turn_count: 110
+player_white: !ruby/object:ComputerPlayer
+  name: Computer
+  color: W
+  board: *1
+  turn: 109
+player_black: &2 !ruby/object:HumanPlayer
+  name: JJ
+  color: B
+current_player: *2
+winner:
