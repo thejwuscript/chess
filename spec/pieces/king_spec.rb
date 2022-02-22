@@ -1,16 +1,18 @@
 # frozen_string_literal: true
 
-require_relative '../lib/king'
-require_relative '../lib/piece'
-require_relative '../lib/rook'
-require_relative '../lib/bishop'
-require_relative '../lib/queen'
-require_relative '../lib/knight'
-require_relative '../lib/pawn'
-require_relative '../spec/shared_example_spec'
+require_relative '../../lib/pieces/king'
+require_relative '../../lib/pieces/piece'
+require_relative '../../lib/pieces/rook'
+require_relative '../../lib/pieces/bishop'
+require_relative '../../lib/pieces/queen'
+require_relative '../../lib/pieces/knight'
+require_relative '../../lib/pieces/pawn'
+require_relative '../shared_example_spec'
 
 RSpec.describe King do
-  include_examples 'shared #position_to_array'
+  describe '#position_to_array' do
+    include_examples 'shared #position_to_array'
+  end
   
   describe '#assign_initial_position' do
     King.assignment_count = 0
