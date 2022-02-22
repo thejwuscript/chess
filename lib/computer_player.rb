@@ -11,6 +11,36 @@ class ComputerPlayer
     @board = board
   end
 
+  def choose_examiner(current_turn)
+    @turn = current_turn
+    examiners = validated_examiners
+    not_sacrificing_queen = examiners.reject { |examiner| danger_queen?(examiner) }
+    not_sacrificing_self = not_sacrificing_queen.reject do |examiner| 
+      danger_self?(examiner) if [Queen, Knight, Rook, Bishop].include?(examiner.piece.class)
+
+    end  
+    run_from_enemy_capture = not_sacrificing_self.reject { |examiner| !(danger_now?(examiner)) } 
+    capturing_moves = not_sacrificing_self.select { |examiner| board.piece_at(examiner.target) }
+    promote_capture = capturing_moves.find do |examiner|
+      target_class = board.piece_at(examiner.target).class
+      [Queen, Rook, Bishop, Knight].include?(target_class)
+    end
+    special_moves(examiners).sample || promote_capture || run_from_enemy_capture.sample ||
+    capturing_moves.sample || not_sacrificing_self.sample || not_sacrificing_queen.sample ||
+    examiners.sample
+  end
+
+  def promotion_choice
+    case rand(1..100)
+      when 1..97 then 1
+      when 98 then 2
+      when 99 then 3
+      when 100 then 4
+    end
+  end
+
+  private
+
   def valid_pieces
      board.all_allies(color).keep_if { |piece| piece.moves_available?(board, turn) }.shuffle
   end
@@ -28,26 +58,6 @@ class ComputerPlayer
         array << examiner if examiner.validate_move
       end
     end
-  end
-
-  def choose_examiner(current_turn)
-    @turn = current_turn
-    examiners = validated_examiners
-    examiners.each { |examiner| return examiner if examiner.en_passant_verified || examiner.castling_verified }
-    
-    filtered = examiners.reject { |examiner| danger_queen?(examiner) }
-    more_filtered = filtered.reject do |examiner| 
-      danger_self?(examiner) if [Queen, Knight, Rook, Bishop].include?(examiner.piece.class)
-
-    end  
-    urgent = more_filtered.reject { |examiner| !(danger_now?(examiner)) } 
-    captures = more_filtered.select { |examiner| board.piece_at(examiner.target) }
-    promote_capture = captures.find do |examiner|
-      target_class = board.piece_at(examiner.target).class
-      [Queen, Rook, Bishop, Knight].include?(target_class)
-    end
-    promote_capture || urgent.sample || captures.sample || 
-    more_filtered.sample || filtered.sample || examiners.sample
   end
 
   def danger_self?(examiner, mock_board = board.deep_clone)
@@ -77,12 +87,7 @@ class ComputerPlayer
     end
   end
 
-  def promotion_choice
-    case rand(1..100)
-      when 1..97 then 1
-      when 98 then 2
-      when 99 then 3
-      when 100 then 4
-    end
+  def special_moves(examiners)
+    examiners.select { |examiner| examiner.en_passant_verified || examiner.castling_verified }
   end
 end
