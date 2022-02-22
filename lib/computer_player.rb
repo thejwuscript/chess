@@ -14,19 +14,13 @@ class ComputerPlayer
   def choose_examiner(current_turn)
     @turn = current_turn
     examiners = validated_examiners
-    not_sacrificing_queen = examiners.reject { |examiner| danger_queen?(examiner) }
-    not_sacrificing_self = not_sacrificing_queen.reject do |examiner| 
-      danger_self?(examiner) if [Queen, Knight, Rook, Bishop].include?(examiner.piece.class)
-
-    end  
-    run_from_enemy_capture = not_sacrificing_self.reject { |examiner| !(danger_now?(examiner)) } 
-    capturing_moves = not_sacrificing_self.select { |examiner| board.piece_at(examiner.target) }
-    promote_capture = capturing_moves.find do |examiner|
-      target_class = board.piece_at(examiner.target).class
-      [Queen, Rook, Bishop, Knight].include?(target_class)
-    end
+    not_sacrificing_queen = remove_moves_exposing_queen(examiners)
+    not_sacrificing_self_and_queen = remove_moves_exposing_self(not_sacrificing_queen)
+    run_from_enemy_capture = not_sacrificing_self_and_queen.reject { |examiner| !(danger_now?(examiner)) } 
+    capturing_moves = not_sacrificing_self_and_queen.select { |examiner| board.piece_at(examiner.target) }
+    promote_capture = enemy_promotes_targeted(capturing_moves)
     special_moves(examiners).sample || promote_capture || run_from_enemy_capture.sample ||
-    capturing_moves.sample || not_sacrificing_self.sample || not_sacrificing_queen.sample ||
+    capturing_moves.sample || not_sacrificing_self_and_queen.sample || not_sacrificing_queen.sample ||
     examiners.sample
   end
 
@@ -95,7 +89,7 @@ class ComputerPlayer
     examiners_list.reject { |examiner| danger_queen?(examiner) }
   end
 
-  def removes_moves_exposing_self(examiners_list)
+  def remove_moves_exposing_self(examiners_list)
     examiners_list.reject do |examiner| 
       [Queen, Knight, Rook, Bishop].include?(examiner.piece.class) ? danger_self?(examiner) : next
     end
