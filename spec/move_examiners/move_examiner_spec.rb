@@ -44,7 +44,7 @@ RSpec.describe MoveExaminer do
         allow(board).to receive(:occupied?).and_return(false).exactly(4).times
         start_ary = depth_examiner.start_ary
         target_ary = depth_examiner.target_ary
-        result = depth_examiner.send(:recursive_search, start_ary, manner, target_ary)
+        result = depth_examiner.recursive_search(start_ary, manner, target_ary)
         expect(result).to eql([5, 0])
       end
     end
@@ -55,7 +55,7 @@ RSpec.describe MoveExaminer do
         allow(board).to receive(:occupied?).and_return(false, false, true)
         start_ary = depth_examiner.start_ary
         target_ary = depth_examiner.target_ary
-        result = depth_examiner.send(:recursive_search, start_ary, manner, target_ary)
+        result = depth_examiner.recursive_search(start_ary, manner, target_ary)
         expect(result).to be_nil
       end
     end
@@ -72,13 +72,13 @@ RSpec.describe MoveExaminer do
       end
       
       it 'returns [5, 4]' do
-        result = breadth_examiner.send(:breadth_search)
+        result = breadth_examiner.breadth_search
         expect(result).to eql([5, 4])
       end
 
       it 'loops through manners array until the target array is found' do
         expect(piece).to receive(:within_limits?).exactly(3).times
-        breadth_examiner.send(:breadth_search)
+        breadth_examiner.breadth_search
       end
     end
   end
@@ -96,13 +96,13 @@ RSpec.describe MoveExaminer do
     
       it 'returns [4, 1] when unobstructed' do
         allow(board).to receive(:occupied?).and_return(false, false)
-        result = pawn_move_examiner.send(:pawn_move_search)
+        result = pawn_move_examiner.pawn_move_search
         expect(result).to eq([4, 1])
       end
 
       it 'returns nil when obstructed' do
         allow(board).to receive(:occupied?).and_return(false, true)
-        result = pawn_move_examiner.send(:pawn_move_search)
+        result = pawn_move_examiner.pawn_move_search
         expect(result).to be_nil
       end
     end
@@ -119,20 +119,20 @@ RSpec.describe MoveExaminer do
     it 'returns nil when the move is not an attacking move' do
       pawn_attack_examiner.instance_variable_set(:@target, 'A3')
       pawn_attack_examiner.instance_variable_set(:@target_ary, [5, 0])
-      result = pawn_attack_examiner.send(:pawn_attack_search)
+      result = pawn_attack_examiner.pawn_attack_search
       expect(result).to be_nil
     end
 
     it 'returns target_ary if the attacking spot is occupied' do
       allow(board).to receive(:occupied?) { true }
-      result = pawn_attack_examiner.send(:pawn_attack_search)
+      result = pawn_attack_examiner.pawn_attack_search
       expect(result).to eq([4, 5])
     end
 
     it 'sends #check_en_passant when the attacking spot is empty' do
       allow(board).to receive(:occupied?) { false }
       expect(pawn_attack_examiner).to receive(:check_en_passant)
-      pawn_attack_examiner.send(:pawn_attack_search)
+      pawn_attack_examiner.pawn_attack_search
     end
   end
 
@@ -145,24 +145,24 @@ RSpec.describe MoveExaminer do
 
     it 'sends a query message to EnPassantChecker' do
       expect_any_instance_of(EnPassantChecker).to receive(:valid_capture_condition?)
-      pawn_examiner.send(:check_en_passant)
+      pawn_examiner.check_en_passant
     end
 
     it "returns target_ary if en passant condition is met" do
       allow_any_instance_of(EnPassantChecker).to receive(:valid_capture_condition?).and_return(true)
-      result = pawn_examiner.send(:check_en_passant)
+      result = pawn_examiner.check_en_passant
       expect(result).to eq([2, 3])
     end
 
     it "returns nil if en passant condition is not met" do
       allow_any_instance_of(EnPassantChecker).to receive(:valid_capture_condition?).and_return(false)
-      result = pawn_examiner.send(:check_en_passant)
+      result = pawn_examiner.check_en_passant
       expect(result).to be_nil
     end
 
     it 'updates @en_passant to true if condition is met' do
       allow_any_instance_of(EnPassantChecker).to receive(:valid_capture_condition?).and_return(true)
-      expect { pawn_examiner.send(:check_en_passant) }.to change { pawn_examiner.en_passant_verified }.to true
+      expect { pawn_examiner.check_en_passant }.to change { pawn_examiner.en_passant_verified }.to true
     end
   end
 
@@ -174,7 +174,7 @@ RSpec.describe MoveExaminer do
         allow(piece).to receive(:position) { 'E1' }
         allow(piece).to receive(:move_count) { 0 }
         expect(two_steps_examiner).to receive(:validate_castling)
-        two_steps_examiner.send(:king_search)
+        two_steps_examiner.king_search
       end
     end
 
@@ -185,7 +185,7 @@ RSpec.describe MoveExaminer do
         allow(piece).to receive(:position) { 'E1' }
         allow(piece).to receive(:move_count) { 0 }
         expect(king_examiner).to receive(:breadth_search)
-        king_examiner.send(:king_search)
+        king_examiner.king_search
       end
     end
 
@@ -196,7 +196,7 @@ RSpec.describe MoveExaminer do
         allow(piece).to receive(:position) { 'E1' }
         allow(piece).to receive(:move_count) { 1 }
         expect(moved_king_examiner).to receive(:breadth_search)
-        moved_king_examiner.send(:king_search)
+        moved_king_examiner.king_search
       end
     end
   end
@@ -209,63 +209,33 @@ RSpec.describe MoveExaminer do
       allow(piece).to receive(:position) { 'E1' }
       allow(castling_checker).to receive(:meet_castling_condition?)
       expect(CastlingChecker).to receive(:new).with(board, piece, [7, 6]) { castling_checker }
-      castling_examiner.send(:validate_castling)
+      castling_examiner.validate_castling
     end
 
     it 'sends a query message to CastlingChecker' do
       allow(piece).to receive(:position) { 'E1' }
       expect_any_instance_of(CastlingChecker).to receive(:meet_castling_condition?)
-      castling_examiner.send(:validate_castling)
+      castling_examiner.validate_castling
     end
 
     it 'returns target_ary if castling conditions are met' do
       allow(piece).to receive(:position) { 'E1' }
       allow_any_instance_of(CastlingChecker).to receive(:meet_castling_condition?).and_return(true)
-      result = castling_examiner.send(:validate_castling)
+      result = castling_examiner.validate_castling
       expect(result).to eq([7, 6])
     end
 
     it 'returns nil if castling conditions are not met' do
       allow(piece).to receive(:position) { 'E1' }
       allow_any_instance_of(CastlingChecker).to receive(:meet_castling_condition?).and_return(false)
-      result = castling_examiner.send(:validate_castling)
+      result = castling_examiner.validate_castling
       expect(result).to be_nil
     end
 
     it 'updates @castling when conditions are met' do
       allow(piece).to receive(:position) { 'E1' }
       allow_any_instance_of(CastlingChecker).to receive(:meet_castling_condition?).and_return(true)
-      expect { castling_examiner.send(:validate_castling) }.to change { castling_examiner.castling_verified }.to true
-    end
-  end
-
-  describe 'own_king_exposed?' do
-    let(:piece) { instance_double(King, is_a?: King, color: 'W') }
-    let(:enemy) { instance_double(King, is_a?: King, color: 'B', position: 'E5') }
-    let(:board) { instance_double(Board) }
-    let(:clone) { instance_double(Board) }
-    subject(:exposed_king_examiner) { described_class.new(board, piece, 'E4') }
-    
-    it 'sends board a message to move the piece to target' do
-      allow(piece).to receive(:position).and_return('E3')
-      allow(clone).to receive(:find_own_king_in_check).with('W')
-      expect(clone).to receive(:move_piece_to_target).with('E4', piece)
-      exposed_king_examiner.send(:king_exposed?, clone)
-    end
-
-    it 'sends board a message to retreive king in check, if any' do
-      allow(board).to receive(:move_piece_to_target)
-      allow(piece).to receive(:position).and_return('E4')
-      expect(board).to receive(:find_own_king_in_check).with('W')
-      exposed_king_examiner.send(:king_exposed?)
-    end
-
-    it 'it returns true if own king would be in check' do
-      allow(board).to receive(:move_piece_to_target)
-      allow(piece).to receive(:position).and_return('E4')
-      allow(board).to receive(:find_own_king_in_check).with('W').and_return(piece)
-      result = exposed_king_examiner.send(:king_exposed?)
-      expect(result).to be true
+      expect { castling_examiner.validate_castling }.to change { castling_examiner.castling_verified }.to true
     end
   end
 

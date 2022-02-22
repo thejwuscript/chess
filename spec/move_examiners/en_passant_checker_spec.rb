@@ -18,7 +18,7 @@ RSpec.describe EnPassantChecker do
         allow(board).to receive(:grid) {
           [[], [], [], [nil, nil, nil, nil, nil, nil, nil, enemy], [], [], [], []] 
           }
-        result = checker.send(:locate_enemy_pawn)
+        result = checker.locate_enemy_pawn
         expect(result).to eq(enemy)
       end
     end
@@ -28,7 +28,7 @@ RSpec.describe EnPassantChecker do
         allow(board).to receive(:grid) {
           [[], [], [], [nil, nil, nil, enemy, nil, nil, nil, nil], [], [], [], []] 
           }
-        result = checker.send(:locate_enemy_pawn)
+        result = checker.locate_enemy_pawn
         expect(result).to be_nil
       end
     end

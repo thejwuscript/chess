@@ -27,8 +27,6 @@ class CastlingChecker
     end
   end
 
-  private
-
   def modifier
     direction = (start_ary[1] - target_ary[1]).positive? ? 'Long' : 'Short'
     direction.eql?('Long') ? -1 : 1

@@ -46,8 +46,6 @@ class MoveExaminer
     end
   end
 
-  private
-
   def ally_king_exposed?(mock_board)
     mock_board.move_piece_to_target(target, piece)
     mock_board.remove_pawn_captured_en_passant(piece, target) if en_passant_verified

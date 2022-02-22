@@ -15,16 +15,16 @@ class EnPassantChecker
     enemy_piece.en_passantable?(enemy_color, turn) if enemy_piece.is_a?(Pawn)
   end
 
-  private
-
-  def enemy_color
-    pawn.color == 'W' ? 'B' : 'W'
-  end
-
   def locate_enemy_pawn
     row, column = target_ary
     modifier = pawn.color == 'W' ? 1 : -1
     piece = board.grid[row + modifier][column]
     piece if piece.is_a?(Pawn) && piece.color != pawn.color
+  end
+
+  private
+
+  def enemy_color
+    pawn.color == 'W' ? 'B' : 'W'
   end
 end

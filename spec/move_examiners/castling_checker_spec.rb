@@ -61,7 +61,7 @@ RSpec.describe CastlingChecker do
       subject(:mod_checker) { described_class.new(board, king, [0, 2]) }
       
       it 'returns -1' do
-        result = mod_checker.send(:modifier)
+        result = mod_checker.modifier
         expect(result).to eq(-1)
       end
     end
@@ -70,7 +70,7 @@ RSpec.describe CastlingChecker do
       subject(:mod_checker) { described_class.new(board, king, [0, 6]) }
       
       it 'returns 1' do
-        result = mod_checker.send(:modifier)
+        result = mod_checker.modifier
         expect(result).to eq(1)
       end
     end
@@ -95,7 +95,7 @@ RSpec.describe CastlingChecker do
           [nil, nil, nil, nil, nil, nil, nil, nil],
           [nil, nil, nil, nil, nil, nil, nil, nil]
         ]}
-        result = left_checker.send(:next_piece, 0, 4)
+        result = left_checker.next_piece(0, 4)
         expect(result).to eq(rook)
       end
 
@@ -110,7 +110,7 @@ RSpec.describe CastlingChecker do
           [nil, nil, nil, nil, nil, nil, nil, nil],
           [nil, nil, nil, nil, nil, nil, nil, nil]
         ]}
-        result = left_checker.send(:next_piece, 0, 4)
+        result = left_checker.next_piece(0, 4)
         expect(result).to be_nil
       end
     end
@@ -129,7 +129,7 @@ RSpec.describe CastlingChecker do
           [nil, nil, nil, nil, nil, nil, nil, nil],
           [nil, nil, nil, nil, nil, nil, nil, nil]
         ]}
-        result = right_checker.send(:next_piece, 0, 4)
+        result = right_checker.next_piece(0, 4)
         expect(result).to eq(rook)
       end
 
@@ -144,7 +144,7 @@ RSpec.describe CastlingChecker do
           [nil, nil, nil, nil, nil, nil, nil, nil],
           [nil, nil, nil, nil, nil, nil, nil, nil]
         ]}
-        result = right_checker.send(:next_piece, 0, 4)
+        result = right_checker.next_piece(0, 4)
         expect(result).to be_nil
       end
     end
@@ -163,7 +163,7 @@ RSpec.describe CastlingChecker do
         allow(board).to receive(:move_piece_to_target)
         allow(GameStatusChecker).to receive(:new).with('W', cloned) { game_status_checker }
         allow(game_status_checker).to receive(:own_king_in_check?).and_return false
-        result = prereq_checker.send(:meet_prerequisites?, [7, 4], 0)
+        result = prereq_checker.meet_prerequisites?([7, 4], 0)
         expect(result).to be true
       end
     end
@@ -173,7 +173,7 @@ RSpec.describe CastlingChecker do
         allow(board).to receive(:move_piece_to_target)
         allow(GameStatusChecker).to receive(:new).with('W', cloned) { game_status_checker }
         allow(game_status_checker).to receive(:own_king_in_check?).and_return true
-        result = prereq_checker.send(:meet_prerequisites?, [7, 4], 0)
+        result = prereq_checker.meet_prerequisites?([7, 4], 0)
         expect(result).to be false
       end
     end
