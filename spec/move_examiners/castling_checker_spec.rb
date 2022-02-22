@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
-require_relative '../lib/castling_checker'
-require_relative '../lib/board'
-require_relative '../lib/king'
-require_relative '../lib/rook'
-require_relative '../lib/bishop'
+require_relative '../../lib/move_examiners/castling_checker'
+require_relative '../../lib/board'
+require_relative '../../lib/pieces/king'
+require_relative '../../lib/pieces/rook'
+require_relative '../../lib/pieces/bishop'
 
 RSpec.describe CastlingChecker do
   describe '#meet_castling_condition?' do
@@ -151,8 +151,9 @@ RSpec.describe CastlingChecker do
   end
 
   describe '#meet_prerequisites?' do
-    let(:board) { instance_double(Board) }
-    let(:king) { instance_double(King, position: 'E1', color: 'W') }
+    let(:cloned) { instance_double(Board)}
+    let(:board) { instance_double(Board, deep_clone: cloned) }
+    let(:king) { instance_double(King, position: 'E1', color: 'W', within_limits?: true) }
     let(:enemy) { instance_double(Bishop) }
     let(:game_status_checker) { instance_double(GameStatusChecker) }
     subject(:prereq_checker) { described_class.new(board, king, [7, 6]) }
@@ -160,7 +161,7 @@ RSpec.describe CastlingChecker do
     context 'when the king would not be in check at the given position' do
       it 'returns true' do
         allow(board).to receive(:move_piece_to_target)
-        allow(GameStatusChecker).to receive(:new).with('W', board) { game_status_checker }
+        allow(GameStatusChecker).to receive(:new).with('W', cloned) { game_status_checker }
         allow(game_status_checker).to receive(:own_king_in_check?).and_return false
         result = prereq_checker.send(:meet_prerequisites?, [7, 4], 0)
         expect(result).to be true
@@ -170,16 +171,9 @@ RSpec.describe CastlingChecker do
     context 'when the king would be in check at the given position' do
       it 'returns false' do
         allow(board).to receive(:move_piece_to_target)
-        allow(GameStatusChecker).to receive(:new).with('W', board) { game_status_checker }
+        allow(GameStatusChecker).to receive(:new).with('W', cloned) { game_status_checker }
         allow(game_status_checker).to receive(:own_king_in_check?).and_return true
         result = prereq_checker.send(:meet_prerequisites?, [7, 4], 0)
-        expect(result).to be false
-      end
-    end
-
-    context 'when the given array is out of bounds' do
-      it 'returns false' do
-        result = prereq_checker.send(:meet_prerequisites?, [7, 8], 4)
         expect(result).to be false
       end
     end

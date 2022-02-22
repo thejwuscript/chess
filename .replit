@@ -1,4 +1,4 @@
-run = 'clear && ruby lib/main.rb'
+run = 'clear && rspec spec/move_examiners/move_examiner_spec.rb'
 
 [packager]
 language = "ruby"
