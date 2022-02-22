@@ -1,4 +1,4 @@
-#frozen_string_literal: true
+# frozen_string_literal: true
 
 require_relative '../lib/en_passant_checker'
 require_relative '../lib/game'
@@ -63,5 +63,4 @@ RSpec.describe EnPassantChecker do
       expect(result).to eq('fail')
     end
   end
-
 end
