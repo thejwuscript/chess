@@ -1,9 +1,9 @@
 #frozen_string_literal: true
 
-require_relative 'converter'
+require_relative '../converter'
 require_relative 'en_passant_checker'
 require_relative 'castling_checker'
-require_relative 'game_status_checker'
+require_relative '../game_status_checker'
 
 class MoveExaminer
   include Converter

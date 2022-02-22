@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module BoardDisplay
   def show_board
     system('clear')

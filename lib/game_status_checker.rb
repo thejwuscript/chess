@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative '../lib/move_examiner'
+require_relative 'move_examiners/move_examiner'
 
 class GameStatusChecker
   attr_reader :color, :board, :turn

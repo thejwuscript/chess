@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative 'game_message'
+require_relative '../game_message'
 
 class HumanPlayer
   include GameMessage

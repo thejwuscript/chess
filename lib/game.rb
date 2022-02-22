@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
-require_relative 'move_examiner'
-require_relative '../lib/game_message'
+require_relative 'move_examiners/move_examiner'
+require_relative 'game_message'
 require_relative 'save_and_load'
-require 'yaml'
 require_relative 'converter'
+require 'yaml'
 
 class Game
   include GameMessage

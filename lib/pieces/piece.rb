@@ -1,7 +1,7 @@
 #frozen_string_literal: true
 
-require_relative 'move_examiner'
-require_relative 'converter'
+require_relative '../move_examiners/move_examiner'
+require_relative '../converter'
 
 class Piece
   include Converter

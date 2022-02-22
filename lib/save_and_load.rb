@@ -45,6 +45,6 @@ module SaveAndLoad
   end
 
   def load_board_info 
-    YAML.load_file('prev_board_info.yaml')
+    YAML.load_file('temp_board_info.yaml')
   end
 end

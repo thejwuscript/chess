@@ -1,5 +1,6 @@
-module GameMessage
+# frozen_string_literal: true
 
+module GameMessage
   def game_loaded_message
     puts ''
     puts 'Game loaded.'

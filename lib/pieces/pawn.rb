@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative '../lib/piece'
+require_relative 'piece'
 
 class Pawn < Piece
   attr_accessor :move_count, :start_position, :double_step_turn
