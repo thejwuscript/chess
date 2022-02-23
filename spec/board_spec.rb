@@ -406,9 +406,23 @@ RSpec.describe Board do
     it 'returns an array of enemies on the board' do
       my_color = 'W'
       rook = Rook.new('B')
+      bishop = Bishop.new('B')
       board.grid[2][3] = rook
+      board.grid[3][3] = bishop
       result = board.all_enemies(my_color)
-      expect(result.size).to eq(1)
+      expect(result).to contain_exactly(rook, bishop)
+    end
+  end
+
+  describe '#all_allies' do
+    it 'returns an array of allies on the board' do
+      my_color = 'W'
+      queen = Queen.new('W')
+      knight = Knight.new('W')
+      board.grid[4][5] = queen
+      board.grid[2][2] = knight
+      result = board.all_allies(my_color)
+      expect(result).to contain_exactly(queen, knight)
     end
   end
 end
