@@ -113,6 +113,64 @@ RSpec.describe Board do
     end
   end
 
+  describe '#promotion_candidate' do
+    let(:pawn) { instance_double(Pawn, is_a?: Pawn) }
+    
+    context 'when a pawn is at the top edge of the board' do
+      it 'returns the pawn' do
+        grid = [
+          [nil, nil, nil, nil, nil, pawn, nil, nil],
+          [nil, nil, nil, nil, nil, nil, nil, nil],
+          [nil, nil, nil, nil, nil, nil, nil, nil],
+          [nil, nil, nil, nil, nil, nil, nil, nil],
+          [nil, nil, nil, nil, nil, nil, nil, nil],
+          [nil, nil, nil, nil, nil, nil, nil, nil],
+          [nil, nil, nil, nil, nil, nil, nil, nil],
+          [nil, nil, nil, nil, nil, nil, nil, nil]
+        ]
+        board.instance_variable_set(:@grid, grid)
+        result = board.promotion_candidate
+        expect(result).to eq(pawn)
+      end
+    end
+
+    context 'when a pawn is at the bottom edge of the board' do  
+      it 'returns the pawn' do
+        grid = [
+          [nil, nil, nil, nil, nil, nil, nil, nil],
+          [nil, nil, nil, nil, nil, nil, nil, nil],
+          [nil, nil, nil, nil, nil, nil, nil, nil],
+          [nil, nil, nil, nil, nil, nil, nil, nil],
+          [nil, nil, nil, nil, nil, nil, nil, nil],
+          [nil, nil, nil, nil, nil, nil, nil, nil],
+          [nil, nil, nil, nil, nil, nil, nil, nil],
+          [nil, nil, nil, nil, pawn, nil, nil, nil]
+        ]
+        board.instance_variable_set(:@grid, grid)
+        result = board.promotion_candidate
+        expect(result).to eq(pawn)
+      end
+    end
+
+    context 'when a pawn is not at the top or bottom edge of the board' do
+      it 'returns nil' do
+        grid = [
+          [nil, nil, nil, nil, nil, nil, nil, nil],
+          [nil, nil, nil, nil, nil, nil, nil, nil],
+          [nil, nil, nil, nil, nil, nil, nil, nil],
+          [nil, nil, nil, nil, nil, nil, nil, nil],
+          [nil, nil, nil, nil, nil, nil, nil, nil],
+          [nil, nil, nil, nil, nil, nil, nil, nil],
+          [nil, nil, nil, pawn, nil, nil, nil, nil],
+          [nil, nil, nil, nil, nil, nil, nil, nil]
+        ]
+        board.instance_variable_set(:@grid, grid)
+        result = board.promotion_candidate
+        expect(result).to be_nil
+      end
+    end
+  end
+
   describe '#occupied?' do
     context 'when the @grid element is occupied by a piece' do
       let(:piece) { double('piece') }
@@ -164,6 +222,79 @@ RSpec.describe Board do
         result = board.same_color_at?(position, black_piece)
         expect(result).to be false
       end
+    end
+  end
+
+  describe '#enemies_giving_check' do
+    it 'returns an array of enemy pieces giving check' do
+      bking = King.new('B', 'E4')
+      wknight = Knight.new('W', 'C5')
+      wrook = Rook.new('W', 'A4')
+      wking = King.new('W', 'A2')
+      grid = [
+        [nil, nil, nil, nil, nil, nil, nil, nil],
+        [nil, nil, nil, nil, nil, nil, nil, nil],
+        [nil, nil, nil, nil, nil, nil, nil, nil],
+        [nil, nil, wknight, nil, nil, nil, nil, nil],
+        [wrook, nil, nil, nil, bking, nil, nil, nil],
+        [nil, nil, nil, nil, nil, nil, nil, nil],
+        [wking, nil, nil, nil, nil, nil, nil, nil],
+        [nil, nil, nil, nil, nil, nil, nil, nil]
+      ]
+      board.instance_variable_set(:@grid, grid)
+      result = board.enemies_giving_check('B', 'E4')
+      expect(result).to eq([wknight, wrook])
+    end
+
+    it 'returns an empty array if no enemies are giving check' do
+      bking = King.new('B', 'E4')
+      wknight = Knight.new('W', 'A4')
+      wrook = Rook.new('W', 'A5')
+      wking = King.new('W', 'A2')
+      grid = [
+        [nil, nil, nil, nil, nil, nil, nil, nil],
+        [nil, nil, nil, nil, nil, nil, nil, nil],
+        [nil, nil, nil, nil, nil, nil, nil, nil],
+        [wrook, nil, nil, nil, nil, nil, nil, nil],
+        [wknight, nil, nil, nil, bking, nil, nil, nil],
+        [nil, nil, nil, nil, nil, nil, nil, nil],
+        [wking, nil, nil, nil, nil, nil, nil, nil],
+        [nil, nil, nil, nil, nil, nil, nil, nil]
+      ]
+      board.instance_variable_set(:@grid, grid)
+      result = board.enemies_giving_check('B', nil)
+      expect(result).to eq([])
+    end
+  end
+
+  describe '#remove_pawn_captured_en_passant' do
+    bpawn = Pawn.new('B', 'D5')
+    wpawn = Pawn.new('W', 'E5')
+    
+    it 'changes the element of where the captured pawn is at to nil' do
+      grid = [
+        [nil, nil, nil, nil, nil, nil, nil, nil],
+        [nil, nil, nil, nil, nil, nil, nil, nil],
+        [nil, nil, nil, nil, nil, nil, nil, nil],
+        [nil, nil, nil, bpawn, wpawn, nil, nil, nil],
+        [nil, nil, nil, nil, nil, nil, nil, nil],
+        [nil, nil, nil, nil, nil, nil, nil, nil],
+        [nil, nil, nil, nil, nil, nil, nil, nil],
+        [nil, nil, nil, nil, nil, nil, nil, nil]
+      ]
+      board.instance_variable_set(:@grid, grid)
+      board.remove_pawn_captured_en_passant(wpawn, 'D6')
+      expected = [
+        [nil, nil, nil, nil, nil, nil, nil, nil],
+        [nil, nil, nil, nil, nil, nil, nil, nil],
+        [nil, nil, nil, nil, nil, nil, nil, nil],
+        [nil, nil, nil, nil, wpawn, nil, nil, nil],
+        [nil, nil, nil, nil, nil, nil, nil, nil],
+        [nil, nil, nil, nil, nil, nil, nil, nil],
+        [nil, nil, nil, nil, nil, nil, nil, nil],
+        [nil, nil, nil, nil, nil, nil, nil, nil]
+      ]
+      expect(board.grid).to eq(expected)
     end
   end
 

@@ -61,8 +61,7 @@ class Board
   def remove_pawn_captured_en_passant(piece, target)
     row, column = position_to_array(target)
     modifier = piece.color == 'W' ? 1 : -1
-    grid[row + modifier].insert(column + 1, nil)
-    grid[row + modifier].delete_at(column)
+    grid[row + modifier][column] = nil
   end
 
   def move_piece_to_target(target, piece)
