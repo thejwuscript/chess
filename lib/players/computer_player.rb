@@ -60,7 +60,7 @@ class ComputerPlayer
   end
 
   def danger_queen?(examiner, mock_board = board.deep_clone)
-    return if examiner.piece.is_a?(Queen)
+    return danger_self?(examiner) if examiner.piece.is_a?(Queen)
     
     mock_board.move_piece_to_target(examiner.target, examiner.piece)
     queen = mock_board.grid.flatten.compact.find { |piece| piece.color == self.color && piece.is_a?(Queen) }

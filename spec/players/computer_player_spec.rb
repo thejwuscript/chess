@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+RSpec::Matchers.define_negated_matcher :not_have_attributes, :have_attributes
 
 require_relative '../../lib/players/computer_player'
 require_relative '../../lib/board'
@@ -136,13 +137,130 @@ RSpec.describe ComputerPlayer do
         allow_any_instance_of(MoveExaminer).to receive(:ally_king_exposed?) { false }
         allow_any_instance_of(MoveExaminer).to receive(:king_exposed?) { false }
         allow_any_instance_of(CastlingChecker).to receive(:meet_castling_condition?) { true }
-        allow(board).to receive(:deep_clone) { board.clone }
       end
     
       it 'returns the examiner with castling verified above all other examiners' do
         result = ai_player.choose_examiner(8)
         expect(result).to be_kind_of(MoveExaminer)
-                      .and have_attributes(piece: wking, target: 'C1', castling_verified: true)
+                      .and have_attributes(piece: wking, castling_verified: true)
+      end
+    end
+
+    context 'when a promote can capture another promote attacking but it would sacrifice itself' do
+      
+      bqueen = Queen.new('B', 'A8')
+      bking = King.new('B', 'B8')
+      bpawn = Pawn.new('B', 'D5')
+      wpawn = Pawn.new('W', 'D4')
+      wrook = Rook.new('W', 'A1')
+      wking = King.new('W', 'E1')
+
+      before do
+        grid = [
+          [bqueen, bking, nil, nil, nil, nil, nil, nil],
+          [nil, nil, nil, nil, nil, nil, nil, nil],
+          [nil, nil, nil, nil, nil, nil, nil, nil],
+          [nil, nil, nil, bpawn, nil, nil, nil, nil],
+          [nil, nil, nil, wpawn, nil, nil, nil, nil],
+          [nil, nil, nil, nil, nil, nil, nil, nil],
+          [nil, nil, nil, nil, nil, nil, nil, nil],
+          [wrook, nil, nil, nil, wking, nil, nil, nil]
+        ]
+        ai_player.instance_variable_set(:@color, 'W')
+        board.instance_variable_set(:@grid, grid)
+        allow_any_instance_of(MoveExaminer).to receive(:ally_king_exposed?) { false }
+        allow_any_instance_of(MoveExaminer).to receive(:king_exposed?) { false }
+        allow_any_instance_of(CastlingChecker).to receive(:meet_castling_condition?) { false }
+      end
+    
+      it 'does not return the examiner with the capturing move' do
+        result = ai_player.choose_examiner(8)
+        expect(result).not_to have_attributes(target: 'A8')
+      end
+
+      it 'does not return examiners with moves that puts self under attack still' do
+        result = ai_player.choose_examiner(14)
+        expect(result).to not_have_attributes(target: 'A7')
+                      .or not_have_attributes(target: 'A6')
+                      .or not_have_attributes(target: 'A5')
+                      .or not_have_attributes(target: 'A4')
+                      .or not_have_attributes(target: 'A3')
+                      .or not_have_attributes(target: 'A2')
+      end
+
+      it 'returns an examiner with a move that prevents capture' do
+        result = ai_player.choose_examiner(12)
+        expect(result).to have_attributes(target: 'B1')
+                      .or have_attributes(target: 'C1')
+                      .or have_attributes(target: 'D1')
+      end
+    end
+
+    context 'when the queen is under attack, queen cannot sacrifice herself but another piece can protect the queen' do
+      bking = King.new('B', 'G8')
+      brook1 = Rook.new('B', 'F8')
+      brook2 = Rook.new('B', 'F1')
+      wbishop = Bishop.new('W', 'A5')
+      wking = King.new('W', 'C1')
+      wqueen = Queen.new('W', 'D1')
+
+      before do
+        grid = [
+          [nil, nil, nil, nil, nil, brook1, bking, nil],
+          [nil, nil, nil, nil, nil, nil, nil, nil],
+          [nil, nil, nil, nil, nil, nil, nil, nil],
+          [wbishop, nil, nil, nil, nil, nil, nil, nil],
+          [nil, nil, nil, nil, nil, nil, nil, nil],
+          [nil, nil, nil, nil, nil, nil, nil, nil],
+          [nil, nil, nil, nil, nil, nil, nil, nil],
+          [nil, nil, wking, wqueen, nil, brook2, nil, nil]
+        ]
+        ai_player.instance_variable_set(:@color, 'W')
+        board.instance_variable_set(:@grid, grid)
+      end
+      
+      it 'returns the examiner with the move to protect the queen despite risking the piece' do
+        result = ai_player.choose_examiner(11)
+        expect(result).to be_kind_of(MoveExaminer)
+                      .and have_attributes(piece: wbishop, target: 'E1')
+      end
+    end
+
+    context 'when the queen cannot escape from being captured' do
+      wking = King.new('W', 'A2')
+      wqueen = Queen.new('W', 'G1')
+      bqueen = Queen.new('B', 'B4')
+      bbishop1 = Bishop.new('B', 'E3')
+      bking = King.new('B', 'E2')
+      bknight = Knight.new('B', 'F1')
+      bbishop2 = Bishop.new('B', 'G2')
+      brook1 = Rook.new('B', 'H2')
+      brook2 = Rook.new('B', 'H1')
+
+      before do
+        grid = [
+          [nil, nil, nil, nil, nil, nil, nil, nil],
+          [nil, nil, nil, nil, nil, nil, nil, nil],
+          [nil, nil, nil, nil, nil, nil, nil, nil],
+          [nil, nil, nil, nil, nil, nil, nil, nil],
+          [nil, bqueen, nil, nil, nil, nil, nil, nil],
+          [nil, nil, nil, nil, bbishop1, nil, nil, nil],
+          [wking, nil, nil, nil, bking, nil, bbishop2, brook1],
+          [nil, nil, nil, nil, nil, bknight, wqueen, brook2]
+        ]
+        ai_player.instance_variable_set(:@color, 'W')
+        board.instance_variable_set(:@grid, grid)
+      end
+    
+      it 'returns any legal move on the board' do
+        result = ai_player.choose_examiner(17)
+        expect(result).to have_attributes(piece: wking, target: 'A1')
+                      .or have_attributes(piece: wqueen, target: 'F1')
+                      .or have_attributes(piece: wqueen, target: 'F2')
+                      .or have_attributes(piece: wqueen, target: 'E3')
+                      .or have_attributes(piece: wqueen, target: 'G2')
+                      .or have_attributes(piece: wqueen, target: 'H2')
+                      .or have_attributes(piece: wqueen, target: 'H1')
       end
     end
   end
