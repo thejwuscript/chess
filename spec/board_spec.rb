@@ -71,6 +71,48 @@ RSpec.describe Board do
     end
   end
 
+  describe '#find_own_king_in_check' do
+    king = King.new('W', 'H2')
+    enemy = Rook.new('B', 'A2')
+    ally = Queen.new('W', 'C2')
+
+    context 'when the king is in check' do
+      grid = [
+        [nil, nil, nil, nil, nil, nil, nil, nil],
+        [nil, nil, nil, nil, nil, nil, nil, nil],
+        [nil, nil, nil, nil, nil, nil, nil, nil],
+        [nil, nil, nil, nil, nil, nil, nil, nil],
+        [nil, nil, nil, nil, nil, nil, nil, nil],
+        [nil, nil, nil, nil, nil, nil, nil, nil],
+        [enemy, nil, nil, nil, nil, nil, nil, king],
+        [nil, nil, nil, nil, nil, nil, nil, nil]
+      ]
+      it 'returns the king' do
+        board.instance_variable_set(:@grid, grid)
+        result = board.find_own_king_in_check('W')
+        expect(result).to eq(king)
+      end
+    end
+
+    context 'when the king is not in check' do
+      grid = [
+        [nil, nil, nil, nil, nil, nil, nil, nil],
+        [nil, nil, nil, nil, nil, nil, nil, nil],
+        [nil, nil, nil, nil, nil, nil, nil, nil],
+        [nil, nil, nil, nil, nil, nil, nil, nil],
+        [nil, nil, nil, nil, nil, nil, nil, nil],
+        [nil, nil, nil, nil, nil, nil, nil, nil],
+        [enemy, nil, ally, nil, nil, nil, nil, king],
+        [nil, nil, nil, nil, nil, nil, nil, nil]
+      ]
+      it 'returns nil' do
+        board.instance_variable_set(:@grid, grid)
+        result = board.find_own_king_in_check('W')
+        expect(result).to be_nil
+      end
+    end
+  end
+
   describe '#occupied?' do
     context 'when the @grid element is occupied by a piece' do
       let(:piece) { double('piece') }
