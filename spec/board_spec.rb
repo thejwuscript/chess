@@ -331,6 +331,77 @@ RSpec.describe Board do
     end
   end
 
+  describe '#move_piece_to_target' do
+    let(:bishop) { instance_double(Bishop, position: 'F1') }
+    
+    it 'moves a piece to the specified position given as an argument' do
+      grid = [
+        [nil, nil, nil, nil, nil, nil, nil, nil],
+        [nil, nil, nil, nil, nil, nil, nil, nil],
+        [nil, nil, nil, nil, nil, nil, nil, nil],
+        [nil, nil, nil, nil, nil, nil, nil, nil],
+        [nil, nil, nil, nil, nil, nil, nil, nil],
+        [nil, nil, nil, nil, nil, nil, nil, nil],
+        [nil, nil, nil, nil, nil, nil, nil, nil],
+        [nil, nil, nil, nil, nil, bishop, nil, nil]
+      ]
+      board.instance_variable_set(:@grid, grid)
+      board.move_piece_to_target('A6', bishop)
+      expected = [
+        [nil, nil, nil, nil, nil, nil, nil, nil],
+        [nil, nil, nil, nil, nil, nil, nil, nil],
+        [bishop, nil, nil, nil, nil, nil, nil, nil],
+        [nil, nil, nil, nil, nil, nil, nil, nil],
+        [nil, nil, nil, nil, nil, nil, nil, nil],
+        [nil, nil, nil, nil, nil, nil, nil, nil],
+        [nil, nil, nil, nil, nil, nil, nil, nil],
+        [nil, nil, nil, nil, nil, nil, nil, nil]
+      ]
+      expect(board.grid).to eq(expected)
+    end
+  end
+
+  describe '#move_castle' do
+    context 'when a king is moving to C8 due to castling' do
+      let(:rook) { instance_double(Rook, color: 'B', position: 'A8') }
+
+      before do
+        grid = [
+          [rook, nil, nil, nil, nil, nil, nil, nil],
+          [nil, nil, nil, nil, nil, nil, nil, nil],
+          [nil, nil, nil, nil, nil, nil, nil, nil],
+          [nil, nil, nil, nil, nil, nil, nil, nil],
+          [nil, nil, nil, nil, nil, nil, nil, nil],
+          [nil, nil, nil, nil, nil, nil, nil, nil],
+          [nil, nil, nil, nil, nil, nil, nil, nil],
+          [nil, nil, nil, nil, nil, nil, nil, nil]
+        ]
+        board.instance_variable_set(:@grid, grid)
+      end
+    
+      it 'moves the rook from A8 to D8' do
+        allow(rook).to receive(:update_position)
+        board.move_castle('C8')
+        expected = [
+          [nil, nil, nil, rook, nil, nil, nil, nil],
+          [nil, nil, nil, nil, nil, nil, nil, nil],
+          [nil, nil, nil, nil, nil, nil, nil, nil],
+          [nil, nil, nil, nil, nil, nil, nil, nil],
+          [nil, nil, nil, nil, nil, nil, nil, nil],
+          [nil, nil, nil, nil, nil, nil, nil, nil],
+          [nil, nil, nil, nil, nil, nil, nil, nil],
+          [nil, nil, nil, nil, nil, nil, nil, nil]
+        ]
+        expect(board.grid).to eq(expected)
+      end
+
+      it 'sends a command message to rook' do
+        expect(rook).to receive(:update_position).with('D8')
+        board.move_castle('C8')
+      end
+    end
+  end
+
   describe '#all_enemies' do
     it 'returns an array of enemies on the board' do
       my_color = 'W'

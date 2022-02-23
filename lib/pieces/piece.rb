@@ -25,6 +25,10 @@ class Piece
     self.selected = value
   end
 
+  def update_position(value)
+    self.position = value
+  end
+
   def all_squares(array = [])
     ('A'..'H').to_a.each do |letter|
       ('1'..'8').to_a.each { |number| array << letter + number }
