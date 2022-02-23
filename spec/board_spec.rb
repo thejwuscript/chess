@@ -268,33 +268,66 @@ RSpec.describe Board do
   end
 
   describe '#remove_pawn_captured_en_passant' do
-    bpawn = Pawn.new('B', 'D5')
-    wpawn = Pawn.new('W', 'E5')
+    context 'when white is capturing black pawn' do
+      bpawn = Pawn.new('B', 'D5')
+      wpawn = Pawn.new('W', 'E5')
     
-    it 'changes the element of where the captured pawn is at to nil' do
-      grid = [
-        [nil, nil, nil, nil, nil, nil, nil, nil],
-        [nil, nil, nil, nil, nil, nil, nil, nil],
-        [nil, nil, nil, nil, nil, nil, nil, nil],
-        [nil, nil, nil, bpawn, wpawn, nil, nil, nil],
-        [nil, nil, nil, nil, nil, nil, nil, nil],
-        [nil, nil, nil, nil, nil, nil, nil, nil],
-        [nil, nil, nil, nil, nil, nil, nil, nil],
-        [nil, nil, nil, nil, nil, nil, nil, nil]
-      ]
-      board.instance_variable_set(:@grid, grid)
-      board.remove_pawn_captured_en_passant(wpawn, 'D6')
-      expected = [
-        [nil, nil, nil, nil, nil, nil, nil, nil],
-        [nil, nil, nil, nil, nil, nil, nil, nil],
-        [nil, nil, nil, nil, nil, nil, nil, nil],
-        [nil, nil, nil, nil, wpawn, nil, nil, nil],
-        [nil, nil, nil, nil, nil, nil, nil, nil],
-        [nil, nil, nil, nil, nil, nil, nil, nil],
-        [nil, nil, nil, nil, nil, nil, nil, nil],
-        [nil, nil, nil, nil, nil, nil, nil, nil]
-      ]
-      expect(board.grid).to eq(expected)
+      it 'changes the element of where the captured pawn is at to nil' do
+        grid = [
+          [nil, nil, nil, nil, nil, nil, nil, nil],
+          [nil, nil, nil, nil, nil, nil, nil, nil],
+          [nil, nil, nil, nil, nil, nil, nil, nil],
+          [nil, nil, nil, bpawn, wpawn, nil, nil, nil],
+          [nil, nil, nil, nil, nil, nil, nil, nil],
+          [nil, nil, nil, nil, nil, nil, nil, nil],
+          [nil, nil, nil, nil, nil, nil, nil, nil],
+          [nil, nil, nil, nil, nil, nil, nil, nil]
+        ]
+        board.instance_variable_set(:@grid, grid)
+        board.remove_pawn_captured_en_passant(wpawn, 'D6')
+        expected = [
+          [nil, nil, nil, nil, nil, nil, nil, nil],
+          [nil, nil, nil, nil, nil, nil, nil, nil],
+          [nil, nil, nil, nil, nil, nil, nil, nil],
+          [nil, nil, nil, nil, wpawn, nil, nil, nil],
+          [nil, nil, nil, nil, nil, nil, nil, nil],
+          [nil, nil, nil, nil, nil, nil, nil, nil],
+          [nil, nil, nil, nil, nil, nil, nil, nil],
+          [nil, nil, nil, nil, nil, nil, nil, nil]
+        ]
+        expect(board.grid).to eq(expected)
+      end
+    end
+
+    context 'when black is capturing white pawn' do
+      bpawn = Pawn.new('B', 'B4')
+      wpawn = Pawn.new('W', 'C4')
+      
+      it 'changes the element of where the captured pawn is at to nil' do
+        grid = [
+          [nil, nil, nil, nil, nil, nil, nil, nil],
+          [nil, nil, nil, nil, nil, nil, nil, nil],
+          [nil, nil, nil, nil, nil, nil, nil, nil],
+          [nil, nil, nil, nil, nil, nil, nil, nil],
+          [nil, bpawn, wpawn, nil, nil, nil, nil, nil],
+          [nil, nil, nil, nil, nil, nil, nil, nil],
+          [nil, nil, nil, nil, nil, nil, nil, nil],
+          [nil, nil, nil, nil, nil, nil, nil, nil]
+        ]
+        board.instance_variable_set(:@grid, grid)
+        board.remove_pawn_captured_en_passant(bpawn, 'C3')
+        expected = [
+          [nil, nil, nil, nil, nil, nil, nil, nil],
+          [nil, nil, nil, nil, nil, nil, nil, nil],
+          [nil, nil, nil, nil, nil, nil, nil, nil],
+          [nil, nil, nil, nil, nil, nil, nil, nil],
+          [nil, bpawn, nil, nil, nil, nil, nil, nil],
+          [nil, nil, nil, nil, nil, nil, nil, nil],
+          [nil, nil, nil, nil, nil, nil, nil, nil],
+          [nil, nil, nil, nil, nil, nil, nil, nil]
+        ]
+        expect(board.grid).to eq(expected)
+      end
     end
   end
 
