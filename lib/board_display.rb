@@ -45,6 +45,10 @@ module BoardDisplay
     show_board
   end
 
+  def move_hints(examiners)
+    @attacking_arrays = examiners.map { |examiner| position_to_array(examiner.target) }
+  end
+
   private
 
   def colorize_board
@@ -75,10 +79,6 @@ module BoardDisplay
     else
       attacking_arrays.include?([row, column]) ? dot_black_square : black_square(piece)
     end
-  end
-
-  def move_hints(examiners)
-    @attacking_arrays = examiners.map { |examiner| position_to_array(examiner.target) }
   end
 
   def green_square(piece)

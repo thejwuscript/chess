@@ -88,8 +88,9 @@ class ComputerPlayer
   end
 
   def remove_moves_exposing_self(examiners_list)
-    examiners_list.reject do |examiner| 
-      [Queen, Knight, Rook, Bishop].include?(examiner.piece.class) ? danger_self?(examiner) : next
+    examiners_list.reject do |examiner|
+      klass = examiner.piece.class
+      [Queen, Knight, Rook, Bishop].include?(klass) ? danger_self?(examiner) : next
     end
   end
 
