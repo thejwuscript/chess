@@ -28,6 +28,49 @@ RSpec.describe Board do
     end
   end
 
+  describe '#deep_clone' do
+    knight = Knight.new('W', 'E4')
+    grid = [
+      [nil, nil, nil, nil, nil, nil, nil, nil],
+      [nil, nil, nil, nil, nil, nil, nil, nil],
+      [nil, nil, nil, nil, nil, nil, nil, nil],
+      [nil, nil, nil, nil, nil, nil, nil, nil],
+      [nil, nil, nil, nil, knight, nil, nil, nil],
+      [nil, nil, nil, nil, nil, nil, nil, nil],
+      [nil, nil, nil, nil, nil, nil, nil, nil],
+      [nil, nil, nil, nil, nil, nil, nil, nil]
+    ]
+
+    before do
+      board.instance_variable_set(:@grid, grid)
+    end
+
+    it 'makes a clone that responds to #grid' do
+      clone = board.deep_clone
+      expect(clone).to respond_to(:grid)
+    end
+  
+    it 'makes a clone of the grid structure' do
+      clone = board.deep_clone
+      expect(clone.grid).to be_a_kind_of(Array)
+                        .and include(a_kind_of(Array)).exactly(8).times
+    end
+  
+    it 'makes clones of the pieces on the board in terms of type and attributes' do
+      clone = board.deep_clone
+      cloned_piece = clone.grid[4][4]
+      original_piece = board.grid[4][4]
+      expect(cloned_piece).to be_kind_of(Knight).and have_attributes(color: 'W', position: 'E4')
+    end
+
+    it 'the pieces cloned are different instances than their counterpart' do
+      clone = board.deep_clone
+      cloned_piece = clone.grid[4][4]
+      original_piece = board.grid[4][4]
+      expect(cloned_piece).not_to eq(original_piece)
+    end
+  end
+
   describe '#occupied?' do
     context 'when the @grid element is occupied by a piece' do
       let(:piece) { double('piece') }
