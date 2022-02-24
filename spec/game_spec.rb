@@ -214,6 +214,78 @@ RSpec.describe Game do
     end
   end
 
+  describe '#select_piece' do
+    let(:player) { instance_double(HumanPlayer) }
+
+    before do
+      allow(game).to receive(:choose_piece_message)
+      allow(game).to receive(:invalid_input_message)
+      allow(game).to receive(:valid_selection?) { true }
+      game.instance_variable_set(:@current_player, player)
+    end
+    
+    it "sends board a message with player's input as argument" do
+      board = game.instance_variable_get(:@board)
+      allow(player).to receive(:input) { 'G4' }
+      expect(board).to receive(:piece_at).with('G4')
+      game.select_piece
+    end
+
+    it 'calls #save_game when input is S' do
+      board = game.instance_variable_get(:@board)
+      allow(player).to receive(:input).and_return('S', 'F3')
+      expect(game).to receive(:save_game)
+      game.select_piece
+    end
+
+    it 'calls #exit_game when input is Q' do
+      board = game.instance_variable_get(:@board)
+      allow(player).to receive(:input).and_return('Q', 'B1')
+      expect(game).to receive(:exit_game)
+      game.select_piece
+    end
+
+    it 'calls #invalid_input_message twice when selection is invalid twice' do
+      board = game.instance_variable_get(:@board)
+      allow(player).to receive(:input).and_return('99', 'J8', 'F6')
+      allow(game).to receive(:valid_selection?).and_return(false, false, true)
+      expect(game).to receive(:invalid_input_message).twice
+      game.select_piece
+    end
+  end
+
+  describe '#player_target' do
+    let(:examiner1) { instance_double(MoveExaminer, piece: nil, target: 'E2') }
+    let(:examiner2) { instance_double(MoveExaminer, piece: nil, target: 'D8') }
+    let(:player) { instance_double(HumanPlayer) }
+
+    before do
+      allow(game).to receive(:choose_move_message)
+      game.instance_variable_set(:@current_player, player)
+    end
+    
+    it "returns the examiner whose target matches the player's input" do
+      allow(player).to receive(:input) { 'D8' }
+      examiners = [examiner1, examiner2]
+      result = game.player_target(examiners)
+      expect(result).to eq(examiner2)
+    end
+
+    it 'calls #undo when player enters B' do
+      allow(player).to receive(:input) { 'B' }
+      examiners = [examiner1, examiner2]
+      expect(game).to receive(:undo)
+      game.player_target(examiners)
+    end
+
+    it "calls #invalid_input_message until the input matches one of examiner's target" do
+      allow(player).to receive(:input).and_return('UJ', 'E1', 'E2')
+      examiners = [examiner1, examiner2]
+      expect(game).to receive(:invalid_input_message).twice
+      game.player_target(examiners)
+    end
+  end
+
   describe '#game_over?' do
     let(:player) { instance_double(HumanPlayer, color: 'W') }
     let(:opponent) { instance_double(HumanPlayer, color: 'B') }
