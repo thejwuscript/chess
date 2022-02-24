@@ -11,7 +11,8 @@ class Game
   include Converter
   include SaveAndLoad
 
-  attr_accessor :board, :turn_count, :current_player, :player_white, :player_black, :winner
+  attr_accessor :turn_count, :current_player, :player_white, :player_black, :winner
+  attr_reader :board
   
   def initialize
     @board = Board.new
