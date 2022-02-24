@@ -191,6 +191,29 @@ RSpec.describe Game do
     end
   end
 
+  describe '#computer_move' do
+    let(:player) { instance_double(ComputerPlayer) }
+    let(:examiner) { instance_double(MoveExaminer, piece: nil) }
+
+    before do
+      board = game.instance_variable_get(:@board)
+      allow(board).to receive(:show_color_guides)
+      allow(player).to receive(:choose_examiner) { examiner }
+      game.instance_variable_set(:@current_player, player)
+    end
+
+    it 'returns a MoveExaminer' do
+      result = game.computer_move
+      expect(result).to eq(examiner)
+    end
+
+    it 'sends #show_color_guides to board' do
+      board = game.instance_variable_get(:@board)
+      expect(board).to receive(:show_color_guides)
+      game.computer_move
+    end
+  end
+
   describe '#game_over?' do
     let(:player) { instance_double(HumanPlayer, color: 'W') }
     let(:opponent) { instance_double(HumanPlayer, color: 'B') }
