@@ -29,7 +29,6 @@ RSpec.describe Rook do
   end
   
   describe '#assign_initial_position' do
-    Rook.assignment_count = 0
     subject(:first) { described_class.new }
     subject(:second) { described_class.new }
     subject(:third) { described_class.new }

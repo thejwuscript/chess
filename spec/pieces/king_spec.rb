@@ -15,7 +15,6 @@ RSpec.describe King do
   end
   
   describe '#assign_initial_position' do
-    King.assignment_count = 0
     subject(:first) { described_class.new }
     subject(:second) { described_class.new }
 

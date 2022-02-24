@@ -9,7 +9,6 @@ RSpec.describe Queen do
   end 
   
   describe '#assign_initial_position' do
-    Queen.assignment_count = 0
     subject(:first) { described_class.new }
     subject(:second) { described_class.new }
 
