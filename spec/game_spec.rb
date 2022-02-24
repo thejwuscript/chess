@@ -352,4 +352,48 @@ RSpec.describe Game do
       end
     end
   end
+
+  describe '#pawn_promotion' do
+    let(:pawn) { instance_double(Pawn, color: 'W', position: 'G8') }
+    let(:player) { instance_double(HumanPlayer) }
+
+    before do
+      allow(game.board).to receive(:promotion_candidate) { pawn }
+      game.instance_variable_set(:@current_player, player)
+      allow(game).to receive(:set_new_promoted_piece)
+      allow(game.board).to receive(:show_board)
+    end
+
+    context 'a pawn is ready to promote and when user chooses one' do
+      it 'instantiates Queen' do
+        allow(player).to receive(:promotion_choice) { 1 }
+        expect(Queen).to receive(:new).with('W', 'G8')
+        game.pawn_promotion
+      end
+    end
+
+    context 'a pawn is ready to promote and when user chooses two' do
+      it 'instantiates Rook' do
+        allow(player).to receive(:promotion_choice) { 2 }
+        expect(Rook).to receive(:new).with('W', 'G8')
+        game.pawn_promotion
+      end
+    end
+
+    context 'a pawn is ready to promote and when user chooses three' do
+      it 'instantiates Bishop' do
+        allow(player).to receive(:promotion_choice) { 3 }
+        expect(Bishop).to receive(:new).with( 'W', 'G8')
+        game.pawn_promotion
+      end
+    end
+
+    context 'a pawn is ready to promote and when user chooses four' do
+      it 'instantiates Knight' do
+        allow(player).to receive(:promotion_choice) { 4 }
+        expect(Knight).to receive(:new).with('W', 'G8')
+        game.pawn_promotion
+      end
+    end
+  end
 end
