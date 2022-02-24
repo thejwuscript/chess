@@ -11,7 +11,7 @@ class ComputerPlayer
     @board = board
   end
 
-  def choose_examiner(current_turn)
+  def choose_examiner(current_turn, num = rand(1..10))
     @turn = current_turn
     examiners = validated_examiners
     not_sacrificing_queen = remove_moves_exposing_queen(examiners)
@@ -21,8 +21,8 @@ class ComputerPlayer
     capturing_moves = not_sacrificing_self_and_queen.select { |examiner| board.piece_at(examiner.target) }
     promote_capture = enemy_promotes_targeted(capturing_moves)
     special_moves(examiners).sample || promote_capture || run_from_enemy_capture.sample ||
-    capturing_moves.sample || attack_king.sample || not_sacrificing_self_and_queen.sample || not_sacrificing_queen.sample ||
-    examiners.sample
+    capturing_moves.sample || (attack_king.sample if num > 4) ||
+    not_sacrificing_self_and_queen.sample || not_sacrificing_queen.sample || examiners.sample
   end
 
   def promotion_choice
