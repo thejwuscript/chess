@@ -3,6 +3,7 @@
 require_relative 'converter'
 require_relative 'board_display'
 require_relative 'game_status_checker'
+require 'yaml'
 
 class Board
   include Converter
@@ -27,7 +28,7 @@ class Board
   end
 
   def deep_clone
-    Marshal.load(Marshal.dump(self))
+    YAML.load(YAML.dump(self))
   end
 
   def find_own_king_in_check(color)

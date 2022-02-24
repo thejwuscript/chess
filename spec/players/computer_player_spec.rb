@@ -84,7 +84,7 @@ RSpec.describe ComputerPlayer do
       bking = King.new('B', 'E8')
       bpawn = Pawn.new('B', 'D5')
       wpawn = Pawn.new('W', 'E5')
-      wrook = Rook.new('W', 'A1')
+      wrook = Rook.new('W', 'A2')
       wking = King.new('W', 'E1')
       
       before do
@@ -95,8 +95,8 @@ RSpec.describe ComputerPlayer do
           [nil, nil, nil, bpawn, wpawn, nil, nil, nil],
           [nil, nil, nil, nil, nil, nil, nil, nil],
           [nil, nil, nil, nil, nil, nil, nil, nil],
-          [nil, nil, nil, nil, nil, nil, nil, nil],
-          [wrook, nil, nil, nil, wking, nil, nil, nil]
+          [wrook, nil, nil, nil, nil, nil, nil, nil],
+          [nil, nil, nil, nil, wking, nil, nil, nil]
         ]
         board.instance_variable_set(:@grid, grid)
         ai_player.instance_variable_set(:@color, 'W')
