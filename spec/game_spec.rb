@@ -12,9 +12,9 @@ require_relative '../lib/pieces/pawn'
 RSpec.describe Game do
   subject(:game) { described_class.new }
   
-  describe '#create_all_pieces' do
+  describe '#all_pieces' do
     it 'returns an array of all board pieces' do
-      array = game.create_all_pieces
+      array = game.all_pieces
       expect(array).to include(a_kind_of(Pawn)).exactly(16).times
        .and include(a_kind_of(Rook)).exactly(4).times
        .and include(a_kind_of(Knight)).exactly(4).times
@@ -24,7 +24,7 @@ RSpec.describe Game do
     end
 
     it 'creates pairs of pieces of the same kind' do
-      array = game.create_all_pieces
+      array = game.all_pieces
       result = true
       i = 0
       until array[i].nil? do
@@ -36,37 +36,13 @@ RSpec.describe Game do
     end
 
     it 'initializes pieces that have no color, position and symbol attributes' do
-      array = game.create_all_pieces
+      array = game.all_pieces
       result = array.all? do |piece|
         piece.color.nil? && piece.position.nil? && piece.symbol.nil?
       end
       expect(result).to be true
     end
   end
-
-  describe '#player_input' do
-    context 'when player enters a valid input' do
-      it 'returns the input' do
-        allow(game).to receive(:gets).and_return('A6')
-        result = game.player_input
-        expect(result).to eq('A6')
-      end
-
-      it 'does not display invalid entry message' do
-        allow(game).to receive(:gets).and_return('A6')
-        expect(game).not_to receive(:invalid_input_message)
-        game.player_input
-      end
-    end
-
-    context 'when player enters invalid input twice' do
-      it 'displays invalid entry message twice' do
-        allow(game).to receive(:gets).and_return('KT', 'G0', 'D2')
-        expect(game).to receive(:invalid_input_message).twice
-        game.player_input
-      end
-    end
-  end 
 
   describe '#change_player' do
     context 'if turn count is an odd number' do
