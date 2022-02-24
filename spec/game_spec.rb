@@ -166,6 +166,31 @@ RSpec.describe Game do
     end
   end
 
+  describe '#round' do
+    context 'when #game_over? returns false, false then true' do
+      before do
+        allow(game).to receive(:game_over?).and_return(false, false, true)
+      end
+    
+      it 'calls #update_turn_count three times' do
+        allow(game).to receive(:player_turn)
+        expect(game).to receive(:update_turn_count).exactly(3).times
+        game.round
+      end
+
+      it 'calls #change_player three times' do
+        allow(game).to receive(:player_turn)
+        expect(game).to receive(:change_player).exactly(3).times
+        game.round
+      end
+
+      it 'calls #player_turn twice' do
+        expect(game).to receive(:player_turn).twice
+        game.round
+      end
+    end
+  end
+
   describe '#game_over?' do
     let(:player) { instance_double(HumanPlayer, color: 'W') }
     let(:opponent) { instance_double(HumanPlayer, color: 'B') }
