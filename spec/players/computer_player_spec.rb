@@ -263,7 +263,7 @@ RSpec.describe ComputerPlayer do
       end
     end
 
-    context 'when an ally piece can give check' do
+    context 'when an ally piece can give check and random number is greater than 4' do
       bking = King.new('B', 'C8')
       wking = King.new('W', 'C1')
       brook = Rook.new('B', 'F5')
@@ -283,7 +283,7 @@ RSpec.describe ComputerPlayer do
         board.instance_variable_set(:@grid, grid)
       end
       it 'returns the examiner with the move that gives check' do
-        result = ai_player.choose_examiner(18)
+        result = ai_player.choose_examiner(18, 9)
         expect(result).to have_attributes(piece: brook, target: 'F1')
                       .or have_attributes(piece: brook, target: 'C5')
       end
