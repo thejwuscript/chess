@@ -121,6 +121,34 @@ RSpec.describe Game do
     end
   end
 
+  describe '#assign_attributes' do
+    let(:rook1) { instance_double(Rook) }
+    let(:rook2) { instance_double(Rook) }
+
+    it 'sends a commange message to each piece' do
+      allow(rook1).to receive(:color=)
+      allow(rook2).to receive(:color=)
+      expect([rook1, rook2]).to all(receive(:initial_positions_and_symbol))
+      game.assign_attributes([rook1, rook2])
+    end
+    
+    it 'assigns white color to pieces in even indices' do
+      allow(rook1).to receive(:initial_positions_and_symbol)
+      allow(rook2).to receive(:initial_positions_and_symbol)
+      allow(rook2).to receive(:color=)
+      expect(rook1).to receive(:color=).with('W')
+      game.assign_attributes([rook1, rook2])
+    end
+
+    it 'assigns black color to pieces in oldd indices' do
+      allow(rook1).to receive(:initial_positions_and_symbol)
+      allow(rook2).to receive(:initial_positions_and_symbol)
+      allow(rook1).to receive(:color=)
+      expect(rook2).to receive(:color=).with('B')
+      game.assign_attributes([rook1, rook2])
+    end
+  end
+
   describe '#game_over?' do
     let(:player) { instance_double(HumanPlayer, color: 'W') }
     let(:opponent) { instance_double(HumanPlayer, color: 'B') }
