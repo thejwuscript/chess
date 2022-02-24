@@ -16,11 +16,12 @@ class ComputerPlayer
     examiners = validated_examiners
     not_sacrificing_queen = remove_moves_exposing_queen(examiners)
     not_sacrificing_self_and_queen = remove_moves_exposing_self(not_sacrificing_queen)
-    run_from_enemy_capture = not_sacrificing_self_and_queen.reject { |examiner| !(danger_now?(examiner)) } 
+    attack_king = moves_attacking_king(not_sacrificing_self_and_queen)
+    run_from_enemy_capture = not_sacrificing_self_and_queen.select { |examiner| danger_now?(examiner) } 
     capturing_moves = not_sacrificing_self_and_queen.select { |examiner| board.piece_at(examiner.target) }
     promote_capture = enemy_promotes_targeted(capturing_moves)
     special_moves(examiners).sample || promote_capture || run_from_enemy_capture.sample ||
-    capturing_moves.sample || not_sacrificing_self_and_queen.sample || not_sacrificing_queen.sample ||
+    capturing_moves.sample || attack_king.sample || not_sacrificing_self_and_queen.sample || not_sacrificing_queen.sample ||
     examiners.sample
   end
 
@@ -91,6 +92,17 @@ class ComputerPlayer
     examiners_list.reject do |examiner|
       klass = examiner.piece.class
       [Queen, Knight, Rook, Bishop].include?(klass) ? danger_self?(examiner) : next
+    end
+  end
+
+  def moves_attacking_king(examiners_list)
+    examiners_list.select do |examiner|
+      test_board = board.deep_clone
+      king = test_board.find_enemy_king(self.color)
+      ally = test_board.piece_at(examiner.piece.position)
+      test_board.move_piece_to_target(examiner.target, ally)
+      ally.position = examiner.target
+      MoveExaminer.new(test_board, ally, king.position, turn).search_target
     end
   end
 

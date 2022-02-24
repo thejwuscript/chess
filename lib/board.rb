@@ -95,6 +95,10 @@ class Board
     @attacking_arrays = hash['attacking_arrays']
   end
 
+  def find_enemy_king(color)
+    grid.flatten.find { |piece| piece.is_a?(King) && piece.color != color }
+  end
+
   private
 
   def delete_piece_at(position)

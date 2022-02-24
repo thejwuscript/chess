@@ -103,7 +103,6 @@ RSpec.describe ComputerPlayer do
         allow_any_instance_of(MoveExaminer).to receive(:ally_king_exposed?) { false }
         allow_any_instance_of(MoveExaminer).to receive(:king_exposed?) { false }
         allow(bpawn).to receive(:double_step_turn) { 10 }
-        allow(board).to receive(:deep_clone) { board.clone }
       end
     
       it 'returns the examiner with pawn and en-passant verified above all other examiners' do
@@ -252,7 +251,7 @@ RSpec.describe ComputerPlayer do
         board.instance_variable_set(:@grid, grid)
       end
     
-      it 'returns any legal move on the board' do
+      it 'returns an examiner that has any legal move on the board' do
         result = ai_player.choose_examiner(17)
         expect(result).to have_attributes(piece: wking, target: 'A1')
                       .or have_attributes(piece: wqueen, target: 'F1')
@@ -261,6 +260,32 @@ RSpec.describe ComputerPlayer do
                       .or have_attributes(piece: wqueen, target: 'G2')
                       .or have_attributes(piece: wqueen, target: 'H2')
                       .or have_attributes(piece: wqueen, target: 'H1')
+      end
+    end
+
+    context 'when an ally piece can give check' do
+      bking = King.new('B', 'C8')
+      wking = King.new('W', 'C1')
+      brook = Rook.new('B', 'F5')
+
+      before do
+        grid = [
+          [nil, nil, bking, nil, nil, nil, nil, nil],
+          [nil, nil, nil, nil, nil, nil, nil, nil],
+          [nil, nil, nil, nil, nil, nil, nil, nil],
+          [nil, nil, nil, nil, nil, brook, nil, nil],
+          [nil, nil, nil, nil, nil, nil, nil, nil],
+          [nil, nil, nil, nil, nil, nil, nil, nil],
+          [nil, nil, nil, nil, nil, nil, nil, nil],
+          [nil, nil, wking, nil, nil, nil, nil, nil]
+        ]
+        ai_player.instance_variable_set(:@color, 'B')
+        board.instance_variable_set(:@grid, grid)
+      end
+      it 'returns the examiner with the move that gives check' do
+        result = ai_player.choose_examiner(18)
+        expect(result).to have_attributes(piece: brook, target: 'F1')
+                      .or have_attributes(piece: brook, target: 'C5')
       end
     end
   end
