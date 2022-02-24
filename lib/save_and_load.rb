@@ -34,12 +34,10 @@ module SaveAndLoad
   end
 
   def save_board_info 
-    previous = board.grid.flatten.compact.find { |piece| piece.selected }
     File.open("temp_board_info.yaml", 'w') do |file| 
       file.write YAML.dump({
         'grid' => board.grid,
-        'origin_ary' => board.origin_ary,
-        'attacking_arrays' => board.attacking_arrays
+        'origin_ary' => board.origin_ary
         })
     end
   end

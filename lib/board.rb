@@ -95,7 +95,7 @@ class Board
   def return_state(hash)
     @grid = hash["grid"]
     @origin_ary = hash["origin_ary"]
-    @attacking_arrays = hash['attacking_arrays']
+    @attacking_arrays = []
   end
 
   def find_enemy_king(color)
