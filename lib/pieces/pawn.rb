@@ -4,12 +4,7 @@ require_relative 'piece'
 
 class Pawn < Piece
   attr_accessor :move_count, :start_position, :double_step_turn
-  
   @assignment_count = 0
-
-  class << self
-    attr_accessor :assignment_count
-  end
   
   def initialize(color = nil, position = nil)
     super(color, position)
@@ -21,9 +16,10 @@ class Pawn < Piece
 
   def assign_initial_position
     ary = ('A'..'H').flat_map { |letter| ["#{letter}2", "#{letter}7"] }
-    self.position = ary[self.class.assignment_count]
-    self.start_position = ary[self.class.assignment_count]
-    self.class.assignment_count += 1
+    count = self.class.instance_variable_get(:@assignment_count)
+    self.position = ary[count]
+    self.start_position = ary[count]
+    self.class.instance_variable_set(:@assignment_count, count += 1)
   end
 
   def assign_symbol

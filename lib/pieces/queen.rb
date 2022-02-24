@@ -5,18 +5,15 @@ require_relative 'piece'
 class Queen < Piece
   @assignment_count = 0
 
-  class << self
-    attr_accessor :assignment_count
-  end
-  
   def initialize(color = nil, position = nil)
     super(color, position)
     @type = 'queen'
   end
 
   def assign_initial_position
-    self.position = ['D1', 'D8'][self.class.assignment_count]
-    self.class.assignment_count += 1
+    count = self.class.instance_variable_get(:@assignment_count)
+    self.position = ['D1', 'D8'][count]
+    self.class.instance_variable_set(:@assignment_count, count += 1)
   end
   
   def assign_symbol

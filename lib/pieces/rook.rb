@@ -5,10 +5,6 @@ require_relative 'piece'
 class Rook < Piece
   attr_accessor :move_count
   @assignment_count = 0
-
-  class << self
-    attr_accessor :assignment_count
-  end
   
   def initialize(color = nil, position = nil)
     super(color, position)
@@ -17,8 +13,9 @@ class Rook < Piece
   end
 
   def assign_initial_position
-    self.position = ['A1', 'A8', 'H1', 'H8'][self.class.assignment_count]
-    self.class.assignment_count += 1
+    count = self.class.instance_variable_get(:@assignment_count)
+    self.position = ['A1', 'A8', 'H1', 'H8'][count]
+    self.class.instance_variable_set(:@assignment_count, count += 1)
   end
   
   def assign_symbol
