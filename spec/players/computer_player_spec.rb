@@ -98,11 +98,11 @@ RSpec.describe ComputerPlayer do
           [wrook, nil, nil, nil, nil, nil, nil, nil],
           [nil, nil, nil, nil, wking, nil, nil, nil]
         ]
-        board.instance_variable_set(:@grid, grid)
         ai_player.instance_variable_set(:@color, 'W')
+        board.instance_variable_set(:@grid, grid)
+        allow(bpawn).to receive(:double_step_turn) { 10 }
         allow_any_instance_of(MoveExaminer).to receive(:ally_king_exposed?) { false }
         allow_any_instance_of(MoveExaminer).to receive(:king_exposed?) { false }
-        allow(bpawn).to receive(:double_step_turn) { 10 }
       end
     
       it 'returns the examiner with pawn and en-passant verified above all other examiners' do

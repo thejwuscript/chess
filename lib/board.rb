@@ -28,6 +28,8 @@ class Board
   end
 
   def deep_clone
+    Marshal.load(Marshal.dump(self))
+  rescue TypeError
     YAML.load(YAML.dump(self))
   end
 
