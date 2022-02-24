@@ -149,6 +149,23 @@ RSpec.describe Game do
     end
   end
 
+  describe '#save_board_info' do
+    it 'sends .open to File' do
+      expect(File).to receive(:open)
+      game.save_board_info
+    end
+
+    it 'dumps a hash' do
+      expect(YAML).to receive(:dump)
+      game.save_board_info
+    end
+
+    it 'writes the serialized hash in a file' do
+      expect_any_instance_of(File).to receive(:write)
+      game.save_board_info
+    end
+  end
+
   describe '#game_over?' do
     let(:player) { instance_double(HumanPlayer, color: 'W') }
     let(:opponent) { instance_double(HumanPlayer, color: 'B') }
