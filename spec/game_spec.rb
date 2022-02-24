@@ -8,6 +8,8 @@ require_relative '../lib/pieces/bishop'
 require_relative '../lib/pieces/queen'
 require_relative '../lib/pieces/king'
 require_relative '../lib/pieces/pawn'
+require_relative 'players/human_player_spec.rb'
+require_relative 'players/computer_player_spec.rb'
 
 RSpec.describe Game do
   subject(:game) { described_class.new }
@@ -46,7 +48,7 @@ RSpec.describe Game do
 
   describe '#change_player' do
     context 'if turn count is an odd number' do
-      let(:player_white) { instance_double(Player) }
+      let(:player_white) { instance_double(HumanPlayer) }
       
       it 'changes @current_player to player_white' do
         game.instance_variable_set(:@player_white, player_white)
@@ -56,7 +58,7 @@ RSpec.describe Game do
     end
 
     context 'if turn count is an even number' do
-      let(:player_black) { instance_double(Player) }
+      let(:player_black) { instance_double(HumanPlayer) }
       
       it 'changes @current_player to player_black' do
         game.instance_variable_set(:@player_black, player_black)
@@ -67,43 +69,61 @@ RSpec.describe Game do
   end
 
   describe '#assign_players' do
-    context 'when two names in an array are provided' do
+    context 'when the player choose 1' do
+      let(:p1) { instance_double(ComputerPlayer) }
+      let(:p2) { instance_double(HumanPlayer) }
+
       before do
-        array = ['Bob', 'Jane']
-        allow(game).to receive(:player_names).and_return(array)
-        allow(array).to receive(:shuffle).and_return(array)
-        allow(Player).to receive(:new).twice
+        allow(game).to receive(:choose_game_message)
+        allow(game).to receive(:get_name)
+        allow(game).to receive(:choice_one_or_two) { 1 }
+        allow(ComputerPlayer).to receive(:new) { p1 }
+        allow(HumanPlayer).to receive(:new) { p2 }
+        allow_any_instance_of(Array).to receive(:shuffle) { [p1, p2] }
+        allow(p1).to receive(:color=).with('B')
+        allow(p2).to receive(:color=).with('W')
       end
       
-      it 'assigns color white to the player of first element' do
-        expect(Player).to receive(:new).with('Bob', 'W')
+      it 'assigns a ComputerPlayer to an instance variable' do
         game.assign_players
+        expect(game.player_black).to eq(p1)
       end
 
-      it 'assigns color black to the player of last element' do
-        expect(Player).to receive(:new).with('Jane', 'B')
+      it 'assigns a HumanPlayer to an instance variable' do
         game.assign_players
+        expect(game.player_white).to eq(p2)
       end
     end
-  end
 
-  describe '#promote_pawn' do
-    context 'when a white pawn can be promoted' do
-      white_pawn = Pawn.new('W', 'C8')
+    context 'when the player choose 2' do
+      let(:p1) { instance_double(HumanPlayer) }
+      let(:p2) { instance_double(HumanPlayer) }
+
+      before do
+        allow(game).to receive(:choose_game_message)
+        allow(game).to receive(:get_name)
+        allow(game).to receive(:choice_one_or_two) { 2 }
+        allow(HumanPlayer).to receive(:new).and_return(p1, p2)
+        allow_any_instance_of(Array).to receive(:shuffle) { [p1, p2] }
+        allow(p1).to receive(:color=).with('B')
+        allow(p2).to receive(:color=).with('W')
+      end
       
-      it 'is replaced by a Queen' do
-        allow(game.board).to receive(:promotion_candidate).and_return(white_pawn)
-        allow(game).to receive(:promotion_choice).and_return(1)
-        game.promote_pawn
-        result = game.board.grid[0][2]
-        expect(result).to be_kind_of(Queen)
+      it 'assigns a HumanPlayer to @player_black' do
+        game.assign_players
+        expect(game.player_black).to eq(p1)
+      end
+
+      it 'assigns a HumanPlayer to @player_white' do
+        game.assign_players
+        expect(game.player_white).to eq(p2)
       end
     end
   end
 
   describe '#game_over?' do
-    let(:player) { instance_double(Player, color: 'W') }
-    let(:opponent) { instance_double(Player, color: 'B') }
+    let(:player) { instance_double(HumanPlayer, color: 'W') }
+    let(:opponent) { instance_double(HumanPlayer, color: 'B') }
     let(:board) { instance_double(Board) }
     let(:checker) { instance_double(GameStatusChecker) }
     subject(:game) { described_class.new }
@@ -113,13 +133,14 @@ RSpec.describe Game do
       game.instance_variable_set(:@current_player, player)
       game.instance_variable_set(:@player_white, player)
       game.instance_variable_set(:@player_black, opponent)
+      game.instance_variable_set(:@turn_count, 8)
       allow(GameStatusChecker).to receive(:new) { checker }
       allow(checker).to receive(:stalemate?)
       allow(checker).to receive(:checkmate?)
     end
     
     it 'sends a command message to GameStatusChecker' do
-      expect(GameStatusChecker).to receive(:new).with('W', board, game)
+      expect(GameStatusChecker).to receive(:new).with('W', board, 8)
       game.game_over?
     end
 
