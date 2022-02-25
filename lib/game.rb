@@ -11,12 +11,13 @@ class Game
   include Converter
   include SaveAndLoad
 
-  attr_accessor :turn_count, :current_player, :player_white, :player_black, :winner
-  attr_reader :board
+  attr_accessor :turn_count, :draw_count, :current_player, :player_white, :player_black, :winner
+  attr_reader :board, :pawn_positions, :active_pieces
   
   def initialize
     @board = Board.new
     @turn_count = 0
+    @draw_count = 0
     @player_white = nil
     @player_black = nil
     @current_player = nil
@@ -89,8 +90,14 @@ class Game
       change_player
       return if game_over?
 
+      store_pawn_positions_and_piece_count
       player_turn
     end
+  end
+
+  def store_pawn_positions_and_piece_count
+    @pawn_positions = board.pawn_positions
+    @active_pieces = board.number_of_pieces
   end
 
   def player_turn
@@ -180,9 +187,22 @@ class Game
    self.current_player = turn_count.odd? ? player_white : player_black
   end
 
+  def update_draw_count
+    no_game_progress? ? self.draw_count += 1 : self.draw_count = 0
+  end
+
+  def no_game_progress?
+    board.pawn_positions == @pawn_positions && board.number_of_pieces == @active_pieces
+  end
+
   def game_over?
+    update_draw_count
     checker = GameStatusChecker.new(current_player.color, board, turn_count)
-    if checker.stalemate?
+    if draw_count == 50
+      fifty_move_rule_message
+      true
+    elsif checker.stalemate?
+      print 'STALEMATE! '
       true
     elsif checker.checkmate?
       self.winner = current_player.color == 'W' ? player_black : player_white

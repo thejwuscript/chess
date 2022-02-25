@@ -51,13 +51,12 @@ module GameMessage
   end
 
   def declare_winner
-    puts ''
     puts 'CHECKMATE!'
     puts "#{winner.name} wins the game!"
   end
 
   def declare_draw
-    puts "STALEMATE! It's a draw!"
+    puts "It's a draw!"
   end
 
   def promotion_message
@@ -80,5 +79,9 @@ module GameMessage
   def get_name
     print "\n#{yield}, please enter your name: "
     gets.chomp
+  end
+
+  def fifty_move_rule_message
+    puts 'The game is over because of the 50-move-rule. '
   end
 end

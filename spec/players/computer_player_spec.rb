@@ -173,22 +173,23 @@ RSpec.describe ComputerPlayer do
       end
     
       it 'does not return the examiner with the capturing move' do
-        result = ai_player.choose_examiner(8)
+        result = ai_player.choose_examiner(8, 9)
         expect(result).not_to have_attributes(target: 'A8')
       end
 
-      it 'does not return examiners with moves that puts self under attack still' do
-        result = ai_player.choose_examiner(14)
-        expect(result).to not_have_attributes(target: 'A7')
-                      .or not_have_attributes(target: 'A6')
-                      .or not_have_attributes(target: 'A5')
-                      .or not_have_attributes(target: 'A4')
-                      .or not_have_attributes(target: 'A3')
-                      .or not_have_attributes(target: 'A2')
+      it 'does not return examiners with moves that puts self under attack' do
+        result = ai_player.choose_examiner(14, 9)
+        expect(result).to not_have_attributes(target: 'A8')
+                      .and not_have_attributes(target: 'A7')
+                      .and not_have_attributes(target: 'A6')
+                      .and not_have_attributes(target: 'A5')
+                      .and not_have_attributes(target: 'A4')
+                      .and not_have_attributes(target: 'A3')
+                      .and not_have_attributes(target: 'A2')
       end
 
       it 'returns an examiner with a move that prevents capture' do
-        result = ai_player.choose_examiner(12)
+        result = ai_player.choose_examiner(12, 9)
         expect(result).to have_attributes(target: 'B1')
                       .or have_attributes(target: 'C1')
                       .or have_attributes(target: 'D1')
@@ -219,7 +220,7 @@ RSpec.describe ComputerPlayer do
       end
       
       it 'returns the examiner with the move to protect the queen despite risking the piece' do
-        result = ai_player.choose_examiner(11, 2)
+        result = ai_player.choose_examiner(11, 9)
         expect(result).to be_kind_of(MoveExaminer)
                       .and have_attributes(piece: wbishop, target: 'E1')
       end

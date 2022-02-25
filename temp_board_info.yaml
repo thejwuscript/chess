@@ -1,0 +1,117 @@
+---
+grid:
+- -
+  -
+  -
+  -
+  -
+  -
+  -
+  -
+- -
+  -
+  -
+  -
+  -
+  -
+  -
+  -
+- -
+  -
+  -
+  -
+  -
+  -
+  -
+  -
+- -
+  -
+  -
+  -
+  -
+  -
+  -
+  -
+- -
+  -
+  - !ruby/object:Pawn
+    color: W
+    position: C4
+    symbol: "♙"
+    selected: false
+    type: pawn
+    start_position: C2
+    move_count: 2
+    double_step_turn: 0
+  -
+  - !ruby/object:Knight
+    color: W
+    position: E4
+    symbol: "♘"
+    selected: false
+    type: knight
+  - !ruby/object:Bishop
+    color: W
+    position: F4
+    symbol: "♗"
+    selected: false
+    type: bishop
+  -
+  -
+- - !ruby/object:Pawn
+    color: W
+    position: A3
+    symbol: "♙"
+    selected: false
+    type: pawn
+    start_position: A2
+    move_count: 1
+    double_step_turn: 0
+  - !ruby/object:Queen
+    color: W
+    position: B3
+    symbol: "♕"
+    selected: false
+    type: queen
+  -
+  -
+  -
+  -
+  -
+  -
+- -
+  -
+  -
+  -
+  -
+  -
+  -
+  -
+- -
+  -
+  -
+  - !ruby/object:Bishop
+    color: W
+    position: D1
+    symbol: "♗"
+    selected: false
+    type: bishop
+  -
+  - !ruby/object:King
+    color: W
+    position: F1
+    symbol: "♔"
+    selected: false
+    move_count: 26
+    type: king
+  -
+  - !ruby/object:King
+    color: B
+    position: H1
+    symbol: "♚"
+    selected: true
+    move_count: 34
+    type: king
+origin_ary:
+- 6
+- 7

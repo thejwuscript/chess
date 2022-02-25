@@ -21,9 +21,9 @@ class ComputerPlayer
     run_from_enemy_capture = not_sacrificing_self_and_queen.select { |examiner| danger_now?(examiner) } 
     capturing_moves = not_sacrificing_self_and_queen.select { |examiner| board.piece_at(examiner.target) }
     promote_capture = enemy_promotes_targeted(capturing_moves)
-    special_moves(examiners).sample || promote_capture || run_from_enemy_capture.sample ||
-    capturing_moves.sample || (attack_king.sample if num > 6) ||
-    (not_sacrificing_self_and_queen.sample if num > 1) || not_sacrificing_queen.sample ||
+    special_moves(examiners).sample || promote_capture || (run_from_enemy_capture.sample if num > 1) ||
+    (capturing_moves.sample if num > 1) || (attack_king.sample if num > 7) ||
+    (not_sacrificing_self_and_queen.sample if num > 1) || (not_sacrificing_queen.sample if queen_alive?) ||
     full_attack.sample || examiners.sample
   end
 
@@ -60,6 +60,10 @@ class ComputerPlayer
     mock_board.all_enemies(self.color).any? do |enemy| 
       MoveExaminer.new(mock_board, enemy, examiner.target).validate_move
     end
+  end
+
+  def queen_alive?
+    board.grid.flatten.compact.find { |piece| piece.color == self.color && piece.is_a?(Queen) }
   end
 
   def danger_queen?(examiner, mock_board = board.deep_clone)

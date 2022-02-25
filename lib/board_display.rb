@@ -22,7 +22,8 @@ module BoardDisplay
   def show_board_with_delay(player)
     show_board
     puts "Computer's turn..." if player.is_a?(ComputerPlayer)
-    sleep 1
+    #sleep 1
+    system("tput cuu1 && tput el")
   end
 
   def show_board_on_quit

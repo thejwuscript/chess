@@ -106,6 +106,16 @@ class Board
     grid.flatten.find { |piece| piece.is_a?(King) && piece.color != color }
   end
 
+  def pawn_positions
+    grid.flatten.compact.select { |piece| piece.is_a?(Pawn) }
+                        .map { |pawn| pawn.position }
+                        .sort
+  end
+
+  def number_of_pieces
+    grid.flatten.compact.size
+  end
+
   private
 
   def delete_piece_at(position)
