@@ -68,7 +68,7 @@ class MoveExaminer
 
   def recursive_search(start, manner, goal)
     next_ary = start.zip(manner).map { |a, b| a + b }
-    return unless piece.within_limits?(next_ary)
+    return unless board.within_limits?(next_ary)
     return goal if next_ary == goal
     
     board.occupied?(next_ary) ? nil : recursive_search(next_ary, manner, goal)
@@ -78,7 +78,7 @@ class MoveExaminer
     manners = piece.move_manner
     until manners.empty? do
       next_ary = start_ary.zip(manners.shift).map { |a, b| a + b }
-      next unless piece.within_limits?(next_ary)
+      next unless board.within_limits?(next_ary)
       return target_ary if next_ary == target_ary
     end
     nil
@@ -88,7 +88,7 @@ class MoveExaminer
     row, column = start_ary
     modifier = piece.color.eql?('W') ? -1 : 1
     one_step = [row + modifier, column]
-    return if board.occupied?(one_step) || board.occupied?(target_ary)
+    return if !(board.within_limits?(one_step)) || board.occupied?(one_step) || board.occupied?(target_ary)
     
     target_ary if double_step? || one_step.eql?(target_ary)
   end

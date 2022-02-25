@@ -1,4 +1,4 @@
-run = 'clear && rspec spec/game_spec.rb'
+run = 'clear && ruby lib/main.rb'
 
 [packager]
 language = "ruby"

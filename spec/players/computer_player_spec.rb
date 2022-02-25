@@ -219,7 +219,7 @@ RSpec.describe ComputerPlayer do
       end
       
       it 'returns the examiner with the move to protect the queen despite risking the piece' do
-        result = ai_player.choose_examiner(11)
+        result = ai_player.choose_examiner(11, 2)
         expect(result).to be_kind_of(MoveExaminer)
                       .and have_attributes(piece: wbishop, target: 'E1')
       end

@@ -7,7 +7,7 @@ require_relative '../../lib/pieces/queen'
 require_relative '../../lib/pieces/knight'
 require_relative '../../lib/pieces/king'
 require_relative '../../lib/pieces/pawn'
-require_relative '../shared_example_spec'
+require_relative 'shared_example_spec'
 
 RSpec.describe Rook do
   describe '#position_to_array' do
@@ -46,22 +46,6 @@ RSpec.describe Rook do
     it 'assigns H1 to third rook' do
       third.assign_initial_position
       expect(third.position).to eql('H1')
-    end
-  end
-
-  describe '#within_limits?' do
-    subject(:limit_rook) { described_class.new }
-
-    context 'when elements greater than 7 is out of bounds' do
-      it 'returns false if the array provided is out of bounds' do
-        array = [8, 0]
-        expect(limit_rook).not_to be_within_limits(array)
-      end
-
-      it 'returns true if the array provided is within limits' do
-        array = [7, 7]
-        expect(limit_rook).to be_within_limits(array)
-      end
     end
   end
 end

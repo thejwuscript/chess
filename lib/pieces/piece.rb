@@ -36,10 +36,6 @@ class Piece
     array
   end
 
-  def within_limits?(array)
-    array.all? { |num| num.between?(0, 7) }
-  end
-
   def moves_available?(board, turn)
     all_squares.any? do |square|
       examiner = MoveExaminer.new(board, self, square, turn)
@@ -47,33 +43,33 @@ class Piece
     end
   end
 
-  def depth_search_coords(start_ary, manner, result = [])
+  def depth_search_coords(start_ary, manner, board, result = [])
     next_ary = start_ary.zip(manner).map { |a, b| a + b }
-    return result unless within_limits?(next_ary)
+    return result unless board.within_limits?(next_ary)
     
     result << next_ary
-    depth_search_coords(next_ary, manner, result)
+    depth_search_coords(next_ary, manner, board, result)
   end
 
-  def generate_coordinates
+  def generate_coordinates(board)
     start_ary = position_to_array
     case self
     when Rook, Bishop, Queen
-      move_manner.flat_map { |manner|  depth_search_coords(start_ary, manner) }
+      move_manner.flat_map { |manner|  depth_search_coords(start_ary, manner, board) }
     when Knight, King, Pawn
       move_manner.filter_map do |manner| 
         combined = start_ary.zip(manner).map { |a, b| a + b }
-        combined if within_limits?(combined)
+        combined if board.within_limits?(combined)
       end
     end
   end
 
-  def possible_targets
-    generate_coordinates.map { |coord| array_to_position(coord) }
+  def possible_targets(board)
+    generate_coordinates(board).map { |coord| array_to_position(coord) }
   end
 
   def approved_examiners(board, turn)
-    possible_targets.filter_map do |target|
+    possible_targets(board).filter_map do |target|
       examiner = MoveExaminer.new(board, self, target, turn)
       examiner if examiner.validate_move
     end

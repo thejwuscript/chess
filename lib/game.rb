@@ -43,7 +43,8 @@ class Game
   def assign_players
     choose_game_message
     choice = choice_one_or_two
-    p1 = HumanPlayer.new(get_name {'Player One'})
+    #p1 = HumanPlayer.new(get_name {'Player One'})
+    p1 = ComputerPlayer.new('AI', board)
     p2 = choice == 1 ? ComputerPlayer.new('Computer', board) :
                        HumanPlayer.new(get_name {'Player Two'})
     self.player_black, self.player_white = [p1, p2].shuffle

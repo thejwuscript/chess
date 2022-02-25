@@ -2,7 +2,6 @@
 
 require_relative '../../lib/move_examiners/move_examiner'
 require_relative '../../lib/board'
-require_relative '../../lib/game'
 require_relative '../../lib/move_examiners/en_passant_checker'
 require_relative '../../lib/pieces/king'
 require_relative '../../lib/pieces/pawn'
@@ -14,7 +13,6 @@ require_relative '../../lib/pieces/knight'
 RSpec.describe MoveExaminer do
   let(:board) { instance_double(Board) }
   let(:piece) { double('piece') }
-  let(:game) { instance_double(Game) }
 
   describe '#initialize' do
     subject(:initial_examiner) { described_class.new(board, piece, 'D3') }
@@ -39,7 +37,7 @@ RSpec.describe MoveExaminer do
 
     before do
       allow(piece).to receive(:position) { 'A8' }
-      allow(piece).to receive(:within_limits?) { true }
+      allow(board).to receive(:within_limits?) { true }
     end
     
     context 'when the path from A8 to A3 is clear' do
@@ -72,7 +70,7 @@ RSpec.describe MoveExaminer do
       before do
         allow(piece).to receive(:position).and_return('G2')
         allow(piece).to receive(:move_manner).and_return([[1, 2], [2, 1], [-1, -2]])
-        allow(piece).to receive(:within_limits?) { true }
+        allow(board).to receive(:within_limits?) { true }
       end
       
       it 'returns [5, 4]' do
@@ -81,21 +79,21 @@ RSpec.describe MoveExaminer do
       end
 
       it 'loops through manners array until the target array is found' do
-        expect(piece).to receive(:within_limits?).exactly(3).times
+        expect(board).to receive(:within_limits?).exactly(3).times
         breadth_examiner.breadth_search
       end
     end
   end
 
   describe '#pawn_move_search' do
-    subject(:pawn_move_examiner) { described_class.new(board, piece, 'B4', game) }
-    
     context 'when a white pawn is moving from B2 to B4' do
+      subject(:pawn_move_examiner) { described_class.new(board, piece, 'B4', 5) }
       
       before do
         allow(piece).to receive(:position).and_return('B2')
         allow(piece).to receive(:color).and_return('W')
         allow(pawn_move_examiner).to receive(:double_step?).and_return(true)
+        allow(board).to receive(:within_limits?) { true }
       end
     
       it 'returns [4, 1] when unobstructed' do
@@ -110,10 +108,23 @@ RSpec.describe MoveExaminer do
         expect(result).to be_nil
       end
     end
+
+    context 'when a black pawn is at D1 and tries to go to G3' do
+      board = Board.new
+      subject(:pawn_move_examiner) { described_class.new(board, piece, 'G3', 7) }
+
+      it 'returns nil' do
+        allow(piece).to receive(:position).and_return('D1')
+        allow(piece).to receive(:color).and_return('B')
+        allow(piece).to receive(:move_count).and_return(5)
+        result = pawn_move_examiner.pawn_move_search
+        expect(result).to be_nil
+      end
+    end
   end
 
   describe '#pawn_attack' do
-    subject(:pawn_attack_examiner) { described_class.new(board, piece, 'F4', game) }
+    subject(:pawn_attack_examiner) { described_class.new(board, piece, 'F4', 6) }
 
     before do
       allow(piece).to receive(:position) { 'E3' }
@@ -244,17 +255,12 @@ RSpec.describe MoveExaminer do
   end
 
   describe '#search_target' do
-    let(:board) { instance_double(Board) }
-    let(:game) { instance_double(Game) }
+    board = Board.new
     
     context 'when piece is a Pawn' do
       pawn = Pawn.new('B', 'A1')
-      subject(:search_examiner) { described_class.new(board, pawn, 'E4', game) }
+      subject(:search_examiner) { described_class.new(board, pawn, 'E4', 3) }
       
-      before do
-         allow(board).to receive (:occupied?)
-      end
-    
       it 'calls #pawn_attack_search' do
         expect(search_examiner).to receive(:pawn_attack_search)
         search_examiner.search_target
@@ -269,7 +275,7 @@ RSpec.describe MoveExaminer do
 
     context 'when piece is a Queen' do
       queen = Queen.new('W', 'G3')
-      subject(:queen_search) { described_class.new(board, queen, 'G5', game) }
+      subject(:queen_search) { described_class.new(board, queen, 'G5', 4) }
       
       it 'calls #depth_search' do
         expect(queen_search).to receive(:depth_search)
@@ -296,7 +302,6 @@ RSpec.describe MoveExaminer do
         [nil, nil, nil, nil, nil, nil, nil, nil],
         [nil, nil, nil, nil, nil, nil, nil, nil]
         ]
-      let(:game) { instance_double(Game) }
       let(:board) { instance_double(Board, deep_clone: cloned_board) }
       subject(:examiner) { described_class.new(board, wpawn, 'D6') }
   
@@ -325,7 +330,6 @@ RSpec.describe MoveExaminer do
         [nil, nil, nil, nil, nil, nil, nil, nil],
         [nil, nil, nil, nil, nil, nil, nil, nil]
         ]
-      let(:game) { instance_double(Game) }
       let(:board) { instance_double(Board, deep_clone: cloned_board) }
       subject(:examiner) { described_class.new(board, wpawn, 'D6') }
       it 'returns false' do
@@ -352,7 +356,6 @@ RSpec.describe MoveExaminer do
         [nil, nil, nil, nil, nil, nil, nil, nil],
         [nil, nil, nil, nil, nil, nil, nil, nil]
       ]
-      let(:game) { instance_double(Game) }
       let(:board) { instance_double(Board, deep_clone: cloned_board) }
       subject(:examiner) { described_class.new(board, bking, 'A7') }
       
@@ -377,7 +380,6 @@ RSpec.describe MoveExaminer do
         [nil, nil, nil, nil, nil, nil, nil, nil],
         [nil, nil, nil, nil, nil, nil, nil, nil]
       ]
-      let(:game) { instance_double(Game) }
       let(:board) { instance_double(Board, deep_clone: cloned_board) }
       subject(:examiner) { described_class.new(board, bking, 'B7') }
       

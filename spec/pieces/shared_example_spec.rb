@@ -14,14 +14,16 @@ RSpec.shared_examples 'shared #generate_coordinates' do |param|
   end
 
   it 'returns all coordinates the piece can move to' do
-    result = subject.generate_coordinates
+    board = Board.new
+    result = subject.generate_coordinates(board)
     expect(result).to eq(param)
   end
 end
 
 RSpec.shared_examples 'shared #possible_targets' do |param|
   it 'returns all possible target positions for the piece' do
-    result = subject.possible_targets
+    board = Board.new
+    result = subject.possible_targets(board)
     expect(result).to eq(param)
   end
 end

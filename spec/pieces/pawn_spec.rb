@@ -7,7 +7,7 @@ require_relative '../../lib/pieces/rook'
 require_relative '../../lib/pieces/bishop'
 require_relative '../../lib/pieces/queen'
 require_relative '../../lib/pieces/knight'
-require_relative '../shared_example_spec'
+require_relative 'shared_example_spec'
 
 RSpec.describe Pawn do
   describe '#position_to_array' do

@@ -152,8 +152,8 @@ RSpec.describe CastlingChecker do
 
   describe '#meet_prerequisites?' do
     let(:cloned) { instance_double(Board)}
-    let(:board) { instance_double(Board, deep_clone: cloned) }
-    let(:king) { instance_double(King, position: 'E1', color: 'W', within_limits?: true) }
+    let(:board) { instance_double(Board, deep_clone: cloned, within_limits?: true) }
+    let(:king) { instance_double(King, position: 'E1', color: 'W') }
     let(:enemy) { instance_double(Bishop) }
     let(:game_status_checker) { instance_double(GameStatusChecker) }
     subject(:prereq_checker) { described_class.new(board, king, [7, 6]) }
