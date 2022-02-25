@@ -5,6 +5,7 @@ require_relative '../../lib/board'
 require_relative '../../lib/pieces/king'
 require_relative '../../lib/pieces/rook'
 require_relative '../../lib/pieces/bishop'
+require_relative '../../lib/pieces/knight'
 
 RSpec.describe CastlingChecker do
   describe '#meet_castling_condition?' do
@@ -49,6 +50,31 @@ RSpec.describe CastlingChecker do
         allow(rook).to receive(:move_count).and_return(0)
         result = condition_checker.meet_castling_condition?
         expect(result).to be true
+      end
+    end
+
+    context 'when there is no rook for long castling' do
+      board = Board.new
+      king = King.new('W', 'E1')
+      bishop = Bishop.new('W', 'F1')
+      knight = Knight.new('W', 'G1')
+      rook = Rook.new('W', 'H1')
+      grid = [
+        [nil, nil, nil, nil, nil, nil, nil, nil],
+        [nil, nil, nil, nil, nil, nil, nil, nil],
+        [nil, nil, nil, nil, nil, nil, nil, nil],
+        [nil, nil, nil, nil, nil, nil, nil, nil],
+        [nil, nil, nil, nil, nil, nil, nil, nil],
+        [nil, nil, nil, nil, nil, nil, nil, nil],
+        [nil, nil, nil, nil, nil, nil, nil, nil],
+        [nil, nil, nil, nil, king, bishop, knight, rook]
+      ]
+      subject(:missing_rook) { described_class.new(board, king, [7, 2]) }
+      
+      it 'returns false' do
+        board.instance_variable_set(:@grid, grid)
+        result = missing_rook.meet_castling_condition?
+        expect(result).to be false
       end
     end
   end

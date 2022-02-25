@@ -44,6 +44,6 @@ class CastlingChecker
   end
 
   def next_piece(row, column)
-    board.grid[row][column + modifier]
+    (column + modifier).negative? ? nil : board.grid[row][column + modifier]
   end
 end

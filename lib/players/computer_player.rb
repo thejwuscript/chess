@@ -22,8 +22,8 @@ class ComputerPlayer
     capturing_moves = not_sacrificing_self_and_queen.select { |examiner| board.piece_at(examiner.target) }
     promote_capture = enemy_promotes_targeted(capturing_moves)
     special_moves(examiners).sample || promote_capture || run_from_enemy_capture.sample ||
-    capturing_moves.sample || (attack_king.sample if num > 4) ||
-    (not_sacrificing_self_and_queen.sample if num > 3) || (not_sacrificing_queen.sample if num > 1) ||
+    capturing_moves.sample || (attack_king.sample if num > 6) ||
+    (not_sacrificing_self_and_queen.sample if num > 1) || not_sacrificing_queen.sample ||
     full_attack.sample || examiners.sample
   end
 
