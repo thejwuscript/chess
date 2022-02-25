@@ -425,4 +425,49 @@ RSpec.describe Board do
       expect(result).to contain_exactly(queen, knight)
     end
   end
+
+  describe '#pawn_positions' do
+    pawn1 = Pawn.new('W', 'A4')
+    pawn2 = Pawn.new('B', 'C5')
+    pawn3 = Pawn.new('W', 'E7')
+    pawn4 = Pawn.new('B', 'B2')
+    
+    it 'returns an array of positions of pawns on the board, sorted' do
+      grid = [
+        [nil, nil, nil, nil, nil, nil, nil, nil],
+        [nil, nil, nil, nil, pawn3, nil, nil, nil],
+        [nil, nil, nil, nil, nil, nil, nil, nil],
+        [nil, nil, pawn2, nil, nil, nil, nil, nil],
+        [pawn1, nil, nil, nil, nil, nil, nil, nil],
+        [nil, nil, nil, nil, nil, nil, nil, nil],
+        [nil, pawn4, nil, nil, nil, nil, nil, nil],
+        [nil, nil, nil, nil, nil, nil, nil, nil]
+      ]
+      board.instance_variable_set(:@grid, grid)
+      result = board.pawn_positions
+      expect(result).to eq(["A4", "B2", "C5", "E7"])
+    end
+  end
+
+  describe '#number_of_pieces' do
+    queen = Pawn.new('W', 'A2')
+    bking = Pawn.new('B', 'B5')
+    wking = Pawn.new('W', 'H4')
+
+    it 'returns the number of chess pieces on the board' do
+      grid = [
+        [nil, nil, nil, nil, nil, nil, nil, nil],
+        [nil, nil, nil, nil, nil, nil, nil, nil],
+        [nil, nil, nil, nil, nil, nil, nil, nil],
+        [nil, bking, nil, nil, nil, nil, nil, nil],
+        [nil, nil, nil, nil, nil, nil, nil, wking],
+        [nil, nil, nil, nil, nil, nil, nil, nil],
+        [queen, nil, nil, nil, nil, nil, nil, nil],
+        [nil, nil, nil, nil, nil, nil, nil, nil]
+      ]
+      board.instance_variable_set(:@grid, grid)
+      result = board.number_of_pieces
+      expect(result).to eq(3)
+    end
+  end
 end
