@@ -18,11 +18,12 @@ class ComputerPlayer
     not_sacrificing_queen = remove_moves_exposing_queen(examiners)
     not_sacrificing_self_and_queen = remove_moves_exposing_self(not_sacrificing_queen)
     attack_king = moves_attacking_king(not_sacrificing_self_and_queen)
-    run_from_enemy_capture = not_sacrificing_self_and_queen.select { |examiner| danger_now?(examiner) } 
     capturing_moves = not_sacrificing_self_and_queen.select { |examiner| board.piece_at(examiner.target) }
+    run_from_enemy_capture = capturing_moves.find { |examiner| danger_now?(examiner) } ||
+    not_sacrificing_self_and_queen.find { |examiner| danger_now?(examiner) }
     promote_capture = enemy_promotes_targeted(capturing_moves)
-    special_moves(examiners).sample || promote_capture || (run_from_enemy_capture.sample if num > 1) ||
-    (capturing_moves.sample if num > 1) || (attack_king.sample if num > 7) ||
+    special_moves(examiners).sample || promote_capture || (run_from_enemy_capture if num > 1) ||
+    (capturing_moves.sample if num > 1) || (attack_king.sample if num > 3) ||
     (not_sacrificing_self_and_queen.sample if num > 1) || (not_sacrificing_queen.sample if queen_alive?) ||
     full_attack.sample || examiners.sample
   end
@@ -67,14 +68,20 @@ class ComputerPlayer
   end
 
   def danger_queen?(examiner, mock_board = board.deep_clone)
-    return danger_self?(examiner) if examiner.piece.is_a?(Queen)
+    #return danger_self?(examiner) if examiner.piece.is_a?(Queen)
     
     mock_board.move_piece_to_target(examiner.target, examiner.piece)
-    queen = mock_board.grid.flatten.compact.find { |piece| piece.color == self.color && piece.is_a?(Queen) }
-    return if queen.nil?
+    if examiner.piece.is_a?(Queen)
+      enemy_target = examiner.target
+    else
+      queen = mock_board.grid.flatten.compact.find { |piece| piece.color == self.color && piece.is_a?(Queen) }
+      return if queen.nil?
+
+      enemy_target = queen.position
+    end
     
     mock_board.all_enemies(self.color).any? do |enemy|
-      MoveExaminer.new(mock_board, enemy, queen.position).validate_move
+      MoveExaminer.new(mock_board, enemy, enemy_target).validate_move
     end
   end
 

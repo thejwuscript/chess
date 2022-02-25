@@ -300,6 +300,8 @@ RSpec.describe Game do
       game.instance_variable_set(:@player_black, opponent)
       game.instance_variable_set(:@turn_count, 8)
       allow(GameStatusChecker).to receive(:new) { checker }
+      allow(board).to receive(:pawn_positions)
+      allow(board).to receive(:number_of_pieces)
       allow(checker).to receive(:stalemate?)
       allow(checker).to receive(:checkmate?)
     end
