@@ -87,4 +87,12 @@ class Piece
     self.position = target
     self.move_count += 1 if [King, Rook, Pawn].include?(self.class)
   end
+
+  def bold
+    "\e[1;30m"
+  end
+
+  def black
+    "\e[38;5;16m"
+  end
 end

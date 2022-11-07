@@ -20,7 +20,7 @@ class King < Piece
 
   def assign_symbol
     self.symbol = "♔" if @color == 'W'
-    self.symbol = "♚" if @color == 'B'
+    self.symbol = "#{black}♚" if @color == 'B'
   end
 
   def move_manner
