@@ -1,5 +1,5 @@
-/save_state.yaml
-/temp_board_info.yaml
+*.yaml
+*.yml
 .replit
 .bundle
 replit.nix
