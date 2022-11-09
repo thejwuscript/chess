@@ -25,3 +25,10 @@ The very first challenge I faced was finding my bearings to build this project f
 <img src="https://user-images.githubusercontent.com/88938117/200637857-3bf187ba-594e-4f8b-9ec3-7cd11475aab4.png" alt="board model" width="300px">
 
 Because the board and pieces were just ANCI escape codes and Unicode symbols, I had a new task at hand; to make them come to life. At this point, I had some ideas of the behaviors I want for my Board class so this was a good start to writing my tests and begin the TDD process.
+
+<img src="https://user-images.githubusercontent.com/88938117/200793310-3251cd99-3cdf-4361-aa44-a07430a1f42c.png" alt="bishop path" width="300">
+
+<img src="https://user-images.githubusercontent.com/88938117/200790192-757b99b6-ea00-493a-8ffb-029ed600c41b.png" alt="pawn path" width="300">
+
+
+
