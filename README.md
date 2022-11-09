@@ -27,6 +27,7 @@ The very first challenge I faced was finding my bearings to build this project f
 After seeing it visually on the terminal, I started having ideas of what methods to define in the Board class. It was a good moment to write my first test and begin the TDD process.
 ### Searching for Possible Moves
 Generating a list of possible moves for a piece like bishop was relatively simple, but it quickly became complicated for a piece that has different move patterns, particularly the pawn. I will briefly discuss the process in generating pawn movements below.
+
 <img src="https://user-images.githubusercontent.com/88938117/200793310-3251cd99-3cdf-4361-aa44-a07430a1f42c.png" alt="bishop path" width="300">
 <img src="https://user-images.githubusercontent.com/88938117/200790192-757b99b6-ea00-493a-8ffb-029ed600c41b.png" alt="pawn path" width="300">
 
