@@ -78,3 +78,8 @@ I then tried to create a deep copy of the board by marshalling and unmarshalling
 cloned_board = Marshal.load(Marshal.dump(board))
 ```
 It was a successful copy, as I could make any changes on the cloned board without affecting the original.
+
+## Future Additions
+- [ ] Rework AI to use minimax algorithm
+- [ ] More specific error messages
+- [ ] More save slots
