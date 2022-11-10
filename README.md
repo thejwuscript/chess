@@ -26,7 +26,7 @@ The very first challenge I faced was finding my bearings to build this project f
 
 After seeing it visually on the terminal, I started having ideas of what methods to define in the Board class. It was a good moment to write my first test and begin the TDD process.
 ### Searching for Possible Moves
-Generating a list of possible moves for a piece like bishop was relatively simple, but it quickly became complicated for a piece that has different move patterns, particularly the pawn. I will briefly discuss the process in generating pawn movements below.
+Generating a list of possible moves for a piece like bishop was relatively simple, but it quickly became complicated for a piece that has different move patterns, particularly the pawn. I will briefly describe the process in generating pawn movements below.
 
 <img src="https://user-images.githubusercontent.com/88938117/200793310-3251cd99-3cdf-4361-aa44-a07430a1f42c.png" alt="bishop path" width="300"> <img src="https://user-images.githubusercontent.com/88938117/200790192-757b99b6-ea00-493a-8ffb-029ed600c41b.png" alt="pawn path" width="300">
 
@@ -37,19 +37,44 @@ First, I came up with all the different scenarios in which the pawn's movement c
 	- An enemy piece is present at the square.
 	- An enemy pawn just performed double step and is adjacent (ie. en passant)
 
-The scenario for en passant was broken down further like so:
+The scenario for en passant was broken down further into 4 key conditions that must be fulfilled for the capturing move:
 
 <img src="https://user-images.githubusercontent.com/88938117/200894903-8ef506ec-6da5-4a84-a803-ba4385f8cf7a.png" alt="en passant condition" width="400">
 
-It became clear to me that four conditions must be fulfilled for an en passant capturing move.
-
 I then defined the core logic for each of the scenario in pseudo code:
 ```ruby
-# Black pawn
-1. Offset self.position by [1, 0]
-2. Offset self.position by [2, 0] if self.position == self.initial_position
-3. Capturing move:
-	a. Offset self.position by [1, 1] || [1, -1] if board.piece_at(offset_position).color != self.color
-	b. Offset self.position by [1, 1] || [1, -1] if EnPassantChecker.new.valid_capture_condition?
+# For Black pawn,
+# Initialize an array called possible_moves
+# Add the results below to possible_moves:
+#
+# Offset self.position by [1, 0]
+# Offset self.position by [2, 0] if self.position == self.initial_position and add it to possible_moves
+# Capturing move:
+#   Offset self.position by [1, 1] || [1, -1] if board.piece_at(offset_position).color != self.color
+#   Offset self.position by [1, 1] || [1, -1] if EnPassantChecker.new.valid_capture_condition?
+#
+# Return possible_moves
 ```
 By breaking things down into manageable parts, I was able to keep myself organized and implement the logic step by step. 
+### Cloning the Board
+I wanted to capture the state of the board along with the chess pieces by cloning the board. The board has a grid attribute that contains all the active chess pieces in a 2d array:
+```ruby
+class Board
+  def initialize
+    @grid = Array.new(8) { Array.new(8) } # chess pieces in the array
+    ...
+  end
+end
+```
+At first, I tried to copy the board with #clone:
+```ruby
+cloned_board = board.clone
+```
+But I whenever I changed the state of any chess piece on the cloned board, it also changed the state of the original piece. This was not the desired behaviour.
+I found out that the method #clone only makes a shallow copy of an object. This meant that it did not clone the chess pieces but only stored references to the original pieces. I confirmed it by checking the object id of a cloned piece against the original, and indeed they were the same.
+
+I then tried to create a deep copy of the board by marshalling and unmarshalling the board object, as suggested by a [post on Stack Overflow](https://stackoverflow.com/questions/8206523/how-to-create-a-deep-copy-of-an-object-in-ruby):
+```ruby
+cloned_board = Marshal.load(Marshal.dump(board))
+```
+It was a successful copy, as I could make any changes on the cloned board without affecting the original.
