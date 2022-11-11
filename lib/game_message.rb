@@ -10,7 +10,7 @@ module GameMessage
 
   def choose_piece_message(player)
     color = player.color
-    puts "\n#{player.name}(#{color}), enter a coordinate to choose a piece. (Example: g5)"
+    puts "\n#{player.name}(#{color}), enter a coordinate to choose a piece. (Example: e2)"
     puts "You may enter \e[1m[S]\e[0m to save and continue, or \e[1m[Q]\e[0m to quit the game."
     puts ''
   end
@@ -53,6 +53,7 @@ module GameMessage
   def declare_winner
     puts 'CHECKMATE!'
     puts "#{winner.name} wins the game!"
+    sleep(3)
   end
 
   def declare_draw
