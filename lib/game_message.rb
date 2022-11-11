@@ -53,7 +53,6 @@ module GameMessage
   def declare_winner
     puts 'CHECKMATE!'
     puts "#{winner.name} wins the game!"
-    sleep(3)
   end
 
   def declare_draw
