@@ -17,7 +17,7 @@ class Bishop < Piece
   end
   
   def assign_symbol
-    self.symbol = "♗" if @color == 'W'
+    self.symbol = "#{white}♝" if @color == 'W'
     self.symbol = "#{black}♝" if @color == 'B'
   end
 

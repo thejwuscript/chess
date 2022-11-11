@@ -23,7 +23,7 @@ class Pawn < Piece
   end
 
   def assign_symbol
-    self.symbol = "♙" if @color == 'W'
+    self.symbol = "#{bold}#{white}♟" if @color == 'W'
     self.symbol = "#{bold}#{black}♟" if @color == 'B'
   end
 

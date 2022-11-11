@@ -95,4 +95,8 @@ class Piece
   def black
     "\e[38;5;16m"
   end
+
+  def white
+    "\e[38;5;255m"
+  end
 end
