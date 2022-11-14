@@ -33,7 +33,7 @@ Play the game on [Replit](https://replit.com/@thejwuscript/Chess) 👈
 ### Knowing Where to Begin
 The very first challenge I faced was finding my bearings to build this project from the ground up with minimal guidance from the [project specification](https://www.theodinproject.com/lessons/ruby-ruby-final-project#assignment). I had a rough idea of what classes I needed, but I was unsure of which one to start working on. To maximize productivity, I decided to start with what I thought was the easiest to accomplish at the time; modelling the game board. Implementing the model was straightforward because I had a clear idea of the result I wanted, which was a board with all the pieces at their starting positions.
 
-<img src="https://user-images.githubusercontent.com/88938117/200637857-3bf187ba-594e-4f8b-9ec3-7cd11475aab4.png" alt="board model" width="300px">
+<img src="https://user-images.githubusercontent.com/88938117/200637857-3bf187ba-594e-4f8b-9ec3-7cd11475aab4.png" alt="board model" width="300">
 
 After seeing it visually on the terminal, I started having ideas of what methods to define in the Board class. It was a good moment to write my first test and begin the test-driven development(TDD) process.
 
@@ -51,7 +51,7 @@ First, I came up with all the different scenarios in which the pawn's movement c
 
 The scenario for en passant capturing move was broken down further into 4 key conditions:
 
-<img src="https://user-images.githubusercontent.com/88938117/200894903-8ef506ec-6da5-4a84-a803-ba4385f8cf7a.png" alt="en passant condition" width="400">
+<img src="https://user-images.githubusercontent.com/88938117/200894903-8ef506ec-6da5-4a84-a803-ba4385f8cf7a.png" alt="en passant condition" width="450">
 
 Because the logic for en passant itself was quite complex and required several pieces of data, I determined having a new class ```EnPassantChecker``` that encapsulated the data and abstracted the logic was necessary. I then defined the core logic for each of the scenarios in pseudo code:
 
