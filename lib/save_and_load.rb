@@ -43,6 +43,9 @@ module SaveAndLoad
   end
 
   def load_board_info 
-    YAML.load_file('temp_board_info.yaml')
+    YAML.load_file(
+      'temp_board_info.yaml',
+      permitted_classes: [Bishop, King, Knight, Pawn, Queen, Rook]
+    )
   end
 end
