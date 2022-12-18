@@ -53,7 +53,7 @@ The scenario for en passant capturing move was broken down further into 4 key co
 
 <img src="https://user-images.githubusercontent.com/88938117/200894903-8ef506ec-6da5-4a84-a803-ba4385f8cf7a.png" alt="en passant condition" width="450">
 
-Because the logic for en passant itself was quite complex and required several pieces of data, I determined having a new class ```EnPassantChecker``` that encapsulated the data and abstracted the logic was necessary. I then defined the core logic for each of the scenarios in pseudo code:
+Because the logic for en passant itself was quite complex and required several pieces of data, I created a new class ```EnPassantChecker``` that encapsulated the data and abstracted the logic. I then defined the core logic for each of the scenarios in pseudo code:
 
 ```ruby
 # For a Black pawn,
@@ -69,6 +69,7 @@ Because the logic for en passant itself was quite complex and required several p
 # Return possible_moves
 ```
 By breaking things down into manageable parts, I was able to keep myself organized and implement the logic step by step. 
+
 ### Cloning the Board
 I wanted to capture the state of the board along with the chess pieces by cloning the board. The board has a grid attribute that contains all the active chess pieces in a 2d array:
 ```ruby
