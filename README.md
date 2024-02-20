@@ -3,8 +3,6 @@ A game of chess on the command line.
 
 Completed as a capstone project of the Ruby course at [The Odin Project](https://www.theodinproject.com/lessons/ruby-ruby-final-project).
 
-Play the game on [Replit](https://replit.com/@thejwuscript/Chess) 👈
-
 ## Demo
 
 <img src="https://user-images.githubusercontent.com/88938117/201371521-12d7fefd-66df-414b-b5b0-f9f286be00e4.gif" alt="demo" width="700"><br/>
